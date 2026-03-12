@@ -1,0 +1,23 @@
+<div class="g-0 col-10 col-md-6 col-xl-4 mx-auto my-5">
+  <h1>Regisztráció</h1>
+  <form class="vertical-box fancy-border gap-3" (ngSubmit)="sendRegisterData()">
+    <div>
+      <label for="username">Felhasználónév</label>
+      <input name="username" type="text" class="form-control fancy-border" placeholder="Felhasználónév" [(ngModel)]="registerModel.username">
+    </div>
+    <div>
+      <label for="email">E-mail cím</label>
+      <input name="email" type="email" class="form-control fancy-border" placeholder="E-mail cím" [(ngModel)]="registerModel.email">
+    </div>
+    <div>
+      <label for="password">Jelszó</label>
+      <input name="password" type="password" class="form-control fancy-border" placeholder="Jelszó" [(ngModel)]="registerModel.password">
+    </div>
+    <div>
+      <label for="conf_password">Jelszó újra</label>
+      <input name="conf_password" type="password" class="form-control fancy-border" placeholder="Jelszó újra" [(ngModel)]="registerModel.confirm_password">
+    </div>
+    <button matButton="filled" class="wide fancy-border mt-2" type="submit">Regisztráció</button>
+    <a [routerLink]="['']">Már van fiókja?</a>
+  </form>
+</div>
