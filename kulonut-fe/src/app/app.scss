@@ -1,0 +1,61 @@
+$primary-blue: rgb(109, 165, 242);
+$primary-orange: rgb(230, 123, 17);
+$bg-gray: rgb(69, 69, 69);
+$bg-dark-gray: rgb(48, 48, 48);
+$error-bg: palevioletred;
+
+*{
+    scroll-behavior: smooth;
+}
+
+html, body{
+    margin: 0;
+    padding: 0;
+    position: relative;
+    width: 100%;
+    overflow-x: hidden;
+}
+::selection{
+    background: $primary-blue;
+    color: white;
+}
+
+.wide{
+    width: 100%;
+}
+.vertical-box{
+    display: flex;
+    flex-direction: column;
+}
+
+form{
+    padding: 40px;
+    background-color: $bg-gray;
+    & input{
+        border-radius: 0;
+        border-color: $primary-blue;
+    }
+    & button{
+        border-radius: 0;
+        font-size: 120%;
+    }
+}
+
+.fancy-border{
+    -webkit-box-shadow: 7px 7px 0px 0px $bg-dark-gray;
+    box-shadow: 7px 7px 0px 0px $bg-dark-gray;
+}
+
+.mandatory-star::after{
+    pointer-events: none;
+    content: "*";
+    color: darkred;
+}
+
+.error-box{
+    margin-top: 5px;
+    background-color: $error-bg;
+    color: darkred;
+    font-size: 110%;
+    padding: 10px;
+}
