@@ -1,0 +1,68 @@
+@import '../../../variables';
+
+header{
+    position: fixed;
+    top: 0;
+    left: 0;
+    background-color: $bg-gray;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    & img{
+        width: 300px;
+        margin-right: 15px;
+    }
+    & a:not(.profile-button){
+        font-size: 120%;
+        text-decoration: none;
+        color: $primary-blue;
+        text-transform: uppercase;
+        height: 100%;
+        padding: 15px 30px;
+        &.active{
+            font-weight: 500;
+            background-color: $bg-dark-gray;
+        }
+        &:hover{
+            font-weight: 500;
+        }
+    }
+    .profile-button{
+        text-decoration: none;
+        margin-left: auto;
+        margin-right: 25px;
+        white-space: nowrap;
+        & .username{
+            color: var(--mat-sys-on-surface);
+        }
+        & .user-role{
+            color: $primary-orange;
+        }
+        & #profile-icon{
+            background-color: $primary-orange;
+            color: black;
+            border-radius: 100%;
+            aspect-ratio: 1;
+            position: relative;
+            height: 40px;
+            & span{
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                font-size: 150%;
+                font-weight: bold;
+            }
+        }
+        &:hover{
+            cursor: pointer;
+            & .username{
+                text-decoration: underline;
+            }
+        }
+    }
+}
+.separator-margin{
+    margin-bottom: 70px;
+}

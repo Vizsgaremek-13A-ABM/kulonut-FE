@@ -4,5 +4,7 @@ export const routes: Routes = [
     { path: '', loadComponent: () => import('./components/login-component/login-component').then(m => m.LoginComponent) },
     // stay signed in
     { path: 'user_register', loadComponent: () => import('./components/register-component/register-component').then(m => m.RegisterComponent) },
+    //auth guard
+    { path: 'main', loadComponent: () => import('./components/main-page-component/main-page-component').then(m => m.MainPageComponent) },
     { path: '**', redirectTo: '' }
 ];

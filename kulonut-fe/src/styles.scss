@@ -11,11 +11,7 @@
 @import 'bootstrap/scss/mixins';
 @import 'bootstrap/scss/buttons';
 @import 'bootstrap/scss/forms';
-
-$primary-blue: rgb(109, 165, 242);
-$primary-orange: rgb(230, 123, 17);
-$bg-gray: rgb(69, 69, 69);
-$bg-dark-gray: rgb(48, 48, 48);
+@import 'variables';
 
 html {
   height: 100%;
