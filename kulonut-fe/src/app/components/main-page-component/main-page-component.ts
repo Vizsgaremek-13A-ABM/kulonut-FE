@@ -4,11 +4,12 @@ import { NgSelectModule } from '@ng-select/ng-select';
 import { FormsModule } from '@angular/forms';
 import { LeafletModule } from '@bluehalo/ngx-leaflet';
 import * as L from 'leaflet';
+import {MatButtonModule} from '@angular/material/button';
 import { tileLayer, latLng, marker } from 'leaflet';
 
 @Component({
   selector: 'app-main-page-component',
-  imports: [TopBarComponent, NgSelectModule, FormsModule, LeafletModule],
+  imports: [TopBarComponent, NgSelectModule, FormsModule, LeafletModule, MatButtonModule],
   templateUrl: './main-page-component.html',
   styleUrls: [
     '../../app.scss',
