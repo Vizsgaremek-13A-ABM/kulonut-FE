@@ -22,6 +22,6 @@ export class LoginComponent {
   private router = inject(Router)
   sendLoginData(){
     console.log(this.loginModel);
-    this.router.navigate(['main']) // ideiglenes
+    this.router.navigate(['profile']) // ideiglenes
   }
 }
