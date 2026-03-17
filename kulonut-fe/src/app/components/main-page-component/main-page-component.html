@@ -1,2 +1,42 @@
 <app-top-bar-component/>
-asdasd
+<div class="content fancy-border">
+    <div class="filters fancy-border">
+        <h4>Szűrők</h4>
+        <div class="d-flex" id="filters-row">
+            <div>
+                <label for="projectname">Projektnév</label>
+                <input name="projectname" type="text" class="form-control" placeholder="Projektnév">
+            </div>
+            <div>
+                <label for="startdate">Kezdeti dátum</label>
+                <input name="startdate" type="date" class="form-control">
+            </div>
+            <div>
+                <label for="enddate">Végdátum</label>
+            <input name="enddate" type="date" class="form-control">
+            </div>
+            <div>
+                <label for="type">Típus</label>
+                <ng-select
+                    name="type"
+                    [multiple]="true"
+                    class="form-control"
+                    placeholder="-- Típus --"
+                    >
+                </ng-select>
+                <!-- <ng-select 
+                    #catSelector="ngModel"
+                    [multiple]="true"
+                    bindLabel="nev"
+                    bindValue="id"
+                    [items]="categories"
+                    name="competitionCategories"
+                    [(ngModel)]="newCompetitionCategories"
+                    > 
+                </ng-select> -->
+            </div>
+        </div>
+    </div>
+    <div #map id="map-div" class="fancy-border">
+    </div>
+</div>
