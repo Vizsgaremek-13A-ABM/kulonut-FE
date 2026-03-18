@@ -12,3 +12,10 @@ button{
         width: 15px;
     }
 }
+
+#profile-picture{
+    height: 150px;
+    width: 150px;
+    object-fit: cover;
+    border: 1px solid $primary-blue;
+}

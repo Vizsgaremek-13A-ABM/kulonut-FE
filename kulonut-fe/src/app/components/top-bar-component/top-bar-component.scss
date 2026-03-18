@@ -45,19 +45,25 @@ header{
             color: $primary-orange;
         }
         & #profile-icon{
-            background-color: $primary-orange;
-            color: black;
-            border-radius: 100%;
-            aspect-ratio: 1;
-            position: relative;
-            height: 40px;
-            & span{
-                position: absolute;
-                top: 50%;
-                left: 50%;
-                transform: translate(-50%, -50%);
-                font-size: 150%;
-                font-weight: bold;
+            // background-color: $primary-orange;
+            // color: black;
+            // border-radius: 100%;
+            // aspect-ratio: 1;
+            // position: relative;
+            // height: 40px;
+            // & span{
+            //     position: absolute;
+            //     top: 50%;
+            //     left: 50%;
+            //     transform: translate(-50%, -50%);
+            //     font-size: 150%;
+            //     font-weight: bold;
+            // }
+            & img{
+                width: 40px;
+                height: 40px;
+                object-fit: cover;
+                border: 1px solid black;
             }
         }
         &:hover{

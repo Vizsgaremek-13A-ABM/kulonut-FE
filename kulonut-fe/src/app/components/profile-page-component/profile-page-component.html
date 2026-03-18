@@ -4,6 +4,8 @@
         <div class="px-2">
             <h4 style="color: white;">Adatmódosítás</h4>
             <form (ngSubmit)="sendUserUpdateData()" [formGroup]="user_data_form" class="fancy-border vertical-box gap-3" style="background-color: white;">
+                <img src="pogatsa.png" alt="pfp" id="profile-picture" class="fancy-border">
+                <!-- <input type="file" matButton="filled" class="fancy-border"/> -->
                 <app-form-field-component
                     label="Felhasználónév"
                     controlName="username"
