@@ -3,27 +3,89 @@
     <div class="col-12 col-md-6">
         <div class="px-2">
             <h4 style="color: white;">Adatmódosítás</h4>
-            <form class="fancy-border vertical-box gap-3" style="background-color: white;">
-                <div>
-                    <label for="username">Felhasználónév</label>
-                    <input name="username" type="text" class="form-control fancy-border" placeholder="Felhasználónév" value="kiss_pista">
-                </div>
-                <div>
-                    <label for="displayname">Megjelenő név</label>
-                    <input name="displayname" type="text" class="form-control fancy-border" placeholder="Felhasználónév" value="Kiss Pista">
-                </div>
+            <form (ngSubmit)="sendUserUpdateData()" [formGroup]="user_data_form" class="fancy-border vertical-box gap-3" style="background-color: white;">
+                <app-form-field-component
+                    label="Felhasználónév"
+                    controlName="username"
+                    [form]="user_data_form"
+                    [required]="true"
+                />
+                <app-form-field-component
+                    label="Megjelenő név"
+                    controlName="display_name"
+                    [form]="user_data_form"
+                />
+                <app-form-field-component
+                    label="E-mail cím"
+                    controlName="email"
+                    [form]="user_data_form"
+                    type="email"
+                    [required]="true"
+                />
+                @if((user_data_form.dirty || user_data_form.touched) && user_data_form.invalid){
+                    <p class="error-box fancy-border mb-1">
+                    @if(user_data_form.get("username")?.errors?.['required']){
+                        - Felhasználónév megadása kötelező!<br>
+                    }
+                    @if(user_data_form.get("email")?.errors?.['required']){
+                        - E-mail cím megadása kötelező!<br>
+                    }
+                    @if(user_data_form.get("email")?.errors?.['email']){
+                        - Hibás e-mail cím formátum!<br>
+                    }
+                    </p>
+                }
+                <button type="submit" matButton="filled" class="fancy-border" [disabled]="true">Mentés</button>
             </form>
         </div>
     </div>
     <div class="col-12 col-md-6">
         <div class="px-2">
             <h4 style="color: white;">Jelszó módosítás</h4>
-            <form class="fancy-border vertical-box gap-3" style="background-color: white;">
-                <div>
-                    <label for="old_password">Régi jelszó</label>
-                    <input name="old_password" type="password" class="form-control fancy-border" placeholder="Régi jelszó">
+            <form (ngSubmit)="sendPasswordUpdateData()" [formGroup]="password_form" class="fancy-border vertical-box gap-3" style="background-color: white;">
+                <app-form-field-component
+                    label="Régi jelszó"
+                    controlName="old_password"
+                    type="password"
+                    [form]="password_form"
+                    [required]="true"
+                    #oldpassword
+                />
+                <app-form-field-component
+                    label="Új jelszó"
+                    controlName="new_password"
+                    type="password"
+                    [form]="password_form"
+                    [required]="true"
+                    #newpassword
+                />
+                <app-form-field-component
+                    label="Új jelszó még egyszer"
+                    controlName="conf_password"
+                    type="password"
+                    [form]="password_form"
+                    [required]="true"
+                    #confpassword
+                />
+                @if((password_form.dirty || password_form.touched) && password_form.invalid){
+                    <!-- ha nem egyeznek akkor nem invalid. erre valami jobb boolt kell keresni. ugyanez gombok disabledre -->
+                    <p class="error-box fancy-border mb-1">
+                    @if(password_form.get("old_password")?.errors?.['required'] || 
+                        password_form.get("new_password")?.errors?.['required'] ||
+                        password_form.get("conf_password")?.errors?.['required']){
+                        - Töltse ki mind a három mezőt!<br>
+                    }
+                    @if(password_form.get("new_password")?.value != password_form.get("conf_password")?.value){
+                        - Az új jelszavak nem egyeznek
+                    }
+                    </p>
+                }
+                <div class="d-flex" style="width: 100%; gap: 25px;">
+                    <button style="width: 100%;" type="submit" matButton="filled" class="fancy-border" [disabled]="true">Jelszó frissítése</button>
+                    <button id="eye-button" type="button" matButton="filled" class="fancy-border" (click)="togglePasswordsVisible()">
+                        <img src="assets/unseen.png" alt="eye" #eye_img>
+                    </button>
                 </div>
-
             </form>
         </div>
     </div>

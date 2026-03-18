@@ -34,6 +34,11 @@ form{
     & button{
         border-radius: 0;
         font-size: 120%;
+        &:disabled{
+            opacity: .8;
+            -webkit-box-shadow: 7px 7px 0px 0px black;
+            box-shadow: 7px 7px 0px 0px black;
+        }
     }
 }
 
@@ -45,7 +50,7 @@ form{
 .mandatory-star::after{
     pointer-events: none;
     content: "*";
-    color: darkred;
+    color: $error-bg;
 }
 
 .error-box{
