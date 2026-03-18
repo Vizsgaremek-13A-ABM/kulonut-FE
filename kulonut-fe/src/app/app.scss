@@ -70,3 +70,13 @@ form{
     color: black;
     padding: 30px;
 }
+button{
+    transition: transform 0.2s ease-in-out, box-shadow .2s ease-in-out;
+}
+
+button.fancy-border:hover{
+    transform: translate(-3px, -3px);
+    transition: transform 0.2s ease-in-out, box-shadow .2s ease-in-out;
+    -webkit-box-shadow: 10px 10px 0px 0px $bg-dark-gray;
+    box-shadow: 10px 10px 0px 0px $bg-dark-gray;
+}
