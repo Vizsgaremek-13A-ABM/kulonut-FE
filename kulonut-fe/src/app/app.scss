@@ -9,6 +9,7 @@ html, body{
     padding: 0;
     position: relative;
     width: 100%;
+    max-width: 100%;
     overflow-x: hidden;
 }
 ::selection{
@@ -39,6 +40,7 @@ form{
             -webkit-box-shadow: 7px 7px 0px 0px black;
             box-shadow: 7px 7px 0px 0px black;
         }
+        //background-color: $primary-blue !important;
     }
 }
 

@@ -1,0 +1,36 @@
+@import '../../../variables';
+
+.filters{
+    background-color: white;
+    border: 1px solid $bg-dark-gray;
+    padding: 15px;
+    input, ng-select {
+        border-radius: 0;
+        border: 1px solid $primary-blue;
+        -webkit-box-shadow: 7px 7px 0px 0px $bg-dark-gray;
+        box-shadow: 7px 7px 0px 0px $bg-dark-gray;
+    }
+}
+
+#filters-row{
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 20px;
+    & div{
+        width: 100%;
+    }
+}
+
+#map-div{
+    margin-top: 20px;
+    width: 100%;
+    height: 650px;
+    position: relative;
+    border: 1px solid $bg-dark-gray;
+}
+button{
+    border-radius: 0;
+    font-size: 120%;
+    background-color: $primary-blue !important;
+    bottom: 0;
+}
