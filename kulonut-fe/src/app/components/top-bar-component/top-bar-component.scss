@@ -1,6 +1,7 @@
 @import '../../../variables';
 
 header{
+    z-index: 999;
     position: fixed;
     top: 0;
     left: 0;
@@ -9,11 +10,13 @@ header{
     display: flex;
     align-items: center;
     justify-content: space-between;
+    border-bottom: 7px solid $bg-dark-gray;
     & img{
         width: 300px;
         margin-right: 15px;
     }
     & a:not(.profile-button){
+        border-left: 1px solid $primary-blue;
         font-size: 120%;
         text-decoration: none;
         color: $primary-blue;
