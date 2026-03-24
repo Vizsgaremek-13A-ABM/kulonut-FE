@@ -69,6 +69,12 @@ form{
     max-width: 1400px;
     color: black;
     padding: 30px;
+    & div.white-panel{
+        background-color: white;
+        padding: 10px;
+        -webkit-box-shadow: 7px 7px 0px 0px $bg-dark-gray;
+        box-shadow: 7px 7px 0px 0px $bg-dark-gray;
+    }
 }
 button{
     transition: transform 0.2s ease-in-out, box-shadow .2s ease-in-out;
