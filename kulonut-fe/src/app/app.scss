@@ -40,7 +40,9 @@ form{
             -webkit-box-shadow: 7px 7px 0px 0px black;
             box-shadow: 7px 7px 0px 0px black;
         }
-        // background-color: $primary-blue !important;
+        &.blue-form-button{
+            background-color: $primary-blue !important;
+        }
     }
 }
 

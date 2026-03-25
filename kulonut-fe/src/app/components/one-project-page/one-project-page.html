@@ -1,55 +1,97 @@
 <app-top-bar-component/>
 <div class="content fancy-border d-flex vertical-box mx-3" style="gap: 25px; max-width: 100%;">
-    <div class="d-flex white-panel">
-        <h2>Projekt neve:</h2>
-    </div>
+    
     <div class="row g-0">
-        <form class="col-12 col-md-7 p-0" [formGroup]="project_form">
+        <form class="col-12 col-lg-7 p-0" [formGroup]="project_form" (submit)="SubmitProjectData()">
             <div class="pe-3">
+                <div class="d-flex white-panel g-0 gap-3" style="width: 100%;">
+                    <h3 style="white-space: nowrap;">Projekt neve:</h3>
+                    <input type="text" class="form-control" formControlName="project_name">
+                </div>
                 <div class="white-panel row g-0">
-                    <div class="col-6 pe-2">
-                        <div class="d-flex">
-                            <h5>Tervező</h5>
-                            <ng-select
-                                [items]="(designers | async) ?? []"
-                                bindLabel="name"
-                                [addTag]="true"
-                                [trackByFn]="trackByFn"
-                                [minTermLength]="2"
-                                [loading]="loaders.designer"
-                                [typeahead]="inputs.designer"
-                                typeToSearchText="Please enter 2 or more characters"
-                                formControlName="selected"
-                                style="width:1000px"
-                                >
-                            </ng-select>
+                    <div class="col-6 pe-3">
+                        <div class="row">
+                            <div class="col-5 d-flex vertical-box" style="gap: 10px; margin-top: 10px;">
+                                <h5>Tervező</h5>
+                                <h5>Generáltervező</h5>
+                                <h5>Geodézia</h5>
+                                <h5>Megrendelő</h5>
+                            </div>
+                            <div class="col-7 d-flex vertical-box" style="gap: 5px;">
+                                @for (item of selectFields; track $index) {
+                                    <ng-select
+                                        [items]="(item.items$| async) ?? []"
+                                        bindLabel="name"
+                                        bindValue="name"
+                                        [addTag]="true"
+                                        [trackByFn]="trackByFn"
+                                        [minTermLength]="2"
+                                        typeToSearchText="Válasszon, vagy kezdejen el gépelni"
+                                        [formControlName]="item.control"
+                                        >
+                                    </ng-select>
+                                }
+                            </div>
                         </div>
-                        <!-- angularos belegepelos select 
-                         [typeahead]="peopleInput$"-->
-                        <h5>Generáltervező</h5>
-                        <h5>Geodézia</h5>
-                        <h5>Megrendelő</h5>
                         <hr>
-                        <h5>Egyéb munkarészek</h5>
-                        <h5>Iratpapucs száma</h5>
-                        <h5>Munkaszám</h5>
+                        <div class="row">
+                            <div class="col-5 d-flex vertical-box" style="gap: 10px; margin-top: 10px;">
+                                <h5>Egyéb munkarészek</h5>
+                                <h5>Iratpapucs száma</h5>
+                                <h5>Munkaszám</h5>
+                            </div>
+                            <div class="col-7 d-flex vertical-box" style="gap: 5px;">
+                                <input type="text" class="form-control" formControlName="other_work_parts" maxlength="255">
+                                <input type="text" class="form-control" formControlName="folder_number" maxlength="100">
+                                <input type="text" class="form-control" formControlName="work_number" maxlength="100">
+                            </div>
+                        </div>
                         <hr>
                         <h5>Megjegyzés</h5>
-                        <textarea name="" id="" class="form-control">
-
-                        </textarea>
+                        <textarea maxlength="255" class="form-control" formControlName="notes"></textarea>
                     </div>
-                    <div class="col-6">
-                        asd
+                    <div class="col-6 row vertical-box" id="datepicker-panel" style="align-items: flex-start; gap: 15px;">
+                        @for (item of dateFields; track $index){
+                            <div>
+                                <h5>{{item.title}}</h5>
+                                <input type="date" class="form-control" [formControlName]="item.control">
+                            </div>
+                        }
+                        <ul id="checkboxes">
+                            @for (item of checkFields; track $index) {
+                                <li>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" [formControlName]="item.control" [id]="item.control">
+                                        <label class="form-check-label" [for]="item.control">
+                                            {{item.title}}
+                                        </label>
+                                    </div>
+                                </li>
+                            }
+                        </ul>
+                        <div>
+                            <label for="uploadFile">Polygonok feltöltése TXT formában</label>
+                            <div class="d-flex gap-2">
+                                <input id="uploadFile" type="file" class="form-control" accept=".txt">
+                                <button type="button" matButton="filled" class="blue-form-button" style="max-height: 38px;">Feltöltés</button>
+                            </div>
+                        </div>
                     </div>
+                    <button type="submit" matButton="filled" class="blue-form-button fancy-border mt-3">{{mode == "new" ? "Rögzít" : "Mentés"}}</button>
                 </div>
             </div>
         </form>
-        <div class="col-12 col-md-5">
-            <div class="ps-3">
-                <div id="map" class="fancy-border">
+        <div class="col-12 col-lg-5">
+            <div class="ps-3 d-flex vertical-box white-panel">
+                <div id="map" class="fancy-border" style="border: 1px solid black;">
                     terkep
                 </div>
+                @if (true) {
+                    <span style="color: springgreen; margin-top: 5px;">Mentve!</span>
+                } @else if (true) {
+                    <span style="color: palevioletred; margin-top: 5px;">A térképen nem mentett poligonok vannak!</span>
+                }
+                <button matButton="filled" class="fancy-border" id="save-map">Poligonok mentése</button>
             </div>
         </div>
     </div>
