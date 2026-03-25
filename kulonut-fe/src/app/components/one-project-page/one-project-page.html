@@ -8,9 +8,24 @@
             <div class="pe-3">
                 <div class="white-panel row g-0">
                     <div class="col-6 pe-2">
-                        <h5>Tervező</h5>
-                        
-                        <!-- angularos belegepelos select -->
+                        <div class="d-flex">
+                            <h5>Tervező</h5>
+                            <ng-select
+                                [items]="(designers | async) ?? []"
+                                bindLabel="name"
+                                [addTag]="true"
+                                [trackByFn]="trackByFn"
+                                [minTermLength]="2"
+                                [loading]="loaders.designer"
+                                [typeahead]="inputs.designer"
+                                typeToSearchText="Please enter 2 or more characters"
+                                formControlName="selected"
+                                style="width:1000px"
+                                >
+                            </ng-select>
+                        </div>
+                        <!-- angularos belegepelos select 
+                         [typeahead]="peopleInput$"-->
                         <h5>Generáltervező</h5>
                         <h5>Geodézia</h5>
                         <h5>Megrendelő</h5>
