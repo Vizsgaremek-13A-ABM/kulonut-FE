@@ -14,6 +14,7 @@ import DisplayShape from '../../interfaces/displayshape.interface';
 import { Subject } from 'rxjs';
 import Polygon from '../../interfaces/polygon.interface';
 import * as geojson from 'geojson';
+import 'leaflet-control-geocoder';
 
 @Component({
   selector: 'app-main-page-component',
@@ -37,6 +38,13 @@ export class MainPageComponent implements OnInit, AfterViewInit {
   protected shapes:DisplayShape[] = [];  
 
   private polygonsLoaded$ = new Subject<Polygon[]>
+
+  protected filters = {
+    name: "",
+    startDate: (new Date()).toISOString().split('T')[0],
+    endDate: (new Date()).toISOString().split('T')[0],
+    types: []
+  }
 
   ngOnInit(): void {
     this.ngrxService
@@ -78,7 +86,6 @@ export class MainPageComponent implements OnInit, AfterViewInit {
       this.shapes = polygons.map(x => {
         return {
           polygon_id: x.polygon_id,
-          name: x.name,
           // project_id: 
           shape: {
             type: "Feature",
@@ -99,7 +106,6 @@ export class MainPageComponent implements OnInit, AfterViewInit {
       this.leafletMap.addLayer(drawnItems);
 
       const layer = L.geoJSON(this.shapes.map(x=>x.shape))
-      console.log(layer);
       
       layer.eachLayer(function(l){        
         (l as any).setStyle({
@@ -107,6 +113,20 @@ export class MainPageComponent implements OnInit, AfterViewInit {
         });
         drawnItems.addLayer(l);
       });
+
+      const geocoder = (L.Control as any).Geocoder.nominatim({
+        geocodingQueryParams: {
+          countrycodes: 'hu',
+          limit: 10
+      }});
+
+      const control = (L.Control as any).geocoder({
+        defaultMarkGeocode: false,
+        geocoder: geocoder
+      }).on('markgeocode', (e: any) => {
+        const center = e.geocode.center; 
+        this.leafletMap.setView([center.lat, center.lng], 12);
+      }).addTo(this.leafletMap);
     });
   }
 }
