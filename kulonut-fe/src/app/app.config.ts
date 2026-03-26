@@ -4,7 +4,7 @@ import { provideRouter } from '@angular/router';
 import { routes } from './app.routes';
 import { provideHttpClient } from '@angular/common/http';
 import { provideStore } from '@ngrx/store';
-import { projectsReducer } from './ngrx/projects/projects.reducer';
+import { polygonsReducer, projectsReducer } from './ngrx/reducers';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -12,7 +12,8 @@ export const appConfig: ApplicationConfig = {
     provideHttpClient(),
     provideRouter(routes),
     provideStore({
-      projects: projectsReducer
+      projects: projectsReducer,
+      polygons: polygonsReducer
     })
 ]
 };
