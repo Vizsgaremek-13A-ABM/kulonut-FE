@@ -3,9 +3,12 @@ import { DestroyRef, inject, Injectable } from "@angular/core";
 import { environment } from "../../environments/enviromnent";
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import Designer from "../interfaces/designer.interface";
-import Project from "../interfaces/project.interface";
+import {Project} from "../interfaces/project.interface";
 import Polygon from "../interfaces/polygon.interface";
 import { Observable, map } from "rxjs";
+import { tileLayer } from "leaflet";
+import DisplayShape from "../interfaces/displayshape.interface";
+import * as geojson from 'geojson';
 
 @Injectable({
   providedIn: 'root'
@@ -72,5 +75,36 @@ export default class DataService {
         .map(x => {return {x, sort: Math.random()}})
         .sort((a, b) => a.sort - b.sort)
         .map(({ x }) => x)
+    }
+
+    public GetMapLayers() {
+        const streetLayer = tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '© OpenStreetMap contributors'
+        })
+        const satelliteLayer = tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+            attribution: 'Tiles &copy; Esri &mdash; Source: Esri, Maxar, USDA, USGS, and the GIS User Community'
+        })
+        return [streetLayer, satelliteLayer]
+    }
+
+    public ConvertPolygonToGeoJson(polygons: Polygon[]) {
+        return polygons.map(x => {
+            return {
+                polygon_id: x.polygon_id,
+                project_ids: x.projects.map(x=>x.project_id),
+                shape: {
+                type: "Feature",
+                geometry: {
+                    type: "Polygon",
+                    coordinates: [
+                    x.coordinates.map(x => [x.longitude, x.latitude])
+                    ]
+                },
+                properties: {
+                    name: x.name
+                }
+                } as geojson.GeoJsonObject
+            } as DisplayShape
+        })
     }
 }

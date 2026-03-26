@@ -1,5 +1,5 @@
 import { createActionGroup, emptyProps, props } from '@ngrx/store';
-import Project from '../interfaces/project.interface';
+import {Project} from '../interfaces/project.interface';
 import Polygon from '../interfaces/polygon.interface';
 
 export const ProjectActions = createActionGroup({

@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, inject, OnInit } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, inject, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { TopBarComponent } from '../top-bar-component/top-bar-component';
 import DataService from '../../services/data.service';
@@ -10,11 +10,11 @@ import Designer from '../../interfaces/designer.interface';
 import Geodesy from '../../interfaces/geodesy.interface';
 import Client from '../../interfaces/client.interface';
 import { MatButtonModule } from '@angular/material/button';
-import { control } from 'leaflet';
+import { MapComponent } from '../map-component/map-component';
 
 @Component({
   selector: 'app-one-project-page',
-  imports: [TopBarComponent, ReactiveFormsModule, FormsModule, NgSelectComponent, AsyncPipe, MatButtonModule],
+  imports: [TopBarComponent, ReactiveFormsModule, FormsModule, NgSelectComponent, AsyncPipe, MatButtonModule, MapComponent],
   templateUrl: './one-project-page.html',
   styleUrls: [
     '../../app.scss',

@@ -1,4 +1,4 @@
-export default interface Project{
+export interface Project{
     id: number;
     project_name: string;
     work_number: string;
@@ -19,4 +19,10 @@ export default interface Project{
     other_work_parts: string;
     notes: string;
     min_role_level: number;
+}
+
+export interface SimplifiedProject{
+    project_id: number;
+    name: string;
+    plan_issue_date: string
 }

@@ -1,5 +1,5 @@
 import { createReducer, on } from '@ngrx/store';
-import Project from '../interfaces/project.interface';
+import {Project} from '../interfaces/project.interface';
 import { PolygonActions, ProjectActions } from './actions';
 import Polygon from '../interfaces/polygon.interface';
 

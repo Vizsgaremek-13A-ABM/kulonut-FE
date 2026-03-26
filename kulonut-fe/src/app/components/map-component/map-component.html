@@ -1,0 +1,8 @@
+<div id="map" #map></div>
+@if (!readonly) {
+    @if (unsaved() === false) {
+        <span style="color: springgreen; margin-top: 5px;">Mentve!</span>
+    } @else if (unsaved() === true) {
+        <span style="color: palevioletred; margin-top: 5px;">A térképen nem mentett poligonok vannak!</span>
+    }
+}
