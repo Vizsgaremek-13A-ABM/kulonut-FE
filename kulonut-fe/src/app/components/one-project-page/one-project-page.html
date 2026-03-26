@@ -57,6 +57,7 @@
                                 <input type="date" class="form-control" [formControlName]="item.control">
                             </div>
                         }
+                        <hr>
                         <ul id="checkboxes">
                             @for (item of checkFields; track $index) {
                                 <li>
@@ -69,11 +70,12 @@
                                 </li>
                             }
                         </ul>
+                        <hr>
                         <div>
                             <label for="uploadFile">Polygonok feltöltése TXT formában</label>
                             <div class="d-flex gap-2">
                                 <input id="uploadFile" type="file" class="form-control" accept=".txt">
-                                <button type="button" matButton="filled" class="blue-form-button" style="max-height: 38px;">Feltöltés</button>
+                                <button type="button" matButton="filled" class="blue-form-button" style="max-height: 37px;">Feltöltés</button>
                             </div>
                         </div>
                     </div>
