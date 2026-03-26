@@ -6,7 +6,6 @@ import { LeafletModule } from '@bluehalo/ngx-leaflet';
 import * as L from 'leaflet';
 import {MatButtonModule} from '@angular/material/button';
 import { tileLayer } from 'leaflet';
-import { ProjectsService } from '../../services/ngrx.temp.service';
 import { Store } from '@ngrx/store';
 import { selectPolygons, selectProjects } from '../../ngrx/selectors';
 import { PolygonActions, ProjectActions } from '../../ngrx/actions';
@@ -15,6 +14,7 @@ import { Subject } from 'rxjs';
 import Polygon from '../../interfaces/polygon.interface';
 import * as geojson from 'geojson';
 import 'leaflet-control-geocoder';
+import DataService from '../../services/data.service';
 
 @Component({
   selector: 'app-main-page-component',
@@ -28,10 +28,9 @@ import 'leaflet-control-geocoder';
 export class MainPageComponent implements OnInit, AfterViewInit {
   @ViewChild("map") map!:ElementRef
   protected leafletMap!:L.Map
-
-  private readonly ngrxService = inject(ProjectsService);
+  
+  private ds = inject(DataService)
   private readonly store = inject(Store);
-
   protected projects = this.store.selectSignal(selectProjects);
   protected polygons = this.store.selectSignal(selectPolygons);
 
@@ -41,19 +40,19 @@ export class MainPageComponent implements OnInit, AfterViewInit {
 
   protected filters = {
     name: "",
-    startDate: (new Date()).toISOString().split('T')[0],
-    endDate: (new Date()).toISOString().split('T')[0],
+    startDate: this.ds.GetToday(),
+    endDate: this.ds.GetToday(),
     types: []
   }
 
   ngOnInit(): void {
-    this.ngrxService
+    this.ds
       .GetProjects()
       .subscribe((projects) =>
         this.store.dispatch(ProjectActions.getProjects({ projects }))
     );
 
-    this.ngrxService
+    this.ds
       .GetPolygons()
       .subscribe((polygons) => {
         this.polygonsLoaded$.next(polygons);
@@ -107,11 +106,14 @@ export class MainPageComponent implements OnInit, AfterViewInit {
 
       const layer = L.geoJSON(this.shapes.map(x=>x.shape))
       
+      const colors = this.ds.GetRandomColors()
+      let i = 0;
       layer.eachLayer(function(l){        
         (l as any).setStyle({
-          color: 'red',
-        });
+          color: colors[i % colors.length],
+        });        
         drawnItems.addLayer(l);
+        i++;
       });
 
       const geocoder = (L.Control as any).Geocoder.nominatim({
