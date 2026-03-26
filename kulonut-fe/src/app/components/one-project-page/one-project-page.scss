@@ -1,0 +1,28 @@
+@import '../../../variables';
+
+ng-select, textarea{
+    border: 1px solid $primary-blue;
+    border-radius: 0;
+}
+
+#datepicker-panel h5{
+    margin-bottom: 3px;
+}
+
+ul#checkboxes{
+    list-style-type: none;
+    column-count: 2;
+}
+
+#uploadFile::file-selector-button{
+    color: white;
+    background-color: $primary-blue;
+}
+
+#save-map{
+    background-color: $primary-blue;
+    width: 100%;
+    border-radius: 0;
+    font-size: 120%;
+    // margin-top: 20px;
+}

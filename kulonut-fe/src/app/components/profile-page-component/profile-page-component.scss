@@ -1,12 +1,12 @@
 @import '../../../variables';
 
 button{
-    background-color: $primary-orange !important;
+    background-color: $primary-blue !important;
     color: black !important;
 }
 
 #eye-button{
-    background-color: $primary-blue !important;
+    background-color: $primary-orange !important;
     width: min-content;
     & img{
         width: 15px;
