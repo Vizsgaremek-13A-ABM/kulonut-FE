@@ -48,7 +48,7 @@
                         </div>
                         <hr>
                         <h5>Megjegyzés</h5>
-                        <textarea style="padding-bottom: auto;" maxlength="255" class="form-control" formControlName="notes"></textarea>
+                        <textarea style="max-height: 190px;" maxlength="255" class="form-control" formControlName="notes"></textarea>
                     </div>
                     <div class="col-6 row vertical-box" id="datepicker-panel" style="align-items: flex-start; gap: 15px; padding-right: 0;">
                         @for (item of dateFields; track $index){
@@ -70,16 +70,20 @@
                                 </li>
                             }
                         </ul>
-                        <hr>
-                        <div>
-                            <label for="uploadFile">Polygonok feltöltése TXT formában</label>
-                            <div class="d-flex gap-2">
-                                <input id="uploadFile" type="file" class="form-control" accept=".txt">
-                                <button type="button" matButton="filled" class="blue-form-button" style="max-height: 37px;">Feltöltés</button>
+                        @if (mode != "show") {
+                            <hr>
+                            <div>
+                                <label for="uploadFile">Polygonok feltöltése TXT formában</label>
+                                <div class="d-flex gap-2">
+                                    <input id="uploadFile" type="file" class="form-control" accept=".txt">
+                                    <button type="button" matButton="filled" class="blue-form-button" style="max-height: 37px;">Feltöltés</button>
+                                </div>
                             </div>
-                        </div>
+                        }
                     </div>
-                    <button style="margin-top: auto;" type="submit" matButton="filled" class="blue-form-button fancy-border">{{mode == "new" ? "Rögzít" : "Mentés"}}</button>
+                    @if (mode != "show") {
+                        <button style="margin-top: auto;" type="submit" matButton="filled" class="blue-form-button fancy-border">{{mode == "new" ? "Rögzít" : "Mentés"}}</button>
+                    }
                 </div>
             </div>
         </form>

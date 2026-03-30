@@ -9,5 +9,5 @@ export default interface DisplayShape{
   isNew: boolean
   isModified: boolean
   isDeleted: boolean
-  isConnectedToNewProject: boolean
+  isConnectedToCurrentProject: boolean
 }

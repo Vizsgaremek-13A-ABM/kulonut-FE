@@ -29,7 +29,7 @@ input[type="date"]:disabled,
 textarea:disabled, 
 .ng-select.ng-select-disabled, 
 ::ng-deep .ng-select.ng-select-disabled > .ng-select-container{
-    border: 0;
+    border: 1px solid transparent;
     background-color: white !important;
     color: $bg-dark-gray;
     font-size: 110%;
@@ -42,7 +42,7 @@ textarea:disabled,
     opacity: 1 !important;
 }
 #project-name-input:disabled{
-    font-size: 150%;
+    font-size: 160%;
 }
 ::ng-deep .ng-select.ng-select-disabled .ng-select-container:hover {
     box-shadow: none !important;

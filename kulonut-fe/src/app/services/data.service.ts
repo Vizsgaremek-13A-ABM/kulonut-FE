@@ -79,12 +79,12 @@ export default class DataService {
         return polygons.map(x => {            
             return {
                 polygon_id: x.polygon_id,
-                project_ids: x.projects.map(x=>x.project_id),
+                project_ids: x.projects.map(y=>y.project_id),
                 polygon_name: x.polygon_name,
                 isNew: false,
                 isModified: false,
                 isDeleted: false,
-                isConnectedToNewProject: false,
+                isConnectedToCurrentProject: false,
                 shape: {
                 type: "Feature",
                 geometry: {
@@ -99,5 +99,9 @@ export default class DataService {
                 } as geojson.GeoJsonObject
             } as DisplayShape
         })
+    }
+
+    public GetProjectById(id: number){
+        return this.http.get<{data: Project;}>(`${this.API_URL}/projects/${id}`)
     }
 }

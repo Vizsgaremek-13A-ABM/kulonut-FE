@@ -8,7 +8,7 @@ export interface Project{
     client: string;
     geodesy: string;
     plan_issue_date: string; // ISO date string (YYYY-MM-DD)
-    eutility_statement_issue_date: string | null;
+    utility_statement_issue_date: string | null;
     road_construction_permit_date: string;
     water_rights_permit_date: string;
     road_construction_plan: boolean;

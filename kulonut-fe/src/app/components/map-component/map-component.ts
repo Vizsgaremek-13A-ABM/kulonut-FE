@@ -41,8 +41,8 @@ export class MapComponent implements OnInit, AfterViewInit {
       this.leafletMap = L.map(this.map.nativeElement, {
         maxZoom: 18,
         minZoom: 8,
-        center: [47.12, 19.42],
-        zoom: 8
+        center: [47.12, 19.42], //elso poligon elso kordinatai, ha nem uj projekt
+        zoom: 8 // nagyobb ertek, ha nem uj projekt, amugymeg lehetne 12, nemtom gyoron kivul vannak e meg projektek
       });
       const mapLayers = this.ds.GetMapLayers()
       mapLayers[0].addTo(this.leafletMap);
@@ -60,23 +60,28 @@ export class MapComponent implements OnInit, AfterViewInit {
       const layer = L.geoJSON(this.shapes.map(x=>x.shape))
       
       let i = 0;
-      layer.eachLayer((l) => {        
+      layer.eachLayer((l) => {
         (l as any).setStyle({
           color: 'rgb(230, 123, 17)',
         });
         this.shapes[i].leaflet_id = (l as any)._leaflet_id
         drawnItems.addLayer(l);
+        if(this.shapes[i].project_ids.includes(this.projectId)){
+          this.shapes[i].isConnectedToCurrentProject = true;
+          (l as any).setStyle({
+            color: 'rgb(109, 165, 242)',
+          });
+        }
         i++;
-        //mivan ha mar a projekt resze?
         
         if (!this.readonly){
           l.on('click', (e)=>{
             const shape = this.shapes.find(x=>x.leaflet_id == e.sourceTarget._leaflet_id)!
-            if (!shape.isConnectedToNewProject){
+            if (!shape.isConnectedToCurrentProject){
               (l as any).setStyle({
                 color: 'rgb(109, 165, 242)',
               })
-              shape.isConnectedToNewProject = true
+              shape.isConnectedToCurrentProject = true
               this.saved.emit(this.shapes.filter(x=>this.isWorthyToEmit(x)))
               L.popup()
                 .setLatLng(e.latlng)
@@ -87,7 +92,7 @@ export class MapComponent implements OnInit, AfterViewInit {
               (l as any).setStyle({
                 color: 'rgb(230, 123, 17)',
               })
-              shape.isConnectedToNewProject = false
+              shape.isConnectedToCurrentProject = false
               this.saved.emit(this.shapes.filter(x=>this.isWorthyToEmit(x)))
               L.popup()
                 .setLatLng(e.latlng)
@@ -145,6 +150,7 @@ export class MapComponent implements OnInit, AfterViewInit {
           const layer = event.layer;
           layer.setStyle({
             color: 'rgb(109, 165, 242)',
+            opacity: 1
           });
           drawnItems.addLayer(layer);
           Swal.fire({
@@ -161,7 +167,7 @@ export class MapComponent implements OnInit, AfterViewInit {
           }).then((result) => {
             if (result.isConfirmed) {
               let dsh = 
-                {leaflet_id: (layer as any)._leaflet_id, shape: layer.toGeoJSON(), polygon_name: result.value, isNew: true, isModified: false, isDeleted: false, isConnectedToNewProject: true} as DisplayShape
+                {leaflet_id: (layer as any)._leaflet_id, shape: layer.toGeoJSON(), polygon_name: result.value, isNew: true, isModified: false, isDeleted: false, isConnectedToCurrentProject: true} as DisplayShape
               this.shapes.push(dsh)
               this.saved.emit(this.shapes.filter(x=>this.isWorthyToEmit(x)))
             }
@@ -187,12 +193,12 @@ export class MapComponent implements OnInit, AfterViewInit {
               shape.isDeleted = true
             }
           })
-          this.saved.emit(this.shapes.filter(x=>x.isNew || x.isModified || x.isDeleted))
+          this.saved.emit(this.shapes.filter(x=>this.isWorthyToEmit(x)))
         });
       }
     })
   }
   isWorthyToEmit(x: DisplayShape){
-    return x.isNew || x.isModified || x.isDeleted || x.isConnectedToNewProject
+    return x.isNew || x.isModified || x.isDeleted || x.isConnectedToCurrentProject
   }
 }
