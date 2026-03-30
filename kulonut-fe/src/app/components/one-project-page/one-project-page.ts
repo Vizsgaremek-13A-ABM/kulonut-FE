@@ -11,6 +11,7 @@ import Geodesy from '../../interfaces/geodesy.interface';
 import Client from '../../interfaces/client.interface';
 import { MatButtonModule } from '@angular/material/button';
 import { MapComponent } from '../map-component/map-component';
+import DisplayShape from '../../interfaces/displayshape.interface';
 
 @Component({
   selector: 'app-one-project-page',
@@ -35,6 +36,8 @@ export class OneProjectPageComponent implements OnInit {
   protected generalDesigners!: Observable<Designer[]>
   protected geodesies!: Observable<Geodesy[]>
   protected clients!: Observable<Client[]>
+
+  private selectedShapes = new Set<DisplayShape>
 
   protected selectFields!:{control: string, items$: Observable<any>}[]
   protected dateFields = [
@@ -95,6 +98,10 @@ export class OneProjectPageComponent implements OnInit {
 
   SubmitProjectData(){
     console.log(this.project_form.value);
-    
+    console.log(this.selectedShapes);
+  }
+
+  onSaved(shapes:any){
+    this.selectedShapes = shapes
   }
 }

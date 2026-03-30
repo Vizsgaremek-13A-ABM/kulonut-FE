@@ -65,18 +65,6 @@ export default class DataService {
         return (new Date()).toISOString().split('T')[0]
     }
 
-    public GetRandomColors(){
-        return ["red", "blue", "green", 
-            "crimson", "blueviolet", 
-            "magenta", "orange", "gold", 
-            "springgreen", "salmon", 
-            "coral", "firebrick", "orchid",
-            "seagreen", "indigo"]
-        .map(x => {return {x, sort: Math.random()}})
-        .sort((a, b) => a.sort - b.sort)
-        .map(({ x }) => x)
-    }
-
     public GetMapLayers() {
         const streetLayer = tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '© OpenStreetMap contributors'
@@ -88,10 +76,11 @@ export default class DataService {
     }
 
     public ConvertPolygonToGeoJson(polygons: Polygon[]) {
-        return polygons.map(x => {
+        return polygons.map(x => {            
             return {
                 polygon_id: x.polygon_id,
                 project_ids: x.projects.map(x=>x.project_id),
+                polygon_name: x.polygon_name,
                 shape: {
                 type: "Feature",
                 geometry: {
@@ -101,7 +90,7 @@ export default class DataService {
                     ]
                 },
                 properties: {
-                    name: x.name
+                    name: x.polygon_name
                 }
                 } as geojson.GeoJsonObject
             } as DisplayShape

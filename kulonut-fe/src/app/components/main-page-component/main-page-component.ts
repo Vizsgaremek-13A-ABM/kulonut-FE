@@ -3,9 +3,6 @@ import { TopBarComponent } from "../top-bar-component/top-bar-component";
 import { NgSelectModule } from '@ng-select/ng-select';
 import { FormsModule } from '@angular/forms';
 import {MatButtonModule} from '@angular/material/button';
-import { Store } from '@ngrx/store';
-import { selectProjects } from '../../ngrx/selectors';
-import { ProjectActions } from '../../ngrx/actions';
 import 'leaflet-control-geocoder';
 import DataService from '../../services/data.service';
 import { MapComponent } from '../map-component/map-component';
@@ -21,8 +18,6 @@ import { MapComponent } from '../map-component/map-component';
 })
 export class MainPageComponent implements OnInit {  
   private ds = inject(DataService)
-  private readonly store = inject(Store);
-  protected projects = this.store.selectSignal(selectProjects);
 
   protected filters = {
     name: "",
@@ -32,10 +27,5 @@ export class MainPageComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.ds
-      .GetProjects()
-      .subscribe((projects) =>
-        this.store.dispatch(ProjectActions.getProjects({ projects }))
-    );
   }
 }

@@ -5,4 +5,5 @@ export default interface DisplayShape{
   shape: geojson.GeoJsonObject
   polygon_id: number
   project_ids: number[]
+  polygon_name: string
 }

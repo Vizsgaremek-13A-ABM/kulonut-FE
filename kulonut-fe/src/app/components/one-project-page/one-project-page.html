@@ -86,9 +86,8 @@
         <div class="col-12 col-lg-5">
             <div class="ps-3 d-flex vertical-box white-panel" style="height: 710px;">
                 <div id="map" class="fancy-border" style="border: 1px solid black;">
-                    <app-map-component [readonly]="false"/>
+                    <app-map-component [readonly]="false" (saved)="onSaved($event)"/>
                 </div>
-                <button matButton="filled" style="margin-top: 15px;" class="fancy-border" id="save-map">Poligonok mentése</button>
             </div>
         </div>
     </div>

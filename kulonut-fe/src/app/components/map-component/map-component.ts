@@ -1,15 +1,15 @@
-import { AfterViewInit, Component, effect, ElementRef, inject, Input, OnInit, signal, SimpleChanges, ViewChild, WritableSignal } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, EventEmitter, inject, Input, OnInit, Output, ViewChild } from '@angular/core';
 import DataService from '../../services/data.service';
-import { Store } from '@ngrx/store';
-import { selectPolygons } from '../../ngrx/selectors';
 import { Subject } from 'rxjs';
 import Polygon from '../../interfaces/polygon.interface';
 import DisplayShape from '../../interfaces/displayshape.interface';
-import { PolygonActions } from '../../ngrx/actions';
 import * as L from 'leaflet';
 import 'leaflet-draw';
 import { LeafletModule } from '@bluehalo/ngx-leaflet';
 import 'leaflet-control-geocoder';
+import Swal from 'sweetalert2';
+import 'sweetalert2/src/sweetalert2.scss'
+import 'sweetalert2/themes/material-ui.css'
 
 @Component({
   selector: 'app-map-component',
@@ -21,29 +21,19 @@ export class MapComponent implements OnInit, AfterViewInit {
   @ViewChild('map') map!:ElementRef
   private ds = inject(DataService)
   @Input() readonly = true
+  @Output() saved = new EventEmitter()
 
-  protected unsaved = signal<boolean|null>(null)
-
-  private readonly store = inject(Store);
-  protected projects = this.store.selectSignal(selectPolygons);
   private polygonsLoaded$ = new Subject<Polygon[]>
   protected shapes:DisplayShape[] = [];  
   protected leafletMap!:L.Map
 
-  constructor(){
-    effect(() => {
-      if (this.unsaved() !== null) {
-        this.map.nativeElement.style.setProperty('height', '97%', 'important');
-      }
-    });
-  }
+  protected selectedShapes = new Set<DisplayShape>
 
   ngOnInit(): void {
     this.ds
       .GetPolygons()
       .subscribe((polygons) => {
         this.polygonsLoaded$.next(polygons);
-        this.store.dispatch(PolygonActions.getPolygons({ polygons }))
     });
   }
   
@@ -70,15 +60,55 @@ export class MapComponent implements OnInit, AfterViewInit {
 
       const layer = L.geoJSON(this.shapes.map(x=>x.shape))
       
-      const colors = this.ds.GetRandomColors()
       let i = 0;
       layer.eachLayer((l) => {        
         (l as any).setStyle({
-          color: colors[this.shapes[i].project_ids[0] % colors.length],
+          color: 'rgb(230, 123, 17)',
         });
         this.shapes[i].leaflet_id = (l as any)._leaflet_id
         drawnItems.addLayer(l);
         i++;
+        //mivan ha mar a projekt resze?
+        
+        if (!this.readonly){
+          l.on('click', (e)=>{
+            const shape = this.shapes.find(x=>x.leaflet_id == e.sourceTarget._leaflet_id)!
+            if (!this.selectedShapes.has(shape)){
+              (l as any).setStyle({
+                color: 'rgb(109, 165, 242)',
+              })
+              this.selectedShapes.add(shape)
+              this.saved.emit(this.selectedShapes)
+              L.popup()
+                .setLatLng(e.latlng)
+                .setContent(`${shape.polygon_name} sikeresen hozzárendelve a projekthez`)
+                .openOn(this.leafletMap);
+            }
+            else{
+              (l as any).setStyle({
+                color: 'rgb(230, 123, 17)',
+              })
+              this.selectedShapes.delete(shape)
+              this.saved.emit(this.selectedShapes)
+              L.popup()
+                .setLatLng(e.latlng)
+                .setContent(`${shape.polygon_name} sikeresen eltávolítva a projektből`)
+                .openOn(this.leafletMap);
+            }
+          })
+        }
+        else{
+          l.on('mouseover', (e)=>{          
+            const shape = this.shapes.find(x=>x.leaflet_id == e.sourceTarget._leaflet_id)!
+            L.popup()
+              .setLatLng(e.latlng)
+              .setContent(shape.polygon_name)
+              .openOn(this.leafletMap);
+          });
+          l.on('click', (e)=>{
+            console.log(e)
+          })
+        }
       });
 
       const geocoder = (L.Control as any).Geocoder.nominatim({
@@ -111,33 +141,54 @@ export class MapComponent implements OnInit, AfterViewInit {
           }
         });
         this.leafletMap.addControl(drawControl);
-        // CRUD OPERATIONS ON SHAPES
-        this.leafletMap.on('draw:created', (event: L.LeafletEvent) => {
-          console.log(event.layer);
-          
-          // const layer = event.layer;
-          // layer.setStyle({
-          //   color: 'red',
-          // });
-          // drawnItems.addLayer(layer);
-          // this.shapes.push({id: (layer as any)._leaflet_id, shape: layer.toGeoJSON()})
-          // this.unsaved = true
+
+        this.leafletMap.on('draw:created', (event: L.LeafletEvent) => {          
+          const layer = event.layer;
+          layer.setStyle({
+            color: 'rgb(109, 165, 242)',
+          });
+          drawnItems.addLayer(layer);
+          Swal.fire({
+            title: "Adjon nevet az alakzatnak:",
+            input: "text",
+            confirmButtonText: 'OK',
+            theme: "material-ui-dark",
+            inputValidator: (value) => {
+              if (!value || value.trim() === '') {
+                return 'Kérem adjon meg egy nem üres nevet';
+              }
+              return null;
+            }
+          }).then((result) => {
+            if (result.isConfirmed) {
+              let dsh = {leaflet_id: (layer as any)._leaflet_id, shape: layer.toGeoJSON(), polygon_name: result.value}
+              this.shapes.push(dsh as DisplayShape)
+              this.selectedShapes.add(dsh as DisplayShape)
+              this.saved.emit(this.selectedShapes)
+            }
+          });
         });
 
-        // this.leafletMap.on('draw:edited', (event: any) => {
-        //   event.layers.eachLayer((l: any)=>{
-        //     let shape = this.shapes.find(x=>x.id == l._leaflet_id)!
-        //     shape.shape = l.toGeoJSON()
-        //   })
-        //   this.unsaved = true
-        // });
+        this.leafletMap.on('draw:edited', (event: any) => {
+          event.layers.eachLayer((l: any)=>{
+            let shape = this.shapes.find(x=>x.leaflet_id == l._leaflet_id)!
+            shape.shape = l.toGeoJSON()
+            this.selectedShapes.forEach(x=>{
+              if(x.leaflet_id == l._leaflet_id){
+                x.shape = l.toGeoJSON()
+              }
+            })
+          })
+          this.saved.emit(this.selectedShapes)
+        });
 
-        //  this.leafletMap.on('draw:deleted', (event: any) => {
-        //   event.layers.eachLayer((l: any)=>{
-        //     this.shapes = this.shapes.filter(x=>x.id != l._leaflet_id)!
-        //   })
-        //   this.unsaved = true
-        // });
+         this.leafletMap.on('draw:deleted', (event: any) => {
+          event.layers.eachLayer((l: any)=>{
+            this.selectedShapes.delete(this.shapes.find(x=>x.leaflet_id == l._leaflet_id)!)
+            this.shapes = this.shapes.filter(x=>x.leaflet_id != l._leaflet_id)!
+          })
+          this.saved.emit(this.selectedShapes)
+        });
       }
     })
   }
