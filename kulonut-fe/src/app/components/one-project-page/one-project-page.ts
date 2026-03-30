@@ -25,7 +25,7 @@ import DisplayShape from '../../interfaces/displayshape.interface';
 export class OneProjectPageComponent implements OnInit {
   private route = inject(ActivatedRoute)
   protected mode!:string
-  private projectId!:number
+  protected projectId!:number
   private ds = inject(DataService)
   private fb = inject(FormBuilder);
 
@@ -37,7 +37,7 @@ export class OneProjectPageComponent implements OnInit {
   protected geodesies!: Observable<Geodesy[]>
   protected clients!: Observable<Client[]>
 
-  private selectedShapes = new Set<DisplayShape>
+  private selectedShapes!: DisplayShape[]
 
   protected selectFields!:{control: string, items$: Observable<any>}[]
   protected dateFields = [
@@ -60,26 +60,27 @@ export class OneProjectPageComponent implements OnInit {
     if(this.mode != "new")
       this.projectId = Number(this.route.snapshot.paramMap.get('id')!)
     this.projectTypes = this.ds.GetProjectTypes()
+    const isDisabled = this.mode === "show";
     this.project_form = this.fb.group({
-      project_name: ["", Validators.required],
-      designer: [null, Validators.required],
-      generalDesigner: [null, Validators.required],
-      geodesy: [null, Validators.required],
-      client: [null, Validators.required],
-      other_work_parts: ["", Validators.required],
-      folder_number: ["", Validators.required],
-      work_number: ["", Validators.required],
-      plan_issue_date: [this.ds.GetToday(), Validators.required],
-      utility_statement_issue_date: [this.ds.GetToday(), Validators.required],
-      road_construction_permit_date: [this.ds.GetToday(), Validators.required],
-      water_rights_permit_date: [this.ds.GetToday(), Validators.required],
-      road_construction_plan: [false],
-      water_network_plan: [false],
-      sewage_plan: [false],
-      stormwater_drainage_plan: [false],
-      public_lighting_plan: [false],
-      notes: [""]
-    })
+      project_name: [{ value: "", disabled: isDisabled }, Validators.required],
+      designer: [{ value: null, disabled: isDisabled }, Validators.required],
+      generalDesigner: [{ value: null, disabled: isDisabled }, Validators.required],
+      geodesy: [{ value: null, disabled: isDisabled }, Validators.required],
+      client: [{ value: null, disabled: isDisabled }, Validators.required],
+      other_work_parts: [{ value: "", disabled: isDisabled }, Validators.required],
+      folder_number: [{ value: "", disabled: isDisabled }, Validators.required],
+      work_number: [{ value: "", disabled: isDisabled }, Validators.required],
+      plan_issue_date: [{ value: this.ds.GetToday(), disabled: isDisabled }, Validators.required],
+      utility_statement_issue_date: [{ value: this.ds.GetToday(), disabled: isDisabled }, Validators.required],
+      road_construction_permit_date: [{ value: this.ds.GetToday(), disabled: isDisabled }, Validators.required],
+      water_rights_permit_date: [{ value: this.ds.GetToday(), disabled: isDisabled }, Validators.required],
+      road_construction_plan: [{ value: false, disabled: isDisabled }],
+      water_network_plan: [{ value: false, disabled: isDisabled }],
+      sewage_plan: [{ value: false, disabled: isDisabled }],
+      stormwater_drainage_plan: [{ value: false, disabled: isDisabled }],
+      public_lighting_plan: [{ value: false, disabled: isDisabled }],
+      notes: [{ value: "", disabled: isDisabled }]
+    });
     this.designers = this.ds.GetDesigners().pipe(map(x => x.data))
     this.generalDesigners = this.ds.GetGeneralDesigners().pipe(map(x => x.data))
     this.geodesies = this.ds.GetGeodesies().pipe(map(x => x.data))

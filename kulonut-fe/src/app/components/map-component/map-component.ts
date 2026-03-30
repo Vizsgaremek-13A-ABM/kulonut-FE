@@ -21,13 +21,12 @@ export class MapComponent implements OnInit, AfterViewInit {
   @ViewChild('map') map!:ElementRef
   private ds = inject(DataService)
   @Input() readonly = true
+  @Input() projectId!: number
   @Output() saved = new EventEmitter()
 
   private polygonsLoaded$ = new Subject<Polygon[]>
   protected shapes:DisplayShape[] = [];  
   protected leafletMap!:L.Map
-
-  protected selectedShapes = new Set<DisplayShape>
 
   ngOnInit(): void {
     this.ds
@@ -73,12 +72,12 @@ export class MapComponent implements OnInit, AfterViewInit {
         if (!this.readonly){
           l.on('click', (e)=>{
             const shape = this.shapes.find(x=>x.leaflet_id == e.sourceTarget._leaflet_id)!
-            if (!this.selectedShapes.has(shape)){
+            if (!shape.isConnectedToNewProject){
               (l as any).setStyle({
                 color: 'rgb(109, 165, 242)',
               })
-              this.selectedShapes.add(shape)
-              this.saved.emit(this.selectedShapes)
+              shape.isConnectedToNewProject = true
+              this.saved.emit(this.shapes.filter(x=>this.isWorthyToEmit(x)))
               L.popup()
                 .setLatLng(e.latlng)
                 .setContent(`${shape.polygon_name} sikeresen hozzárendelve a projekthez`)
@@ -88,8 +87,8 @@ export class MapComponent implements OnInit, AfterViewInit {
               (l as any).setStyle({
                 color: 'rgb(230, 123, 17)',
               })
-              this.selectedShapes.delete(shape)
-              this.saved.emit(this.selectedShapes)
+              shape.isConnectedToNewProject = false
+              this.saved.emit(this.shapes.filter(x=>this.isWorthyToEmit(x)))
               L.popup()
                 .setLatLng(e.latlng)
                 .setContent(`${shape.polygon_name} sikeresen eltávolítva a projektből`)
@@ -161,10 +160,10 @@ export class MapComponent implements OnInit, AfterViewInit {
             }
           }).then((result) => {
             if (result.isConfirmed) {
-              let dsh = {leaflet_id: (layer as any)._leaflet_id, shape: layer.toGeoJSON(), polygon_name: result.value}
-              this.shapes.push(dsh as DisplayShape)
-              this.selectedShapes.add(dsh as DisplayShape)
-              this.saved.emit(this.selectedShapes)
+              let dsh = 
+                {leaflet_id: (layer as any)._leaflet_id, shape: layer.toGeoJSON(), polygon_name: result.value, isNew: true, isModified: false, isDeleted: false, isConnectedToNewProject: true} as DisplayShape
+              this.shapes.push(dsh)
+              this.saved.emit(this.shapes.filter(x=>this.isWorthyToEmit(x)))
             }
           });
         });
@@ -173,23 +172,27 @@ export class MapComponent implements OnInit, AfterViewInit {
           event.layers.eachLayer((l: any)=>{
             let shape = this.shapes.find(x=>x.leaflet_id == l._leaflet_id)!
             shape.shape = l.toGeoJSON()
-            this.selectedShapes.forEach(x=>{
-              if(x.leaflet_id == l._leaflet_id){
-                x.shape = l.toGeoJSON()
-              }
-            })
+            shape.isModified = true
           })
-          this.saved.emit(this.selectedShapes)
+          this.saved.emit(this.shapes.filter(x=>this.isWorthyToEmit(x)))
         });
 
          this.leafletMap.on('draw:deleted', (event: any) => {
           event.layers.eachLayer((l: any)=>{
-            this.selectedShapes.delete(this.shapes.find(x=>x.leaflet_id == l._leaflet_id)!)
-            this.shapes = this.shapes.filter(x=>x.leaflet_id != l._leaflet_id)!
+            let shape = this.shapes.find(x=>x.leaflet_id == l._leaflet_id)!
+            if(shape.isNew){
+              this.shapes = this.shapes.filter(x=>x.leaflet_id != l._leaflet_id)!
+            }
+            else{
+              shape.isDeleted = true
+            }
           })
-          this.saved.emit(this.selectedShapes)
+          this.saved.emit(this.shapes.filter(x=>x.isNew || x.isModified || x.isDeleted))
         });
       }
     })
+  }
+  isWorthyToEmit(x: DisplayShape){
+    return x.isNew || x.isModified || x.isDeleted || x.isConnectedToNewProject
   }
 }

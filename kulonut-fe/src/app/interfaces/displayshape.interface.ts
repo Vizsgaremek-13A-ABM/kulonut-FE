@@ -6,4 +6,8 @@ export default interface DisplayShape{
   polygon_id: number
   project_ids: number[]
   polygon_name: string
+  isNew: boolean
+  isModified: boolean
+  isDeleted: boolean
+  isConnectedToNewProject: boolean
 }

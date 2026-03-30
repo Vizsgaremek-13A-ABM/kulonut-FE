@@ -81,6 +81,10 @@ export default class DataService {
                 polygon_id: x.polygon_id,
                 project_ids: x.projects.map(x=>x.project_id),
                 polygon_name: x.polygon_name,
+                isNew: false,
+                isModified: false,
+                isDeleted: false,
+                isConnectedToNewProject: false,
                 shape: {
                 type: "Feature",
                 geometry: {
