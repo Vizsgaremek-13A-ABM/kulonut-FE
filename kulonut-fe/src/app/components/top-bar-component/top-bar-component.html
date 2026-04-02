@@ -1,0 +1,22 @@
+<header>
+    <img src="assets/logo.png" alt="">
+    <a [routerLink]="['/main']" class="active">térkép</a>
+    <a [routerLink]="['']">projektek</a>
+    <a [routerLink]="['/project/new']">új projekt</a> <!--nem mindenkinel-->
+    <a [routerLink]="['']">kijelentkezés</a>
+    <a class="profile-button" [routerLink]="['/profile']">
+        <div class="row">
+            <div class="col" style="text-align: right;">
+                <span class="username">Gipsz Jakab</span> <br>
+                <span class="user-role">rang</span>
+            </div>
+            <div class="col p-0">
+                <div id="profile-icon">
+                    <img src="pogatsa.png" class="fancy-border" alt="pfp">
+                </div>
+            </div>
+        </div>
+
+    </a>
+</header>
+<div class="separator-margin"></div>

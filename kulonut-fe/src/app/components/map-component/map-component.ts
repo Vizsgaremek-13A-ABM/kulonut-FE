@@ -1,0 +1,277 @@
+import { AfterViewInit, Component, ElementRef, EventEmitter, inject, Input, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core';
+import DataService from '../../services/data.service';
+import { Subject } from 'rxjs';
+import Polygon from '../../interfaces/polygon.interface';
+import DisplayShape from '../../interfaces/displayshape.interface';
+import * as L from 'leaflet';
+import 'leaflet-draw';
+import { LeafletModule } from '@bluehalo/ngx-leaflet';
+import 'leaflet-control-geocoder';
+import Swal from 'sweetalert2';
+import 'sweetalert2/themes/material-ui.css'
+import proj4 from 'proj4';
+import { GeoJsonObject } from 'geojson';
+
+@Component({
+  selector: 'app-map-component',
+  imports: [LeafletModule],
+  templateUrl: './map-component.html',
+  styleUrl: './map-component.scss',
+})
+export class MapComponent implements OnInit, AfterViewInit {
+  @ViewChild('map') map!:ElementRef
+  private ds = inject(DataService)
+  @Input() readonly = true
+  @Input() projectId!: number
+  @Input() file!:string[]
+  @Output() saved = new EventEmitter()
+
+  private polygonsLoaded$ = new Subject<Polygon[]>
+  protected shapes:DisplayShape[] = [];  
+  protected leafletMap!:L.Map
+  private drawnItems!: L.FeatureGroup
+
+  ngOnInit(): void {
+    this.ds
+      .GetPolygons()
+      .subscribe((polygons) => {
+        this.polygonsLoaded$.next(polygons);
+    });
+    proj4.defs("EPSG:23700",
+      "+proj=somerc +lat_0=47.14439372222222 +lon_0=19.04857177777778 " +
+      "+k=0.99993 +x_0=650000 +y_0=200000 +ellps=GRS67 " +
+      "+towgs84=52.17,-71.82,-14.9,0,0,0,0 +units=m +no_defs"
+    );
+  }
+  
+  ngAfterViewInit(): void {
+    this.polygonsLoaded$.subscribe(polygons => {
+      this.leafletMap = L.map(this.map.nativeElement, {
+        maxZoom: 18,
+        minZoom: 8,
+        center: [47.12, 19.42], //elso poligon elso kordinatai, ha nem uj projekt
+        zoom: 8 // nagyobb ertek, ha nem uj projekt, amugymeg lehetne 12, nemtom gyoron kivul vannak e meg projektek
+      });
+      const mapLayers = this.ds.GetMapLayers()
+      mapLayers[0].addTo(this.leafletMap);
+
+      const baseMaps = {
+        "Street": mapLayers[0],
+        "Satellite": mapLayers[1],
+      };
+      L.control.layers(baseMaps).addTo(this.leafletMap);
+      
+      this.shapes = this.ds.ConvertPolygonToGeoJson(polygons)
+      this.drawnItems = new L.FeatureGroup();
+      this.leafletMap.addLayer(this.drawnItems);
+
+      const layer = L.geoJSON(this.shapes.map(x=>x.shape))
+      
+      let i = 0;
+      layer.eachLayer((l) => {
+        (l as any).setStyle({
+          color: 'rgb(230, 123, 17)',
+        });
+        this.shapes[i].leaflet_id = (l as any)._leaflet_id
+        this.drawnItems.addLayer(l);
+        if(this.shapes[i].project_ids.includes(this.projectId)){
+          this.shapes[i].isConnectedToCurrentProject = true;
+          (l as any).setStyle({
+            color: 'rgb(109, 165, 242)',
+          });
+        }
+        i++;
+        
+        if (!this.readonly){
+          l.on('click', (e)=>{
+            const shape = this.shapes.find(x=>x.leaflet_id == e.sourceTarget._leaflet_id)!
+            
+            if (!shape.isConnectedToCurrentProject){
+              (l as any).setStyle({
+                color: 'rgb(109, 165, 242)',
+              })
+              shape.isConnectedToCurrentProject = true
+              this.EmitSave()
+              L.popup()
+                .setLatLng(e.latlng)
+                .setContent(`${shape.polygon_name} sikeresen hozzárendelve a projekthez`)
+                .openOn(this.leafletMap);
+            }
+            else{
+              (l as any).setStyle({
+                color: 'rgb(230, 123, 17)',
+              })
+              shape.isConnectedToCurrentProject = false
+              this.EmitSave()
+              L.popup()
+                .setLatLng(e.latlng)
+                .setContent(`${shape.polygon_name} sikeresen eltávolítva a projektből`)
+                .openOn(this.leafletMap);
+            }
+          })
+        }
+        else{
+          l.on('mouseover', (e)=>{          
+            const shape = this.shapes.find(x=>x.leaflet_id == e.sourceTarget._leaflet_id)!
+            L.popup()
+              .setLatLng(e.latlng)
+              .setContent(shape.polygon_name)
+              .openOn(this.leafletMap);
+          });
+          l.on('click', (e)=>{
+            console.log(e)
+          })
+        }
+      });
+
+      const geocoder = (L.Control as any).Geocoder.nominatim({
+        geocodingQueryParams: {
+          countrycodes: 'hu',
+          limit: 10
+      }});
+
+      (L.Control as any).geocoder({
+        defaultMarkGeocode: false,
+        geocoder: geocoder
+      }).on('markgeocode', (e: any) => {
+        const center = e.geocode.center; 
+        this.leafletMap.setView([center.lat, center.lng], 12);
+      }).addTo(this.leafletMap);
+      
+      if(!this.readonly){
+        const drawControl = new L.Control.Draw({
+          edit: {
+            featureGroup: this.drawnItems,
+            // remove: false
+          },
+          draw: {
+            polygon: {},
+            polyline: false,
+            circle: false,
+            rectangle: false,
+            marker: false,
+            circlemarker: false
+          }
+        });
+        this.leafletMap.addControl(drawControl);
+
+        this.leafletMap.on('draw:created', (event: L.LeafletEvent) => {          
+          const layer = event.layer;
+          layer.setStyle({
+            color: 'rgb(109, 165, 242)',
+            opacity: 1
+          });
+          this.drawnItems.addLayer(layer);
+          Swal.fire({
+            title: "Adjon nevet az alakzatnak:",
+            input: "text",
+            confirmButtonText: 'OK',
+            theme: "material-ui-dark",
+            inputValidator: (value) => {
+              if (!value || value.trim() === '') {
+                return 'Kérem adjon meg egy nem üres nevet';
+              }
+              return null;
+            }
+          }).then((result) => {
+            if (result.isConfirmed) {
+              let dsh = 
+                {leaflet_id: (layer as any)._leaflet_id, shape: layer.toGeoJSON(), polygon_name: result.value, isNew: true, isModified: false, isDeleted: false, isConnectedToCurrentProject: true} as DisplayShape
+              this.shapes.push(dsh)
+              this.EmitSave()
+            } else if (result.isDismissed) {
+                this.drawnItems.removeLayer(layer);
+            }
+          });
+        });
+
+        this.leafletMap.on('draw:edited', (event: any) => {
+          event.layers.eachLayer((l: any)=>{
+            let shape = this.shapes.find(x=>x.leaflet_id == l._leaflet_id)!
+            shape.shape = l.toGeoJSON()
+            shape.isModified = true
+          })
+          this.EmitSave()          
+        });
+
+         this.leafletMap.on('draw:deleted', (event: any) => {
+          event.layers.eachLayer((l: any)=>{
+            let shape = this.shapes.find(x=>x.leaflet_id == l._leaflet_id)!
+            if(shape.isNew){
+              this.shapes = this.shapes.filter(x=>x.leaflet_id != l._leaflet_id)!
+            }
+            else{
+              shape.isDeleted = true
+            }
+          })
+          this.EmitSave()
+        });
+      }
+      this.EmitSave()
+    })
+  }
+  isWorthyToEmit(x: DisplayShape){
+    return x.isNew || x.isModified || x.isDeleted || x.isConnectedToCurrentProject
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    if(changes['file'] && changes['file'].currentValue){
+      let coordPairs = []
+      for (let pair of changes['file'].currentValue){
+        if (pair != ""){
+          const wgs84 = proj4("EPSG:23700", "WGS84", pair.split(' ').map((x:string)=>Number(x)));
+          coordPairs.push(wgs84.reverse())
+        }
+      }      
+      const layer = L.polygon(coordPairs)
+      layer.setStyle({
+        color: 'rgb(109, 165, 242)',
+        opacity: 1
+      });
+
+      layer.addTo(this.drawnItems)      
+      this.leafletMap.setView(coordPairs[0], 15)
+      this.shapes.push({
+        leaflet_id: (layer as any)._leaflet_id,
+        shape: layer.toGeoJSON() as GeoJsonObject,
+        project_ids: this.projectId ? [this.projectId] : [],
+        polygon_name: "swal ablak",
+        isNew: true,
+        isModified: false,
+        isDeleted: false,
+        isConnectedToCurrentProject: true
+      } as DisplayShape)
+      this.EmitSave()
+    }
+  }
+  private EmitSave(){
+    this.saved.emit(this.shapes.filter(x=>this.isWorthyToEmit(x)))
+  }
+  ShowInfo(){
+    Swal.fire({
+      html:`
+      <h3 style="color:white;">Útmutató</h3>
+      <h5 style="color:white;">Új alakzat</h5>
+      <p style="text-align:justify;">
+        Új alakzat felvétele az ötszög gombbal lehetséges, vagy TXT fájl útján. Mindkét esetben egy felugró ablakban el kell nevezni az alakzatot.
+        TXT esetén a 'Feltöltés' gomb véglegesít, az ötszög esetén az alakzat bezárása, vagy a szürke 'Finish' gomb
+      </p>
+      <h5 style="color:white;">Kiválasztás</h5>
+      <p style="text-align:justify;">
+        Alakzatra kattintva hozzáadhatjuk/elvehetjük azt az adott projektből. A kék alakzatok tartoznak az adott projekthez, a narancssárgák nem.
+      </p>
+      <h5 style="color:white;">Szerkesztés és törlés</h5>
+      <p style="text-align:justify;">
+        Szerkesztés és törlés esetén a módosítások csak a 'Save' gomb megnyomása után lépnek életbe.
+        A Cancel gombbal visszavonhatja a legutóbbi módosításokat.
+      </p>
+      <h5 style="color:white;">Térkép</h5>
+      <p style="text-align:justify;">
+        A jobb felső sarokban található ikonnal válthatunk utcai és műholdas nézet között.
+        A nagyítóra kattintva helynévre kereshetünk, Enter nyomása után a térkép az adott helyre ugrik
+      </p>
+      `,
+      theme: 'material-ui-dark'
+    })
+  }
+}

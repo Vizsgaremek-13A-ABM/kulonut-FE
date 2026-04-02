@@ -1,0 +1,21 @@
+@import '../../../variables';
+
+button{
+    background-color: $primary-blue !important;
+    color: black !important;
+}
+
+#eye-button{
+    background-color: $primary-orange !important;
+    width: min-content;
+    & img{
+        width: 15px;
+    }
+}
+
+#profile-picture{
+    height: 150px;
+    width: 150px;
+    object-fit: cover;
+    border: 1px solid $primary-blue;
+}
