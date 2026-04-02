@@ -1,1 +1,6 @@
-<div id="map" #map></div>
+<div style="position: relative; height: 100%;">
+    <div id="map" #map></div>
+    @if(!readonly){
+        <button (click)="ShowInfo()">i</button>
+    }
+</div>

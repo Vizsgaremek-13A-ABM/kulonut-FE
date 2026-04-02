@@ -48,7 +48,8 @@
                         </div>
                         <hr>
                         <h5>Megjegyzés</h5>
-                        <textarea style="max-height: 190px;" maxlength="255" class="form-control" formControlName="notes"></textarea>
+                        <textarea style="max-height: 180px;" maxlength="255" class="form-control" formControlName="notes"></textarea>
+                        <span>A projekthez jelenleg {{polygonsCount}} alakzat tartozik</span>
                     </div>
                     <div class="col-6 row vertical-box" id="datepicker-panel" style="align-items: flex-start; gap: 15px; padding-right: 0;">
                         @for (item of dateFields; track $index){
@@ -82,7 +83,7 @@
                         }
                     </div>
                     @if (mode != "show") {
-                        <button style="margin-top: auto;" type="submit" matButton="filled" class="blue-form-button fancy-border">{{mode == "new" ? "Rögzít" : "Mentés"}}</button>
+                        <button [disabled]="project_form.invalid" style="margin-top: auto;" type="submit" matButton="filled" class="blue-form-button fancy-border">{{mode == "new" ? "Rögzít" : "Mentés"}}</button>
                     }
                 </div>
             </div>

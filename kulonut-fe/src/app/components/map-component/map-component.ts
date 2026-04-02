@@ -91,7 +91,7 @@ export class MapComponent implements OnInit, AfterViewInit {
                 color: 'rgb(109, 165, 242)',
               })
               shape.isConnectedToCurrentProject = true
-              this.saved.emit(this.shapes.filter(x=>this.isWorthyToEmit(x)))
+              this.EmitSave()
               L.popup()
                 .setLatLng(e.latlng)
                 .setContent(`${shape.polygon_name} sikeresen hozzárendelve a projekthez`)
@@ -102,7 +102,7 @@ export class MapComponent implements OnInit, AfterViewInit {
                 color: 'rgb(230, 123, 17)',
               })
               shape.isConnectedToCurrentProject = false
-              this.saved.emit(this.shapes.filter(x=>this.isWorthyToEmit(x)))
+              this.EmitSave()
               L.popup()
                 .setLatLng(e.latlng)
                 .setContent(`${shape.polygon_name} sikeresen eltávolítva a projektből`)
@@ -178,7 +178,9 @@ export class MapComponent implements OnInit, AfterViewInit {
               let dsh = 
                 {leaflet_id: (layer as any)._leaflet_id, shape: layer.toGeoJSON(), polygon_name: result.value, isNew: true, isModified: false, isDeleted: false, isConnectedToCurrentProject: true} as DisplayShape
               this.shapes.push(dsh)
-              this.saved.emit(this.shapes.filter(x=>this.isWorthyToEmit(x)))
+              this.EmitSave()
+            } else if (result.isDismissed) {
+                this.drawnItems.removeLayer(layer);
             }
           });
         });
@@ -189,7 +191,7 @@ export class MapComponent implements OnInit, AfterViewInit {
             shape.shape = l.toGeoJSON()
             shape.isModified = true
           })
-          this.saved.emit(this.shapes.filter(x=>this.isWorthyToEmit(x)))          
+          this.EmitSave()          
         });
 
          this.leafletMap.on('draw:deleted', (event: any) => {
@@ -202,9 +204,10 @@ export class MapComponent implements OnInit, AfterViewInit {
               shape.isDeleted = true
             }
           })
-          this.saved.emit(this.shapes.filter(x=>this.isWorthyToEmit(x)))
+          this.EmitSave()
         });
       }
+      this.EmitSave()
     })
   }
   isWorthyToEmit(x: DisplayShape){
@@ -238,7 +241,37 @@ export class MapComponent implements OnInit, AfterViewInit {
         isDeleted: false,
         isConnectedToCurrentProject: true
       } as DisplayShape)
-      this.saved.emit(this.shapes.filter(x=>this.isWorthyToEmit(x)))
+      this.EmitSave()
     }
+  }
+  private EmitSave(){
+    this.saved.emit(this.shapes.filter(x=>this.isWorthyToEmit(x)))
+  }
+  ShowInfo(){
+    Swal.fire({
+      html:`
+      <h3 style="color:white;">Útmutató</h3>
+      <h5 style="color:white;">Új alakzat</h5>
+      <p style="text-align:justify;">
+        Új alakzat felvétele az ötszög gombbal lehetséges, vagy TXT fájl útján. Mindkét esetben egy felugró ablakban el kell nevezni az alakzatot.
+        TXT esetén a 'Feltöltés' gomb véglegesít, az ötszög esetén az alakzat bezárása, vagy a szürke 'Finish' gomb
+      </p>
+      <h5 style="color:white;">Kiválasztás</h5>
+      <p style="text-align:justify;">
+        Alakzatra kattintva hozzáadhatjuk/elvehetjük azt az adott projektből. A kék alakzatok tartoznak az adott projekthez, a narancssárgák nem.
+      </p>
+      <h5 style="color:white;">Szerkesztés és törlés</h5>
+      <p style="text-align:justify;">
+        Szerkesztés és törlés esetén a módosítások csak a 'Save' gomb megnyomása után lépnek életbe.
+        A Cancel gombbal visszavonhatja a legutóbbi módosításokat.
+      </p>
+      <h5 style="color:white;">Térkép</h5>
+      <p style="text-align:justify;">
+        A jobb felső sarokban található ikonnal válthatunk utcai és műholdas nézet között.
+        A nagyítóra kattintva helynévre kereshetünk, Enter nyomása után a térkép az adott helyre ugrik
+      </p>
+      `,
+      theme: 'material-ui-dark'
+    })
   }
 }

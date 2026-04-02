@@ -47,3 +47,7 @@ textarea:disabled,
 ::ng-deep .ng-select.ng-select-disabled .ng-select-container:hover {
     box-shadow: none !important;
 }
+input[type="date"]::-webkit-calendar-picker-indicator {
+  filter: invert(1);
+  cursor: pointer;
+}

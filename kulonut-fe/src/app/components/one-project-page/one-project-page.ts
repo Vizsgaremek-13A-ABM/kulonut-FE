@@ -43,6 +43,7 @@ export class OneProjectPageComponent implements OnInit {
   protected clients!: Observable<Client[]>
 
   private selectedShapes!: DisplayShape[]
+  protected polygonsCount = 0
 
   protected selectFields!:{control: string, items$: Observable<any>}[]
   protected dateFields = [
@@ -60,7 +61,7 @@ export class OneProjectPageComponent implements OnInit {
     { title: "Közvilágítási terv", control: "public_lighting_plan"  }
   ]
 
-  ngOnInit(): void {
+  ngOnInit(): void {    
     this.mode = this.route.snapshot.data['mode'];
     const isDisabled = this.mode === "show";
     if(this.mode != "new"){
@@ -77,17 +78,17 @@ export class OneProjectPageComponent implements OnInit {
     }
     this.project_form = this.fb.group({
       project_name: [{ value: "", disabled: isDisabled }, Validators.required],
-      designer: [{ value: null, disabled: isDisabled }, Validators.required],
+      designer: [{ value: null, disabled: isDisabled }],
       generalDesigner: [{ value: null, disabled: isDisabled }, Validators.required],
-      geodesy: [{ value: null, disabled: isDisabled }, Validators.required],
+      geodesy: [{ value: null, disabled: isDisabled }],
       client: [{ value: null, disabled: isDisabled }, Validators.required],
-      other_work_parts: [{ value: "", disabled: isDisabled }, Validators.required],
-      folder_number: [{ value: "", disabled: isDisabled }, Validators.required],
+      other_work_parts: [{ value: "", disabled: isDisabled }],
+      folder_number: [{ value: "", disabled: isDisabled }],
       work_number: [{ value: "", disabled: isDisabled }, Validators.required],
       plan_issue_date: [{ value: this.ds.GetToday(), disabled: isDisabled }, Validators.required],
-      utility_statement_issue_date: [{ value: this.ds.GetToday(), disabled: isDisabled }, Validators.required],
-      road_construction_permit_date: [{ value: this.ds.GetToday(), disabled: isDisabled }, Validators.required],
-      water_rights_permit_date: [{ value: this.ds.GetToday(), disabled: isDisabled }, Validators.required],
+      utility_statement_issue_date: [{ value: this.ds.GetToday(), disabled: isDisabled }],
+      road_construction_permit_date: [{ value: this.ds.GetToday(), disabled: isDisabled }],
+      water_rights_permit_date: [{ value: this.ds.GetToday(), disabled: isDisabled }],
       road_construction_plan: [{ value: false, disabled: isDisabled }],
       water_network_plan: [{ value: false, disabled: isDisabled }],
       sewage_plan: [{ value: false, disabled: isDisabled }],
@@ -141,6 +142,7 @@ export class OneProjectPageComponent implements OnInit {
 
   onSaved(shapes:any){
     this.selectedShapes = shapes
+    this.polygonsCount = this.selectedShapes.filter(x=>x.isConnectedToCurrentProject).length
   }
 
   async uploadFile(){
