@@ -13,6 +13,7 @@
 @import 'bootstrap/scss/forms';
 @import 'variables';
 @import "@ng-select/ng-select/themes/default.theme.css";
+@import 'sweetalert2/src/sweetalert2.scss';
 
 @font-face {
     font-family: 'IBM';
@@ -61,6 +62,7 @@ button{
 
 .leaflet-control-geocoder-form input{
     color: black;
+}
 ng-select{
   padding: 0 !important;
 }

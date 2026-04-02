@@ -1,4 +1,4 @@
-export default interface Project{
+export interface Project{
     id: number;
     project_name: string;
     work_number: string;
@@ -8,7 +8,7 @@ export default interface Project{
     client: string;
     geodesy: string;
     plan_issue_date: string; // ISO date string (YYYY-MM-DD)
-    eutility_statement_issue_date: string | null;
+    utility_statement_issue_date: string | null;
     road_construction_permit_date: string;
     water_rights_permit_date: string;
     road_construction_plan: boolean;
@@ -19,4 +19,10 @@ export default interface Project{
     other_work_parts: string;
     notes: string;
     min_role_level: number;
+}
+
+export interface SimplifiedProject{
+    project_id: number;
+    name: string;
+    plan_issue_date: string
 }

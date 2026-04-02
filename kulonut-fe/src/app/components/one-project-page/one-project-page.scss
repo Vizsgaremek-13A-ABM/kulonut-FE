@@ -19,10 +19,35 @@ ul#checkboxes{
     background-color: $primary-blue;
 }
 
-#save-map{
-    background-color: $primary-blue;
-    width: 100%;
-    border-radius: 0;
-    font-size: 120%;
-    // margin-top: 20px;
+#map{
+    height: 100%;
+    background-color: $bg-gray;
+}
+
+input[type="text"]:disabled, 
+input[type="date"]:disabled, 
+textarea:disabled, 
+.ng-select.ng-select-disabled, 
+::ng-deep .ng-select.ng-select-disabled > .ng-select-container{
+    border: 1px solid transparent;
+    background-color: white !important;
+    color: $bg-dark-gray;
+    font-size: 110%;
+}
+::ng-deep .ng-select.ng-select-disabled .ng-arrow-wrapper{
+    display: none;
+}
+.form-check-input:disabled,
+.form-check-label{
+    opacity: 1 !important;
+}
+#project-name-input:disabled{
+    font-size: 160%;
+}
+::ng-deep .ng-select.ng-select-disabled .ng-select-container:hover {
+    box-shadow: none !important;
+}
+input[type="date"]::-webkit-calendar-picker-indicator {
+  filter: invert(1);
+  cursor: pointer;
 }

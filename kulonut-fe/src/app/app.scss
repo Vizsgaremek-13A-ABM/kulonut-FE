@@ -88,3 +88,7 @@ button.fancy-border:hover{
     -webkit-box-shadow: 10px 10px 0px 0px $bg-dark-gray;
     box-shadow: 10px 10px 0px 0px $bg-dark-gray;
 }
+
+input[type="checkbox"]:checked{
+    background-color: $primary-blue;
+}
