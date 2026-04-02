@@ -1,0 +1,56 @@
+name: Docker
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: generate image tag
+      run: |
+        echo "IMAGE_TAG=$(date +%s)" >> $GITHUB_ENV
+
+    - uses: actions/checkout@v4
+
+    - name: Build and push frontend
+      run: |
+        docker build ./kulonut-fe -t ghcr.io/megadrive88/kulonut-fe-vizsgaremek:$IMAGE_TAG
+        echo "${{ secrets.GHCR_TOKEN }}" | docker login ghcr.io -u megadrive88 --password-stdin
+        docker push ghcr.io/megadrive88/kulonut-fe-vizsgaremek:$IMAGE_TAG
+        
+    - name: Checkout
+      run: |
+        sed -i 's|image: ghcr.io/megadrive88/kulonut-fe-vizsgaremek:.*|image: ghcr.io/megadrive88/kulonut-fe-vizsgaremek:'"$IMAGE_TAG"'|' kulonut-fe/deployment.yaml
+        
+        git config --global user.email "podlipnik.adam@students.jedlik.eu"
+        git config --global user.name "megadrive88"
+ 
+        git add kulonut-fe/deployment.yaml
+        git commit -m "Update K8S deployment file"
+        git push
+
+        mkdir -p ~/.kube
+        echo "${{ secrets.JEDLIK_K8S_CONFIG }}" | base64 -d > ~/.kube/config
+
+    - name: Create GHCR pull secret in Kubernetes
+      run: |
+        kubectl create secret docker-registry ghcr-auth-token \
+          --docker-server=ghcr.io \
+          --docker-username=megadrive88 \
+          --docker-password=${{ secrets.GHCR_TOKEN }} \
+          --dry-run=client -o yaml | kubectl apply -f -
+
+    - name: Apply deployment.yaml
+      run: |
+        kubectl apply -f ./kulonut-fe/deployment.yaml
