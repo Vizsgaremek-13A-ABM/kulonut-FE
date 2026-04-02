@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
         - name: github-action-container
-          image: ghcr.io/megadrive88/kulonut-fe-vizsgaremek:1775137395
+          image: ghcr.io/megadrive88/kulonut-fe-vizsgaremek:1774286685
           ports:
             - containerPort: 80
       imagePullSecrets:
@@ -58,7 +58,15 @@ spec:
       secretName: kulonut-vizsgaremek-certificate
   rules:
     - host: kulonut-vizsgaremek.jcloud.jedlik.cloud
-
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: kulonut-fe-vizsgaremek-service
+                port:
+                  number: 80
 
 ---
 
