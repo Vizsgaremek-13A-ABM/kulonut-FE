@@ -1,11 +1,11 @@
-import { AfterViewInit, Component, ElementRef, inject, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, inject, OnInit, ViewChild, ChangeDetectorRef } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { TopBarComponent } from '../top-bar-component/top-bar-component';
 import DataService from '../../services/data.service';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { NgSelectComponent } from '@ng-select/ng-select';
 import { AsyncPipe } from '@angular/common';
-import { Observable, Subject, UnaryFunction, map } from 'rxjs';
+import { Observable, Subject, map } from 'rxjs';
 import Designer from '../../interfaces/designer.interface';
 import Geodesy from '../../interfaces/geodesy.interface';
 import Client from '../../interfaces/client.interface';
@@ -29,6 +29,9 @@ export class OneProjectPageComponent implements OnInit {
   protected projectId!:number
   private ds = inject(DataService)
   private fb = inject(FormBuilder);
+  private cdr = inject(ChangeDetectorRef)
+  @ViewChild("TXTUploader") txtUploader!: ElementRef<HTMLInputElement>
+  protected uploadedFile!: string[]
 
   protected projectTypes!: string[]
   protected project_form!: FormGroup;
@@ -138,5 +141,22 @@ export class OneProjectPageComponent implements OnInit {
 
   onSaved(shapes:any){
     this.selectedShapes = shapes
+  }
+
+  async uploadFile(){
+    const fileInput = this.txtUploader.nativeElement
+    if (fileInput.files && fileInput.files[0]){
+      const file = fileInput.files[0]
+      const reader = new FileReader();
+      reader.addEventListener("load", ()=>{
+        const text = reader.result as string;
+        this.uploadedFile = [...text.split(/\r?\n/)]
+        this.cdr.detectChanges()
+      })
+      if (file) {
+        reader.readAsText(file);
+        fileInput.value = ''
+      }
+    }
   }
 }

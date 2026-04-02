@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, EventEmitter, inject, Input, OnInit, Output, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, EventEmitter, inject, Input, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core';
 import DataService from '../../services/data.service';
 import { Subject } from 'rxjs';
 import Polygon from '../../interfaces/polygon.interface';
@@ -8,8 +8,9 @@ import 'leaflet-draw';
 import { LeafletModule } from '@bluehalo/ngx-leaflet';
 import 'leaflet-control-geocoder';
 import Swal from 'sweetalert2';
-import 'sweetalert2/src/sweetalert2.scss'
 import 'sweetalert2/themes/material-ui.css'
+import proj4 from 'proj4';
+import { GeoJsonObject } from 'geojson';
 
 @Component({
   selector: 'app-map-component',
@@ -22,11 +23,13 @@ export class MapComponent implements OnInit, AfterViewInit {
   private ds = inject(DataService)
   @Input() readonly = true
   @Input() projectId!: number
+  @Input() file!:string[]
   @Output() saved = new EventEmitter()
 
   private polygonsLoaded$ = new Subject<Polygon[]>
   protected shapes:DisplayShape[] = [];  
   protected leafletMap!:L.Map
+  private drawnItems!: L.FeatureGroup
 
   ngOnInit(): void {
     this.ds
@@ -34,6 +37,11 @@ export class MapComponent implements OnInit, AfterViewInit {
       .subscribe((polygons) => {
         this.polygonsLoaded$.next(polygons);
     });
+    proj4.defs("EPSG:23700",
+      "+proj=somerc +lat_0=47.14439372222222 +lon_0=19.04857177777778 " +
+      "+k=0.99993 +x_0=650000 +y_0=200000 +ellps=GRS67 " +
+      "+towgs84=52.17,-71.82,-14.9,0,0,0,0 +units=m +no_defs"
+    );
   }
   
   ngAfterViewInit(): void {
@@ -54,8 +62,8 @@ export class MapComponent implements OnInit, AfterViewInit {
       L.control.layers(baseMaps).addTo(this.leafletMap);
       
       this.shapes = this.ds.ConvertPolygonToGeoJson(polygons)
-      const drawnItems = new L.FeatureGroup();
-      this.leafletMap.addLayer(drawnItems);
+      this.drawnItems = new L.FeatureGroup();
+      this.leafletMap.addLayer(this.drawnItems);
 
       const layer = L.geoJSON(this.shapes.map(x=>x.shape))
       
@@ -65,7 +73,7 @@ export class MapComponent implements OnInit, AfterViewInit {
           color: 'rgb(230, 123, 17)',
         });
         this.shapes[i].leaflet_id = (l as any)._leaflet_id
-        drawnItems.addLayer(l);
+        this.drawnItems.addLayer(l);
         if(this.shapes[i].project_ids.includes(this.projectId)){
           this.shapes[i].isConnectedToCurrentProject = true;
           (l as any).setStyle({
@@ -77,6 +85,7 @@ export class MapComponent implements OnInit, AfterViewInit {
         if (!this.readonly){
           l.on('click', (e)=>{
             const shape = this.shapes.find(x=>x.leaflet_id == e.sourceTarget._leaflet_id)!
+            
             if (!shape.isConnectedToCurrentProject){
               (l as any).setStyle({
                 color: 'rgb(109, 165, 242)',
@@ -132,7 +141,7 @@ export class MapComponent implements OnInit, AfterViewInit {
       if(!this.readonly){
         const drawControl = new L.Control.Draw({
           edit: {
-            featureGroup: drawnItems,
+            featureGroup: this.drawnItems,
             // remove: false
           },
           draw: {
@@ -152,7 +161,7 @@ export class MapComponent implements OnInit, AfterViewInit {
             color: 'rgb(109, 165, 242)',
             opacity: 1
           });
-          drawnItems.addLayer(layer);
+          this.drawnItems.addLayer(layer);
           Swal.fire({
             title: "Adjon nevet az alakzatnak:",
             input: "text",
@@ -180,7 +189,7 @@ export class MapComponent implements OnInit, AfterViewInit {
             shape.shape = l.toGeoJSON()
             shape.isModified = true
           })
-          this.saved.emit(this.shapes.filter(x=>this.isWorthyToEmit(x)))
+          this.saved.emit(this.shapes.filter(x=>this.isWorthyToEmit(x)))          
         });
 
          this.leafletMap.on('draw:deleted', (event: any) => {
@@ -200,5 +209,36 @@ export class MapComponent implements OnInit, AfterViewInit {
   }
   isWorthyToEmit(x: DisplayShape){
     return x.isNew || x.isModified || x.isDeleted || x.isConnectedToCurrentProject
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    if(changes['file'] && changes['file'].currentValue){
+      let coordPairs = []
+      for (let pair of changes['file'].currentValue){
+        if (pair != ""){
+          const wgs84 = proj4("EPSG:23700", "WGS84", pair.split(' ').map((x:string)=>Number(x)));
+          coordPairs.push(wgs84.reverse())
+        }
+      }      
+      const layer = L.polygon(coordPairs)
+      layer.setStyle({
+        color: 'rgb(109, 165, 242)',
+        opacity: 1
+      });
+
+      layer.addTo(this.drawnItems)      
+      this.leafletMap.setView(coordPairs[0], 15)
+      this.shapes.push({
+        leaflet_id: (layer as any)._leaflet_id,
+        shape: layer.toGeoJSON() as GeoJsonObject,
+        project_ids: this.projectId ? [this.projectId] : [],
+        polygon_name: "swal ablak",
+        isNew: true,
+        isModified: false,
+        isDeleted: false,
+        isConnectedToCurrentProject: true
+      } as DisplayShape)
+      this.saved.emit(this.shapes.filter(x=>this.isWorthyToEmit(x)))
+    }
   }
 }
