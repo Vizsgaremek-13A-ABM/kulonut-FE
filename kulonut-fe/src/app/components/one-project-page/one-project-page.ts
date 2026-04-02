@@ -13,6 +13,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MapComponent } from '../map-component/map-component';
 import DisplayShape from '../../interfaces/displayshape.interface';
 import { Project } from '../../interfaces/project.interface';
+import 'sweetalert2/themes/material-ui.css'
 
 @Component({
   selector: 'app-one-project-page',
@@ -94,7 +95,8 @@ export class OneProjectPageComponent implements OnInit {
       sewage_plan: [{ value: false, disabled: isDisabled }],
       stormwater_drainage_plan: [{ value: false, disabled: isDisabled }],
       public_lighting_plan: [{ value: false, disabled: isDisabled }],
-      notes: [{ value: "", disabled: isDisabled }]
+      notes: [{ value: "", disabled: isDisabled }],
+      min_role_level: [1]
     });
     this.projectTypes = this.ds.GetProjectTypes()
     this.designers = this.ds.GetDesigners().pipe(map(x => x.data))
@@ -126,7 +128,8 @@ export class OneProjectPageComponent implements OnInit {
         sewage_plan: project.sewage_plan,
         stormwater_drainage_plan: project.stormwater_drainage_plan,
         public_lighting_plan: project.public_lighting_plan,
-        notes: project.notes
+        notes: project.notes,
+        min_role_level: 1
       })
     })
   }
@@ -136,6 +139,13 @@ export class OneProjectPageComponent implements OnInit {
 	}
 
   SubmitProjectData(){
+    if(this.mode == "show") return
+    if(this.mode == "edit"){
+
+    }
+    else if(this.mode == "new"){
+
+    }
     console.log(this.project_form.value);
     console.log(this.selectedShapes);
   }

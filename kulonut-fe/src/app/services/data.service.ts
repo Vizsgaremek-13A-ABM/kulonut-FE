@@ -104,4 +104,12 @@ export default class DataService {
     public GetProjectById(id: number){
         return this.http.get<{data: Project;}>(`${this.API_URL}/projects/${id}`)
     }
+
+    public CreateProject(project: Project){
+        // return this.http.post<{id: number}>(`${this.API_URL}/projects`, )
+    }
+
+    public UpdateProject(id: number, project: Project){
+        // return this.http.put<{data: Project;}>(`${this.API_URL}/projects/${}`, )
+    }
 }

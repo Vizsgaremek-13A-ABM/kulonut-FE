@@ -8,7 +8,7 @@
                     <h3 style="white-space: nowrap;">Projekt neve:</h3>
                     <input id="project-name-input" type="text" class="form-control" formControlName="project_name">
                 </div>
-                <div class="white-panel row g-0" style="height: 650px;">
+                <div class="white-panel row g-0" style="height: 660px;">
                     <div class="col-6 pe-3">
                         <div class="row">
                             <div class="col-5 d-flex vertical-box" style="gap: 10px; margin-top: 10px;">
@@ -48,7 +48,7 @@
                         </div>
                         <hr>
                         <h5>Megjegyzés</h5>
-                        <textarea style="max-height: 180px;" maxlength="255" class="form-control" formControlName="notes"></textarea>
+                        <textarea style="max-height: 180px; height: 100%;" maxlength="255" class="form-control" formControlName="notes"></textarea>
                         <span>A projekthez jelenleg {{polygonsCount}} alakzat tartozik</span>
                     </div>
                     <div class="col-6 row vertical-box" id="datepicker-panel" style="align-items: flex-start; gap: 15px; padding-right: 0;">
@@ -89,7 +89,7 @@
             </div>
         </form>
         <div class="col-12 col-lg-5">
-            <div class="d-flex vertical-box white-panel" style="height: 710px;">
+            <div class="d-flex vertical-box white-panel" style="height: 720px;">
                 <div id="map" class="fancy-border" style="border: 1px solid black;">
                     <app-map-component [file]="uploadedFile" [readonly]="mode == 'show'" [projectId]="projectId" (saved)="onSaved($event)"/>
                 </div>
