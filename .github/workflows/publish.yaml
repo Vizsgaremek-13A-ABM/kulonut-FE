@@ -25,7 +25,7 @@ jobs:
 
     - name: Build and push frontend
       run: |
-        docker build ./frontend -t ghcr.io/megadrive88/kulonut-fe-vizsgaremek:$IMAGE_TAG
+        docker build ./kulonut-fe -t ghcr.io/megadrive88/kulonut-fe-vizsgaremek:$IMAGE_TAG
         echo "${{ secrets.GHCR_TOKEN }}" | docker login ghcr.io -u megadrive88 --password-stdin
         docker push ghcr.io/megadrive88/kulonut-fe-vizsgaremek:$IMAGE_TAG
         
