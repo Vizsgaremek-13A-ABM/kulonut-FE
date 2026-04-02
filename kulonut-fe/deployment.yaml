@@ -58,22 +58,7 @@ spec:
       secretName: kulonut-vizsgaremek-certificate
   rules:
     - host: kulonut-vizsgaremek.jcloud.jedlik.cloud
-      http:
-        paths:
-          - path: /students
-            pathType: Prefix
-            backend:
-              service:
-                name: devops-backend-service
-                port:
-                  number: 3000
-          - path: /
-            pathType: Prefix
-            backend:
-              service:
-                name: kulonut-fe-vizsgaremek-service
-                port:
-                  number: 80
+
 
 ---
 
