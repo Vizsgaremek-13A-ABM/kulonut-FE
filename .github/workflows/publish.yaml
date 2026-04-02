@@ -31,12 +31,12 @@ jobs:
         
     - name: Checkout
       run: |
-        sed -i 's|image: ghcr.io/megadrive88/kulonut-fe-vizsgaremek:.*|image: ghcr.io/megadrive88/kulonut-fe-vizsgaremek:'"$IMAGE_TAG"'|' deployment.yaml
+        sed -i 's|image: ghcr.io/megadrive88/kulonut-fe-vizsgaremek:.*|image: ghcr.io/megadrive88/kulonut-fe-vizsgaremek:'"$IMAGE_TAG"'|' kulonut-fe/deployment.yaml
         
         git config --global user.email "podlipnik.adam@students.jedlik.eu"
         git config --global user.name "megadrive88"
  
-        git add deployment.yaml
+        git add kulonut-fe/deployment.yaml
         git commit -m "Update K8S deployment file"
         git push
 
@@ -53,4 +53,4 @@ jobs:
 
     - name: Apply deployment.yaml
       run: |
-        kubectl apply -f ./deployment.yaml
+        kubectl apply -f ./kulonut-fe/deployment.yaml
