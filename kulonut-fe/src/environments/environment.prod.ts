@@ -1,5 +1,5 @@
 export const environment = {
   production: true,
-  apiUrl: '',
-  storageUrl: '',
+  apiUrl: 'https://kulonutapi.jcloud.jedlik.cloud/api',
+  storageUrl: 'https://kulonutapi.jcloud.jedlik.cloud',
 };
