@@ -16,7 +16,7 @@ import * as geojson from 'geojson';
 export default class DataService {
     private readonly http = inject(HttpClient);
     private destroyRef = inject(DestroyRef)
-    public readonly API_URL = environment.apiUrl;
+    private readonly API_URL = environment.apiUrl;
     public readonly STORAGE_URL = environment.storageUrl;
 
     private projectTypes = [

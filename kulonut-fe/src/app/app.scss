@@ -37,8 +37,6 @@ form{
         font-size: 120%;
         &:disabled{
             opacity: .8;
-            -webkit-box-shadow: 7px 7px 0px 0px black;
-            box-shadow: 7px 7px 0px 0px black;
         }
         &.blue-form-button{
             background-color: $primary-blue !important;

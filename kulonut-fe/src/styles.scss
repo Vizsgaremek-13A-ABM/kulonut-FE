@@ -14,6 +14,7 @@
 @import 'variables';
 @import "@ng-select/ng-select/themes/default.theme.css";
 @import 'sweetalert2/src/sweetalert2.scss';
+@import 'sweetalert2/themes/material-ui.css';
 
 @font-face {
     font-family: 'IBM';
@@ -58,6 +59,9 @@ h1,h2,h3,h4,h5,h6{
 
 button{
   font-family: "IBM" !important;
+  &:disabled{
+    color: $bg-gray !important;
+  }
 }
 
 .leaflet-control-geocoder-form input{

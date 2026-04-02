@@ -3,7 +3,7 @@
   <form class="vertical-box fancy-border gap-3" (ngSubmit)="sendRegisterData()" [formGroup]="form">
     <app-form-field-component
         label="Felhasználónév"
-        controlName="username"
+        controlName="name"
         [form]="form"
     />
     <app-form-field-component
@@ -20,11 +20,11 @@
     />
     <app-form-field-component
         label="Jelszó újra"
-        controlName="conf_password"
+        controlName="password_confirmation"
         [form]="form"
         type="password"
     />
-    <button matButton="filled" class="wide fancy-border mt-2 blue-form-button" type="submit">Regisztráció</button>
+    <button [disabled]="form.invalid" matButton="filled" class="wide fancy-border mt-2 blue-form-button" type="submit">Regisztráció</button>
     <a [routerLink]="['']" style="width: fit-content;">Már van fiókja?</a>
   </form>
 </div>
