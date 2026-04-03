@@ -151,7 +151,10 @@ export class OneProjectPageComponent implements OnInit {
 
   onSaved(shapes:any){
     this.selectedShapes = shapes
-    this.polygonsCount = this.selectedShapes.filter(x=>x.isConnectedToCurrentProject).length
+    const nextCount = this.selectedShapes.filter(x => x.isConnectedToCurrentProject).length
+    queueMicrotask(() => {
+      this.polygonsCount = nextCount
+    })
   }
 
   async uploadFile(){

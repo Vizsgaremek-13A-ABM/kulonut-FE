@@ -50,11 +50,19 @@ export class MapComponent implements OnInit, AfterViewInit {
   
   ngAfterViewInit(): void {
     this.polygonsLoaded$.subscribe(polygons => {
+      let centerCoords = [47.683, 17.66]
+      if (this.projectId){
+        let coords = polygons.find(x =>
+          x.projects.some(project => project.project_id == this.projectId)
+        )?.coordinates[0];
+        centerCoords = [coords?.latitude!, coords?.longitude!]
+      }
+
       this.leafletMap = L.map(this.map.nativeElement, {
         maxZoom: 18,
         minZoom: 8,
-        center: [47.12, 19.42], //elso poligon elso kordinatai, ha nem uj projekt
-        zoom: 8 // nagyobb ertek, ha nem uj projekt, amugymeg lehetne 12, nemtom gyoron kivul vannak e meg projektek
+        center: centerCoords as L.LatLngExpression,
+        zoom: 12
       });
       const mapLayers = this.ds.GetMapLayers()
       mapLayers[0].addTo(this.leafletMap);
@@ -119,18 +127,6 @@ export class MapComponent implements OnInit, AfterViewInit {
                 .setContent(`${shape.polygon_name} sikeresen eltávolítva a projektből`)
                 .openOn(this.leafletMap);
             }
-          })
-        }
-        else{
-          l.on('mouseover', (e)=>{          
-            const shape = this.shapes.find(x=>x.leaflet_id == e.sourceTarget._leaflet_id)!
-            L.popup()
-              .setLatLng(e.latlng)
-              .setContent(shape.polygon_name)
-              .openOn(this.leafletMap);
-          });
-          l.on('click', (e)=>{
-            this.polygonClicked.emit(this.shapes.find(x=>x.leaflet_id == e.sourceTarget._leaflet_id)!)
           })
         }
       });
@@ -263,6 +259,15 @@ export class MapComponent implements OnInit, AfterViewInit {
           let layer = L.geoJSON(x.shape)
           layer.setStyle({
             color: this.blue,
+          })
+          layer.on('mouseover', (e)=>{          
+            L.popup()
+              .setLatLng(e.latlng)
+              .setContent(x.polygon_name)
+              .openOn(this.leafletMap);
+          });
+          layer.on('click', ()=>{
+            this.polygonClicked.emit(x)
           })
           this.drawnItems.addLayer(layer)
         })

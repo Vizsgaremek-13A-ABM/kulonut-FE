@@ -76,3 +76,10 @@ ng-select{
 .ng-input>input{
   color: black;
 }
+
+.swal-left-align{
+  text-align: left;
+  & a:hover{
+    opacity: .8;
+  }
+}
