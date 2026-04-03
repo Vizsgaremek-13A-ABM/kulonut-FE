@@ -72,7 +72,7 @@ export class AllProjectsPage implements OnInit {
       return x.project_name.includes(filters.name) &&
       new Date(x.plan_issue_date).getTime() >= new Date(filters.startDate).getTime() &&
       new Date(x.plan_issue_date).getTime() <= new Date(filters.endDate).getTime() &&
-      filters.types.length == 0 ? true : (filters.types as string[]).some(y => {
+      (filters.types.length == 0 ? true : (filters.types as string[]).some(y => {
         switch (y){
           case "Útépítési terv":
             return x.road_construction_plan
@@ -87,7 +87,7 @@ export class AllProjectsPage implements OnInit {
           default:
             return false
         }
-      });
+      }));
     })
   }
 }

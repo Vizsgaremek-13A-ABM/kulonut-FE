@@ -24,7 +24,7 @@ export class FiltersComponent implements OnInit {
     this.projectTypes = this.ds.GetProjectTypes()
     this.form = this.fb.group({
       name: [""],
-      startDate: [this.ds.GetToday()],
+      startDate: ["2000-01-01"],
       endDate: [this.ds.GetToday()],
       types: [[]]
     })

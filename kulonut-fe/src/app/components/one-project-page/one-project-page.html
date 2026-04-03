@@ -49,7 +49,7 @@
                         <hr>
                         <h5>Megjegyzés</h5>
                         <textarea style="max-height: 180px; height: 100%;" maxlength="255" class="form-control" formControlName="notes"></textarea>
-                        <span>A projekthez jelenleg {{polygonsCount}} alakzat tartozik</span>
+                        <span>A projekthez jelenleg {{polygonsCount}} terület tartozik</span>
                     </div>
                     <div class="col-6 row vertical-box" id="datepicker-panel" style="align-items: flex-start; gap: 15px; padding-right: 0;">
                         @for (item of dateFields; track $index){
@@ -82,7 +82,8 @@
                             </div>
                         }
                     </div>
-                    @if (mode != "show") {
+                    @if (mode != "show") { 
+                        <!-- else ha jogosult, akkor szerkesztes -->
                         <button [disabled]="project_form.invalid" style="margin-top: auto;" type="submit" matButton="filled" class="blue-form-button fancy-border">{{mode == "new" ? "Rögzít" : "Mentés"}}</button>
                     }
                 </div>
@@ -91,7 +92,7 @@
         <div class="col-12 col-lg-5">
             <div class="d-flex vertical-box white-panel" style="height: 720px;">
                 <div id="map" class="fancy-border" style="border: 1px solid black;">
-                    <app-map-component [file]="uploadedFile" [readonly]="mode == 'show'" [projectId]="projectId" (saved)="onSaved($event)"/>
+                    <app-map-component [readonlyProjectIds]="[projectId]" [file]="uploadedFile" [readonly]="mode == 'show'" [projectId]="projectId" (saved)="onSaved($event)"/>
                 </div>
             </div>
         </div>
