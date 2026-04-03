@@ -9,6 +9,7 @@ import { Observable, map } from "rxjs";
 import { tileLayer } from "leaflet";
 import DisplayShape from "../interfaces/displayshape.interface";
 import * as geojson from 'geojson';
+import AuthService from "./auth.service";
 
 @Injectable({
   providedIn: 'root'
@@ -18,6 +19,7 @@ export default class DataService {
     private destroyRef = inject(DestroyRef)
     private readonly API_URL = environment.apiUrl;
     public readonly STORAGE_URL = environment.storageUrl;
+    private authService = inject(AuthService)
 
     private projectTypes = [
         "Útépítési terv",
@@ -103,6 +105,7 @@ export default class DataService {
 
     public GetProjectById(id: number){
         return this.http.get<{data: Project;}>(`${this.API_URL}/projects/${id}`)
+            .pipe(takeUntilDestroyed(this.destroyRef))
     }
 
     public CreateProject(project: Project){
@@ -111,5 +114,10 @@ export default class DataService {
 
     public UpdateProject(id: number, project: Project){
         // return this.http.put<{data: Project;}>(`${this.API_URL}/projects/${}`, )
+    }
+
+    public DeleteProject(id: number){
+        return this.http.delete<any>(`${this.API_URL}/projects/${id}`, { headers: this.authService.Headers })
+            .pipe(takeUntilDestroyed(this.destroyRef))
     }
 }

@@ -6,10 +6,11 @@ import {MatButtonModule} from '@angular/material/button';
 import 'leaflet-control-geocoder';
 import DataService from '../../services/data.service';
 import { MapComponent } from '../map-component/map-component';
+import { FiltersComponent } from "../filters-component/filters-component";
 
 @Component({
   selector: 'app-main-page-component',
-  imports: [TopBarComponent, NgSelectModule, FormsModule, MatButtonModule, MapComponent],
+  imports: [TopBarComponent, NgSelectModule, FormsModule, MatButtonModule, MapComponent, FiltersComponent],
   templateUrl: './main-page-component.html',
   styleUrls: [
     '../../app.scss',
@@ -19,13 +20,10 @@ import { MapComponent } from '../map-component/map-component';
 export class MainPageComponent implements OnInit {  
   private ds = inject(DataService)
 
-  protected filters = {
-    name: "",
-    startDate: this.ds.GetToday(),
-    endDate: this.ds.GetToday(),
-    types: []
+  ngOnInit(): void {
   }
 
-  ngOnInit(): void {
+  FilterCommand(filters: any){
+    console.log(filters);
   }
 }

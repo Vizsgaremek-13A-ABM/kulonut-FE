@@ -1,6 +1,8 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { Router, RouterLink } from "@angular/router";
 import AuthService from '../../services/auth.service';
+import User from '../../interfaces/user.interface';
+import { environment } from '../../../environments/enviromnent';
 
 @Component({
   selector: 'app-top-bar-component',
@@ -11,9 +13,17 @@ import AuthService from '../../services/auth.service';
     './top-bar-component.scss'
   ],
 })
-export class TopBarComponent {
+export class TopBarComponent implements OnInit {
   private authService = inject(AuthService)
   private router = inject(Router)
+  protected activeRoute!: string
+  protected user!: User
+  protected storageUrl = environment.storageUrl
+  ngOnInit(): void {
+    this.activeRoute = this.router.url
+    this.user = this.authService.GetUser()!
+  }
+
   Logout(){
     this.authService.Logout()
     this.router.navigate(['/'])
