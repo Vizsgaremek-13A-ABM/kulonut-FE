@@ -22,8 +22,13 @@ export class MapComponent implements OnInit, AfterViewInit {
   private ds = inject(DataService)
   @Input() readonly = true
   @Input() projectId!: number
+  @Input() readonlyProjectIds!: number[]
   @Input() file!:string[]
+  @Output() polygonClicked = new EventEmitter()
   @Output() saved = new EventEmitter()
+
+  private blue = 'rgb(109, 165, 242)'
+  private orange = 'rgb(230, 123, 17)'
 
   private polygonsLoaded$ = new Subject<Polygon[]>
   protected shapes:DisplayShape[] = [];  
@@ -61,6 +66,13 @@ export class MapComponent implements OnInit, AfterViewInit {
       L.control.layers(baseMaps).addTo(this.leafletMap);
       
       this.shapes = this.ds.ConvertPolygonToGeoJson(polygons)
+      
+      if(this.readonly){
+        this.shapes = this.shapes.filter(x => {
+          return x.project_ids.some(y => this.readonlyProjectIds.includes(y))
+        })
+      }
+
       this.drawnItems = new L.FeatureGroup();
       this.leafletMap.addLayer(this.drawnItems);
 
@@ -69,14 +81,14 @@ export class MapComponent implements OnInit, AfterViewInit {
       let i = 0;
       layer.eachLayer((l) => {
         (l as any).setStyle({
-          color: 'rgb(230, 123, 17)',
+          color: this.orange,
         });
         this.shapes[i].leaflet_id = (l as any)._leaflet_id
         this.drawnItems.addLayer(l);
         if(this.shapes[i].project_ids.includes(this.projectId)){
           this.shapes[i].isConnectedToCurrentProject = true;
           (l as any).setStyle({
-            color: 'rgb(109, 165, 242)',
+            color: this.blue,
           });
         }
         i++;
@@ -87,7 +99,7 @@ export class MapComponent implements OnInit, AfterViewInit {
             
             if (!shape.isConnectedToCurrentProject){
               (l as any).setStyle({
-                color: 'rgb(109, 165, 242)',
+                color: this.blue,
               })
               shape.isConnectedToCurrentProject = true
               this.EmitSave()
@@ -98,7 +110,7 @@ export class MapComponent implements OnInit, AfterViewInit {
             }
             else{
               (l as any).setStyle({
-                color: 'rgb(230, 123, 17)',
+                color: this.orange,
               })
               shape.isConnectedToCurrentProject = false
               this.EmitSave()
@@ -118,7 +130,7 @@ export class MapComponent implements OnInit, AfterViewInit {
               .openOn(this.leafletMap);
           });
           l.on('click', (e)=>{
-            console.log(e)
+            this.polygonClicked.emit(this.shapes.find(x=>x.leaflet_id == e.sourceTarget._leaflet_id)!)
           })
         }
       });
@@ -157,7 +169,7 @@ export class MapComponent implements OnInit, AfterViewInit {
         this.leafletMap.on('draw:created', (event: L.LeafletEvent) => {          
           const layer = event.layer;
           layer.setStyle({
-            color: 'rgb(109, 165, 242)',
+            color: this.blue,
             opacity: 1
           });
           this.drawnItems.addLayer(layer);
@@ -224,7 +236,7 @@ export class MapComponent implements OnInit, AfterViewInit {
       }      
       const layer = L.polygon(coordPairs)
       layer.setStyle({
-        color: 'rgb(109, 165, 242)',
+        color: this.blue,
         opacity: 1
       });
 
@@ -241,6 +253,21 @@ export class MapComponent implements OnInit, AfterViewInit {
         isConnectedToCurrentProject: true
       } as DisplayShape)
       this.EmitSave()
+    }
+    else if (changes["readonlyProjectIds"] && !changes['readonlyProjectIds'].firstChange){
+      if (this.readonly && this.drawnItems){
+        this.drawnItems.clearLayers()
+        this.shapes.filter(x => {
+          return x.project_ids.some(y => this.readonlyProjectIds.includes(y))
+        }).forEach(x => {
+          let layer = L.geoJSON(x.shape)
+          layer.setStyle({
+            color: this.blue,
+          })
+          this.drawnItems.addLayer(layer)
+        })
+        
+      }
     }
   }
   private EmitSave(){

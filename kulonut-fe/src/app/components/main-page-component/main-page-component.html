@@ -1,7 +1,7 @@
 <app-top-bar-component/>
 <div class="content fancy-border">
-    <app-filters-component/>
+    <app-filters-component (apply)="FilterCommand($event)"/>
     <div id="map-div" class="fancy-border">
-        <app-map-component [readonly]="true" />
+        <app-map-component [readonly]="true" [readonlyProjectIds]="FilteredProjectIds" (polygonClicked)="polygonClicked($event)"/>
     </div>
 </div>

@@ -91,7 +91,7 @@
         <div class="col-12 col-lg-5">
             <div class="d-flex vertical-box white-panel" style="height: 720px;">
                 <div id="map" class="fancy-border" style="border: 1px solid black;">
-                    <app-map-component [file]="uploadedFile" [readonly]="mode == 'show'" [projectId]="projectId" (saved)="onSaved($event)"/>
+                    <app-map-component [readonlyProjectIds]="[projectId]" [file]="uploadedFile" [readonly]="mode == 'show'" [projectId]="projectId" (saved)="onSaved($event)"/>
                 </div>
             </div>
         </div>
