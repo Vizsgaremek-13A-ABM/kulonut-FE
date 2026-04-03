@@ -3,7 +3,7 @@
     <a [routerLink]="['/main']" class="active">térkép</a>
     <a [routerLink]="['']">projektek</a>
     <a [routerLink]="['/project/new']">új projekt</a> <!--nem mindenkinel-->
-    <a [routerLink]="['']">kijelentkezés</a>
+    <a (click)="Logout()" style="cursor: pointer;">kijelentkezés</a>
     <a class="profile-button" [routerLink]="['/profile']">
         <div class="row">
             <div class="col" style="text-align: right;">

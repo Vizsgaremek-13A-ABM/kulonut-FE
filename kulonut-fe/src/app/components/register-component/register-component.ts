@@ -20,6 +20,7 @@ export class RegisterComponent implements OnInit {
   private authService = inject(AuthService)
   private router = inject(Router)
   protected form!: FormGroup
+
   ngOnInit(): void {
     this.form = this.fb.group({
       name: ['', Validators.required],
@@ -68,22 +69,24 @@ export class RegisterComponent implements OnInit {
       next: async (response) =>{
         await Swal.fire({
           title: "Sikeres regisztráció!",
+          text: "Ne felejtse el hitelesíteni e-mail címét, amit az arra kiküldött linkkel tehet meg!",
           theme: 'material-ui-dark',
           icon: "success"
         })
-        this.router.navigate(["/login"])
+        this.router.navigate(["/"])
         //email validate
       },
       error: (response) =>{
-        
-        if (response.error.errors.email) {
+        const backendErrors = response?.error?.errors
+
+        if (backendErrors?.email) {
           Swal.fire({
             title: "A megadott e-mail címmel már létezik felhasználó!",
             theme: 'material-ui-dark',
             icon: "error"
           })
         }
-        else if (response.error.errors.password) {
+        else if (backendErrors?.password) {
           Swal.fire({
             title: "A jelszó túl gyenge!",
             text: "Legalább egy kis- és nagybetűt, egy számot és egy speciális karaktert kell tartalmaznia, valamint minimum 8 karakter hosszú kell legyen.",
