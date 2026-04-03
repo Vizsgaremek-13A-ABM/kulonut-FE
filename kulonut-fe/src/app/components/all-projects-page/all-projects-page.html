@@ -1,0 +1,45 @@
+<app-top-bar-component/>
+<div class="content fancy-border vertical-box gap-4">
+    <app-filters-component/>
+    @for (project of projects; track $index){
+        <ul class="project-row fancy-border white-panel">
+            <li>
+                Projekt neve
+                <h5>
+                    {{project.project_name}}
+                </h5>
+            </li>
+            <li>
+                Tervkiadás dátuma
+                <h5>
+                    {{project.plan_issue_date | date:"yyyy.MM.dd."}}
+                </h5>
+            </li>
+            <li>
+                Megrendelő
+                <h5>
+                    {{project.client}}
+                </h5>
+            </li>
+            <li>
+                Generáltervező
+                <h5>
+                    {{project.general_designer}}
+                </h5>
+            </li>
+            <li>
+                Tervezők
+                <h5>
+                    {{project.designer ? project.designer : '- nincs -'}}
+                </h5>
+            </li>
+            <li class="buttons-li">
+                <!-- jogosultsaghoz kotni, egyebkent csak show (mint majd polygon kattintasnal) -->
+                <a [routerLink]="[`/project/edit/${project.id}`]" matButton="filled" class="fancy-border">Szerkesztés</a>
+                <button (click)="DeleteProjectCommand(project.id, project.project_name)" matButton="filled" class="fancy-border orange-bg">Törlés</button>
+            </li>
+        </ul>
+        <!-- paging? -->
+    }
+</div>
+<button id="back-to-top" class="fancy-border" (click)="BackToTopCommand()">🡅</button>

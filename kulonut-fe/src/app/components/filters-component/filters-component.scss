@@ -1,0 +1,31 @@
+@import '../../../variables';
+
+.filters{
+    background-color: white;
+    border: 1px solid $bg-dark-gray;
+    padding: 15px;
+    input, ng-select {
+        border-radius: 0;
+        border: 1px solid $primary-blue;
+        -webkit-box-shadow: 7px 7px 0px 0px $bg-dark-gray;
+        box-shadow: 7px 7px 0px 0px $bg-dark-gray;
+    }
+}
+
+#filters-row{
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 20px;
+    & div{
+        width: 100%;
+    }
+}
+button{
+    border-radius: 0;
+    font-size: 120%;
+    background-color: $primary-blue !important;
+    bottom: 0;
+}
+
+// ::ng-deep .ng-select-container.ng-has-value{
+// }

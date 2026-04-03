@@ -1,0 +1,36 @@
+@import '../../../variables';
+
+.project-row{
+    list-style-type: none;
+    gap: 5px;
+    display: grid;
+}
+
+#back-to-top{
+    position: fixed;
+    bottom: 15px;
+    right: 15px;
+    width: 40px;
+    height: 40px;
+    font-size: 22pt;
+    border: 0;
+    background-color: $bg-gray;
+}
+
+li.buttons-li{
+    display: flex;
+    gap: 20px;
+}
+
+button, a{
+    font-family: "IBM";
+    border-radius: 0;
+    font-size: 120%;
+    background-color: $primary-blue !important;
+    bottom: 0;
+}
+
+.orange-bg{
+    background-color: $primary-orange !important;
+    color: darkred !important;
+}

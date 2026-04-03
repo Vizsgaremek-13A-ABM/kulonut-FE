@@ -23,6 +23,7 @@ header{
         text-transform: uppercase;
         height: 100%;
         padding: 15px 30px;
+        white-space: nowrap;
         &.active{
             font-weight: 500;
             background-color: $bg-dark-gray;

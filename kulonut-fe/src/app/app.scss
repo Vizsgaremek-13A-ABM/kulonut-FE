@@ -66,10 +66,10 @@ form{
     background-color: $bg-gray;
     margin-left: auto;
     margin-right: auto;
-    max-width: 1400px;
+    max-width: 80%;
     color: black;
     padding: 30px;
-    & div.white-panel{
+    & .white-panel{
         background-color: white;
         padding: 10px;
         -webkit-box-shadow: 7px 7px 0px 0px $bg-dark-gray;
