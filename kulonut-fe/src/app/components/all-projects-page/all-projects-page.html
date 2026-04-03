@@ -1,7 +1,7 @@
 <app-top-bar-component/>
 <div class="content fancy-border vertical-box gap-4">
-    <app-filters-component/>
-    @for (project of projects; track $index){
+    <app-filters-component (apply)="FilterCommand($event)"/>
+    @for (project of displayProjects; track $index){
         <ul class="project-row fancy-border white-panel">
             <li>
                 Projekt neve

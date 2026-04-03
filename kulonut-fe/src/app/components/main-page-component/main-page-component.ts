@@ -20,13 +20,10 @@ import { FiltersComponent } from "../filters-component/filters-component";
 export class MainPageComponent implements OnInit {  
   private ds = inject(DataService)
 
-  protected filters = {
-    name: "",
-    startDate: this.ds.GetToday(),
-    endDate: this.ds.GetToday(),
-    types: []
+  ngOnInit(): void {
   }
 
-  ngOnInit(): void {
+  FilterCommand(filters: any){
+    console.log(filters);
   }
 }
