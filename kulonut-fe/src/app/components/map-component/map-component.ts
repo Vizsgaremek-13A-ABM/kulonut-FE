@@ -8,7 +8,6 @@ import 'leaflet-draw';
 import { LeafletModule } from '@bluehalo/ngx-leaflet';
 import 'leaflet-control-geocoder';
 import Swal from 'sweetalert2';
-import 'sweetalert2/themes/material-ui.css'
 import proj4 from 'proj4';
 import { GeoJsonObject } from 'geojson';
 

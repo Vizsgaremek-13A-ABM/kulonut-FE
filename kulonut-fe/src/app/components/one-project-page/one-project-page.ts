@@ -13,7 +13,6 @@ import { MatButtonModule } from '@angular/material/button';
 import { MapComponent } from '../map-component/map-component';
 import DisplayShape from '../../interfaces/displayshape.interface';
 import { Project } from '../../interfaces/project.interface';
-import 'sweetalert2/themes/material-ui.css'
 
 @Component({
   selector: 'app-one-project-page',

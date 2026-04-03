@@ -1,4 +1,4 @@
 <div [formGroup]="form">
     <label for="{{controlName}}" [className]="required ? 'mandatory-star' : ''">{{label}}</label>
-    <input [required]="required" [formControlName]="controlName" name="controlName" [type]="type" class="form-control fancy-border" placeholder="{{label}}">
+    <input aria-autocomplete="{{controlName}}" [required]="required" [formControlName]="controlName" name="controlName" [type]="type" class="form-control fancy-border" placeholder="{{label}}">
 </div>

@@ -2,8 +2,9 @@
   <h1>Bejelentkezés</h1>
   <form class="vertical-box fancy-border gap-3" (ngSubmit)="sendLoginData()" [formGroup]="form">
     <app-form-field-component
-        label="Felhasználónév"
-        controlName="username"
+        label="E-mail cím"
+        controlName="email"
+        type="email"
         [form]="form"
     />
     <app-form-field-component
@@ -12,7 +13,19 @@
         type="password"
         [form]="form"
     />
-    <button matButton="filled" class="wide fancy-border mt-2 blue-form-button" type="submit">Bejelentkezés</button>
-    <a [routerLink]="['/user_register']" style="width: fit-content;">Nincs még fiókja?</a>
+    <div>
+      <div class="form-check">
+        <input class="form-check-input" type="checkbox" value="" id="rememberMeCheckbox" [formGroup]="form" formControlName="rememberMe">
+        <label class="form-check-label" for="rememberMeCheckbox">
+          Maradok bejelentkezve
+        </label>
+      </div>
+      <button matButton="filled" class="wide fancy-border mt-2 blue-form-button" type="submit">Bejelentkezés</button>
+    </div>
+    <div>
+      <a [routerLink]="['/user_register']" style="width: fit-content;">Nincs még fiókja?</a>
+      /
+      <a [routerLink]="['/']" style="width: fit-content;">Elfelejtett jelszó</a>
+    </div>
   </form>
 </div>

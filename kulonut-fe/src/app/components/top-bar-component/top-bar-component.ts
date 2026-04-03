@@ -1,5 +1,6 @@
-import { Component } from '@angular/core';
-import { RouterLink } from "@angular/router";
+import { Component, inject } from '@angular/core';
+import { Router, RouterLink } from "@angular/router";
+import AuthService from '../../services/auth.service';
 
 @Component({
   selector: 'app-top-bar-component',
@@ -11,5 +12,10 @@ import { RouterLink } from "@angular/router";
   ],
 })
 export class TopBarComponent {
-
+  private authService = inject(AuthService)
+  private router = inject(Router)
+  Logout(){
+    this.authService.Logout()
+    this.router.navigate(['/'])
+  }
 }
