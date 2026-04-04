@@ -144,12 +144,13 @@ export default class DataService {
     }
 
     public UpdateUserProfilePicture(userId: number, profile_icon: any){   
-        if (!profile_icon) return     
+        if (!profile_icon) return
         return this.http.post<any>(`${this.API_URL}/users/${userId}/profile-icon`, profile_icon, { headers: this.authService.Headers })
             .pipe(takeUntilDestroyed(this.destroyRef))
     }
 
-    public UpdatePassword(userId: number, data: Object){
-
+    public UpdatePassword(data: Object){
+        return this.http.post<any>(`${this.API_URL}/auth/update-password`, data, { headers: this.authService.Headers })
+            .pipe(takeUntilDestroyed(this.destroyRef))
     }
 }

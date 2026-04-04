@@ -49,14 +49,62 @@ export class ProfilePageComponent implements OnInit {
       email: [this.user.email, [Validators.required, Validators.email]],
     })
     this.password_form = this.fb.group({
-      old_password: ['', Validators.required],
-      new_password: ['', Validators.required],
-      conf_password: ['', Validators.required]
+      current_password: ['', Validators.required],
+      password: ['', Validators.required],
+      password_confirmation: ['', Validators.required]
     })
   }
   sendPasswordUpdateData() {
-    console.log(this.password_form.value);
+    const passwordData = this.password_form.value
+    const passwordRegex = this.authService.PASSWORD_REGEX
+    if (!passwordData.password.match(passwordRegex)){
+      Swal.fire({
+        title: "Az új jelszó túl gyenge",
+        text: "Legalább egy kis- és nagybetűt, egy számot és egy speciális karaktert kell tartalmaznia, valamint minimum 8 karakter hosszú kell legyen.",
+        theme: 'material-ui-dark',
+        icon: "error"
+      })
+      return
+    }
+    else if (passwordData.password != passwordData.password_confirmation){
+      Swal.fire({
+        title: "Az új jelszavak nem egyeznek!",
+        theme: 'material-ui-dark',
+        icon: "error"
+      })
+      return
+    }
+    this.ds.UpdatePassword(passwordData).subscribe({
+      next: async () => {
+        await Swal.fire({
+          title: "Sikeres jelszó módosítás, kérem jelentkezzen be újra!",
+          icon: "success",
+          theme: "material-ui"
+        })
+        this.authService.Logout()
+        location.reload()
+      },
+      error: (response) => {
+        const backendErrors = response?.error?.errors
+        
+        if (backendErrors.password){
+          Swal.fire({
+            title: "Az új jelszó nem lehet a régi jelszó",
+            theme: 'material-ui-dark',
+            icon: "error"
+          })
+        }
+        else if(backendErrors.current_password){
+          Swal.fire({
+            title: "Helytelen jelszó",
+            theme: 'material-ui-dark',
+            icon: "error"
+          })
+        }
+      }
+    })
   }
+
   sendUserUpdateData() {
     const userData = this.user_data_form.value
     const emailRegex = this.authService.EMAIL_REGEX
@@ -91,6 +139,7 @@ export class ProfilePageComponent implements OnInit {
       }
     })
   }
+
   togglePasswordsVisible(){
     if(this.passwordsVisible){
       this.passwordsVisible = false
@@ -126,5 +175,9 @@ export class ProfilePageComponent implements OnInit {
       };
       reader.readAsDataURL(file);
     }
+  }
+
+  ImageError(e: any){
+    e.target.src = "/assets/default_avatar.png"
   }
 }

@@ -28,4 +28,8 @@ export class TopBarComponent implements OnInit {
     this.authService.Logout()
     this.router.navigate(['/'])
   }
+
+  ImageError(e: any){
+    e.target.src = "/assets/default_avatar.png"
+  }
 }

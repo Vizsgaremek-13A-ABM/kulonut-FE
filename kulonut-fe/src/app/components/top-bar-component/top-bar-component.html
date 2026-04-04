@@ -16,7 +16,7 @@
             <div class="col p-0">
                 <div id="profile-icon">
                     @if (user.avatar && user.avatar != 'default-avatar.png') {
-                        <img src="{{user.avatar}}" class="fancy-border" alt="pfp">
+                        <img src="{{user.avatar}}" class="fancy-border" alt="pfp" (error)="ImageError($event)">
                     }
                     @else {
                         <img src="/assets/default_avatar.png" class="fancy-border" alt="pfp">
