@@ -1,4 +1,4 @@
-@import '../../../variables';
+@use '../../../variables' as *;
 
 ng-select, textarea{
     border: 1px solid $primary-blue;

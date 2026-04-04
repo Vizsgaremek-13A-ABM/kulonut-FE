@@ -59,35 +59,7 @@ export class AllProjectsPage implements OnInit {
     })
   }
 
-  FilterCommand(filters: any){    
-    if (new Date(filters.startDate).getTime() > new Date(filters.endDate).getTime()){
-      Swal.fire({
-        title: "Kezdeti dátum nem lehet a végdátum után!",
-        theme: "material-ui-dark",
-        icon: "error"
-      })
-      return
-    }
-    this.displayProjects = this.projects.filter(x => {
-      return x.project_name.includes(filters.name) &&
-      new Date(x.plan_issue_date).getTime() >= new Date(filters.startDate).getTime() &&
-      new Date(x.plan_issue_date).getTime() <= new Date(filters.endDate).getTime() &&
-      (filters.types.length == 0 ? true : (filters.types as string[]).some(y => {
-        switch (y){
-          case "Útépítési terv":
-            return x.road_construction_plan
-          case "Vízhálózati terv":
-            return x.water_network_plan
-          case "Közvilágítási terv":
-            return x.public_lighting_plan
-          case "Szennyvíz csatorna terv":
-            return x.sewage_plan
-          case "Csapadékvíz elvezetési terv":
-            return x.stormwater_drainage_plan
-          default:
-            return false
-        }
-      }));
-    })
+  FilterCommand(filterFn: Function){
+    this.displayProjects = this.projects.filter(x => filterFn(x))
   }
 }
