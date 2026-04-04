@@ -69,7 +69,7 @@ export class RegisterComponent implements OnInit {
       next: async (response) =>{
         await Swal.fire({
           title: "Sikeres regisztráció!",
-          text: "Ne felejtse el hitelesíteni e-mail címét, amit az arra kiküldött linkkel tehet meg!",
+          text: "Ne felejtse el hitelesíteni e-mail címét, amit az arra kiküldött linkkel tehet meg, valamint vegye fel a kapcsolatot az adminisztrátorral a megfelelő rangért!",
           theme: 'material-ui-dark',
           icon: "success"
         })
