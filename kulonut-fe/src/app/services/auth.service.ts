@@ -79,10 +79,6 @@ export default class AuthService {
     this.SelectStorage(remember).setItem(this.TOKEN_KEY, token);
   }
 
-  private GetToken() {
-    return this.auth_token;
-  }
-
   public GetUser() {
     return this.user;
   }

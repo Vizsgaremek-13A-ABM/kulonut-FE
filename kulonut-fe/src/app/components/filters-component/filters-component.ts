@@ -43,7 +43,7 @@ export class FiltersComponent implements OnInit {
       return
     }
     const filterFn = (x: Project) => {
-      return x.project_name.includes(filters.name) &&
+      return x.project_name.toLowerCase().includes(filters.name.toLowerCase()) &&
       new Date(x.plan_issue_date).getTime() >= new Date(filters.startDate).getTime() &&
       new Date(x.plan_issue_date).getTime() <= new Date(filters.endDate).getTime() &&
       (filters.types.length == 0 ? true : (filters.types as string[]).some(y => {
