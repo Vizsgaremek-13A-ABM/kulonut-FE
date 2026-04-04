@@ -5,8 +5,6 @@ RUN npm i
 RUN npm install -g @angular/cli
 RUN ng build --configuration production
 
-FROM nginx
-COPY --from=build /home/node/app/dist/kulonut-fe/browser /usr/share/nginx/html
-COPY nginx.conf /etc/nginx/conf.d/default.conf
+FROM httpd:2.4
+COPY --from=build /home/node/app/dist/kulonut-fe/browser /usr/local/apache2/htdocs/
 EXPOSE 80
-CMD ["nginx", "-g", "daemon off;"]
