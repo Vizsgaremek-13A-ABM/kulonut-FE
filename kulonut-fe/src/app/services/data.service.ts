@@ -137,4 +137,19 @@ export default class DataService {
         return this.http.put<any>(`${this.API_URL}/users/${userId}`, { role_id: roleId }, { headers: this.authService.Headers })
             .pipe(takeUntilDestroyed(this.destroyRef))
     }
+
+    public UpdateUserPersonal(userId: number, data: Object){
+        return this.http.put<any>(`${this.API_URL}/users/${userId}`, data, { headers: this.authService.Headers })
+            .pipe(takeUntilDestroyed(this.destroyRef))
+    }
+
+    public UpdateUserProfilePicture(userId: number, profile_icon: any){   
+        if (!profile_icon) return     
+        return this.http.post<any>(`${this.API_URL}/users/${userId}/profile-icon`, profile_icon, { headers: this.authService.Headers })
+            .pipe(takeUntilDestroyed(this.destroyRef))
+    }
+
+    public UpdatePassword(userId: number, data: Object){
+
+    }
 }

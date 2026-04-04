@@ -31,7 +31,7 @@ export class RegisterComponent implements OnInit {
   }
   sendRegisterData(){
     const registerData = this.form.value
-    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/
+    const emailRegex = this.authService.EMAIL_REGEX
     if (registerData.name.length == 0){
       Swal.fire({
         title: "Felhasználónév megadása kötelező!",
@@ -99,6 +99,6 @@ export class RegisterComponent implements OnInit {
   }
 
   private validatePassword(pwd: string){
-    return pwd.match(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z\d\.]).{8,}$/)
+    return pwd.match(this.authService.PASSWORD_REGEX)
   }
 }

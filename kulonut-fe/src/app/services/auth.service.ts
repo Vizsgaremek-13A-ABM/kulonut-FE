@@ -32,6 +32,9 @@ export default class AuthService {
   private readonly TOKEN_KEY = "kulonut:auth_token";
   private readonly USER_KEY = "kulonut:user";
 
+  public readonly PASSWORD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z\d\.]).{8,}$/
+  public readonly EMAIL_REGEX = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/
+
   constructor() {
     this.LoadFromStorage();
   }
@@ -41,7 +44,6 @@ export default class AuthService {
 
     return new HttpHeaders({
       Accept: "application/json",
-      "Content-Type": "application/json",
       Authorization: `Bearer ${this.auth_token}`,
     });
   }
@@ -73,20 +75,33 @@ export default class AuthService {
     this.ClearAuthState();
   }
 
-  public SetToken(token: string, remember: boolean) {
+  public SetToken(token: string, remember?: boolean) {
     this.auth_token = token;
+    const shouldRemember = this.ResolveRememberPreference(remember);
     this.ClearStoredToken();
-    this.SelectStorage(remember).setItem(this.TOKEN_KEY, token);
+    this.SelectStorage(shouldRemember).setItem(this.TOKEN_KEY, token);
   }
 
   public GetUser() {
     return this.user;
   }
 
-  public SetUser(user: User, remember: boolean) {
+  public SetUser(user: User, remember?: boolean) {
     this.user = user;
+    const shouldRemember = this.ResolveRememberPreference(remember);
     this.ClearStoredUser();
-    this.SelectStorage(remember).setItem(this.USER_KEY, JSON.stringify(user));
+    this.SelectStorage(shouldRemember).setItem(this.USER_KEY, JSON.stringify(user));
+  }
+
+  private ResolveRememberPreference(remember?: boolean) {
+    if (remember !== undefined) {
+      return remember;
+    }
+
+    return (
+      localStorage.getItem(this.TOKEN_KEY) !== null ||
+      localStorage.getItem(this.USER_KEY) !== null
+    );
   }
 
   private SelectStorage(remember: boolean) {
