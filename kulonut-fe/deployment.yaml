@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
         - name: github-action-container
-          image: ghcr.io/megadrive88/kulonut-fe-vizsgaremek:1775138893
+          image: ghcr.io/megadrive88/kulonut-fe-vizsgaremek:1775312314
           ports:
             - containerPort: 80
       imagePullSecrets:
