@@ -1,8 +1,11 @@
 <header>
     <img src="/assets/logo.png" alt="">
-    <a [routerLink]="['/main']" [class]="activeRoute == '/main' ? 'active' : ''">térkép</a>
-    <a [routerLink]="['/projects']" [class]="activeRoute != '/project/new' && activeRoute.includes('project') ? 'active' : ''">projektek</a>
-    <a [routerLink]="['/project/new']" [class]="activeRoute == '/project/new' ? 'active' : ''">új projekt</a> <!--nem mindenkinel-->
+    <a [routerLink]="['/main']" routerLinkActive="active">térkép</a>
+    <a [routerLink]="['/projects']" routerLinkActive="active">projektek</a>
+    <a [routerLink]="['/project/new']" routerLinkActive="active">új projekt</a> <!--nem mindenkinel-->
+    @if (user.role.level >= 5) {
+        <a [routerLink]="['/admin']" routerLinkActive="active">Felhasználókarbantartás</a>
+    }
     <a (click)="Logout()" style="cursor: pointer;">kijelentkezés</a>
     <a class="profile-button" [routerLink]="['/profile']">
         <div class="row">

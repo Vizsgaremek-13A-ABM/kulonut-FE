@@ -5,13 +5,13 @@
 // Learn more about theming and how to use it for your application's
 // custom components at https://material.angular.dev/guide/theming
 @use '@angular/material' as mat;
+@use 'variables' as *;
 @import 'bootstrap/scss/bootstrap';
 @import 'bootstrap/scss/functions';
 @import 'bootstrap/scss/variables';
 @import 'bootstrap/scss/mixins';
 @import 'bootstrap/scss/buttons';
 @import 'bootstrap/scss/forms';
-@import 'variables';
 @import "@ng-select/ng-select/themes/default.theme.css";
 @import 'sweetalert2/src/sweetalert2.scss';
 @import 'sweetalert2/themes/material-ui.css';
@@ -82,4 +82,8 @@ ng-select{
   & a:hover{
     opacity: .8;
   }
+}
+
+.swal2-container{
+  z-index: 10000 !important;
 }

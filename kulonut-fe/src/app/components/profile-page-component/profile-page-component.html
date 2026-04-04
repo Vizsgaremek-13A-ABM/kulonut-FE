@@ -4,11 +4,21 @@
         <div class="px-2">
             <h4 style="color: white;">Adatmódosítás</h4>
             <form (ngSubmit)="sendUserUpdateData()" [formGroup]="user_data_form" class="fancy-border vertical-box gap-3" style="background-color: white;">
-                <img src="pogatsa.png" alt="pfp" id="profile-picture" class="fancy-border">
-                <!-- <input type="file" matButton="filled" class="fancy-border"/> -->
+                <div id="pfp-container">
+                    @if (user.avatar && user.avatar != 'default-avatar.png') {
+                        <img src="{{user.avatar}}" class="fancy-border" alt="pfp" id="profile-picture">
+                    }
+                    @else {
+                        <img src="/assets/default_avatar.png" class="fancy-border" alt="pfp" id="profile-picture">
+                    }
+                    <div class="pfp-overlay" (click)="UploadPfpCommand()">
+                        ✎Feltöltés
+                    </div>
+                </div>
+                <input type="file" #pfpUploader id="pfp-file-input" (change)="onFileSelected($event)" accept="image/*"/>
                 <app-form-field-component
                     label="Felhasználónév"
-                    controlName="username"
+                    controlName="name"
                     [form]="user_data_form"
                     [required]="true"
                 />
@@ -26,7 +36,7 @@
                 />
                 @if((user_data_form.dirty || user_data_form.touched) && user_data_form.invalid){
                     <p class="error-box fancy-border mb-1">
-                    @if(user_data_form.get("username")?.errors?.['required']){
+                    @if(user_data_form.get("name")?.errors?.['required']){
                         - Felhasználónév megadása kötelező!<br>
                     }
                     @if(user_data_form.get("email")?.errors?.['required']){
@@ -37,7 +47,7 @@
                     }
                     </p>
                 }
-                <button type="submit" matButton="filled" class="fancy-border" [disabled]="true">Mentés</button>
+                <button type="submit" matButton="filled" class="fancy-border" [disabled]="((user_data_form.dirty || user_data_form.touched) && user_data_form.invalid)">Mentés</button>
             </form>
         </div>
     </div>
@@ -70,15 +80,11 @@
                     #confpassword
                 />
                 @if((password_form.dirty || password_form.touched) && password_form.invalid){
-                    <!-- ha nem egyeznek akkor nem invalid. erre valami jobb boolt kell keresni. ugyanez gombok disabledre -->
                     <p class="error-box fancy-border mb-1">
                     @if(password_form.get("old_password")?.errors?.['required'] || 
                         password_form.get("new_password")?.errors?.['required'] ||
                         password_form.get("conf_password")?.errors?.['required']){
                         - Töltse ki mind a három mezőt!<br>
-                    }
-                    @if(password_form.get("new_password")?.value != password_form.get("conf_password")?.value){
-                        - Az új jelszavak nem egyeznek
                     }
                     </p>
                 }

@@ -1,0 +1,43 @@
+<app-top-bar-component/>
+<div class="content fancy-border vertical-box gap-4">
+    <div class="white-panel d-flex" id="filter-row">
+        <div>
+            <label for="username">Felhasználónév</label>
+            <input [(ngModel)]="filterValue" name="username" type="text" class="form-control fancy-border" placeholder="Felhasználónév">
+        </div>
+        <button (click)="FilterCommand()" matButton="filled" class="fancy-border" style="max-height: 38px;">Keresés</button>
+    </div>
+    @for (user of displayUsers; track user.id) {
+        <ul class="user-row fancy-border white-panel">
+            <li>
+                Felhasználónév
+                <h5>
+                    {{user.name}}
+                </h5>
+            </li>
+            <li>
+                Megjelenő név
+                <h5>
+                    {{ user.display_name ?? '-' }}
+                </h5>
+            </li>
+            <li>
+                E-mail cím
+                <h5>
+                    {{user.email}}
+                </h5>
+            </li>
+            <li>
+                Rang
+                <select class="form-select fancy-border" (change)="SaveRoleCommand(user, $event)">
+                    @for (role of roles; track role.id) {
+                        <option [value]="role.id" [selected]="user.role.id == role.id">
+                            {{role.role_name}}
+                        </option>
+                    }
+                </select>
+            </li>
+        </ul>
+    }
+</div>
+<button id="back-to-top" class="fancy-border" (click)="BackToTopCommand()">🡅</button>

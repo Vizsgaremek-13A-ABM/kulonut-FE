@@ -1,12 +1,12 @@
 import { Component, inject, OnInit } from '@angular/core';
-import { Router, RouterLink } from "@angular/router";
+import { Router, RouterLink, RouterLinkActive } from "@angular/router";
 import AuthService from '../../services/auth.service';
 import User from '../../interfaces/user.interface';
 import { environment } from '../../../environments/enviromnent';
 
 @Component({
   selector: 'app-top-bar-component',
-  imports: [RouterLink],
+  imports: [RouterLink, RouterLinkActive],
   templateUrl: './top-bar-component.html',
   styleUrls: [
     '../../app.scss',

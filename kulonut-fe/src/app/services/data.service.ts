@@ -10,6 +10,8 @@ import { tileLayer } from "leaflet";
 import DisplayShape from "../interfaces/displayshape.interface";
 import * as geojson from 'geojson';
 import AuthService from "./auth.service";
+import User from "../interfaces/user.interface";
+import Role from "../interfaces/role.interface";
 
 @Injectable({
   providedIn: 'root'
@@ -119,5 +121,35 @@ export default class DataService {
     public DeleteProject(id: number){
         return this.http.delete<any>(`${this.API_URL}/projects/${id}`, { headers: this.authService.Headers })
             .pipe(takeUntilDestroyed(this.destroyRef))
+    }
+
+    public GetAllUsers(){
+        return this.http.get<{data: User[]}>(`${this.API_URL}/users`, { headers: this.authService.Headers })
+            .pipe(takeUntilDestroyed(this.destroyRef))
+    }
+
+    public GetAllRoles(){
+        return this.http.get<{data: Role[]}>(`${this.API_URL}/roles`, { headers: this.authService.Headers })
+            .pipe(takeUntilDestroyed(this.destroyRef))
+    }
+
+    public UpdateUserRole(userId: number, roleId: number){
+        return this.http.put<any>(`${this.API_URL}/users/${userId}`, { role_id: roleId }, { headers: this.authService.Headers })
+            .pipe(takeUntilDestroyed(this.destroyRef))
+    }
+
+    public UpdateUserPersonal(userId: number, data: Object){
+        return this.http.put<any>(`${this.API_URL}/users/${userId}`, data, { headers: this.authService.Headers })
+            .pipe(takeUntilDestroyed(this.destroyRef))
+    }
+
+    public UpdateUserProfilePicture(userId: number, profile_icon: any){   
+        if (!profile_icon) return     
+        return this.http.post<any>(`${this.API_URL}/users/${userId}/profile-icon`, profile_icon, { headers: this.authService.Headers })
+            .pipe(takeUntilDestroyed(this.destroyRef))
+    }
+
+    public UpdatePassword(userId: number, data: Object){
+
     }
 }

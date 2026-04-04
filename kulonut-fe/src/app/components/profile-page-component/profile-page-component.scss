@@ -1,4 +1,4 @@
-@import '../../../variables';
+@use '../../../variables' as *;
 
 button{
     background-color: $primary-blue !important;
@@ -13,9 +13,36 @@ button{
     }
 }
 
+.pfp-overlay{
+    height: 100%;
+    width: 100%;
+    position: absolute;
+    background-color: rgba($color: black, $alpha: .5);
+    top: 0;
+    left: 0;
+    cursor: pointer;
+    visibility: hidden;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
 #profile-picture{
     height: 150px;
     width: 150px;
     object-fit: cover;
     border: 1px solid $primary-blue;
+}
+
+#pfp-container{
+    position: relative;
+    width: min-content;
+    &:hover .pfp-overlay {
+        visibility: visible;
+    }
+}
+
+#pfp-file-input{
+    display: none;
 }

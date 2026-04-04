@@ -1,7 +1,7 @@
 <app-top-bar-component/>
 <div class="content fancy-border vertical-box gap-4">
     <app-filters-component (apply)="FilterCommand($event)"/>
-    @for (project of displayProjects; track $index){
+    @for (project of displayProjects; track project.id){
         <ul class="project-row fancy-border white-panel">
             <li>
                 Projekt neve
@@ -35,7 +35,7 @@
             </li>
             <li class="buttons-li">
                 <!-- jogosultsaghoz kotni, egyebkent csak show (mint majd polygon kattintasnal) -->
-                <a [routerLink]="[`/project/show/${project.id}`]" matButton="filled" class="fancy-border">Megtekint</a>
+                <a [routerLink]="[`/project/show/${project.id}`]" matButton="filled" class="fancy-border">Megtekintés</a>
                 <a [routerLink]="[`/project/edit/${project.id}`]" matButton="filled" class="fancy-border">Szerkesztés</a>
                 <button (click)="DeleteProjectCommand(project.id, project.project_name)" matButton="filled" class="fancy-border orange-bg">Törlés</button>
             </li>
