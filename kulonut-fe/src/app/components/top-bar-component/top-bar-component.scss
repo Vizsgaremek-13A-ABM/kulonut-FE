@@ -83,10 +83,14 @@ nav{
    margin-left: 10px;
    padding: 0 6px;
    border-radius: 0;
+   border: 1px solid black;
 }
 
 @media screen and (max-width: 1400px) {
     .navbar{
         padding-bottom: 5px;
+    }
+    nav a:not(.profile-button):not(.navbar-brand){
+        border: 0;
     }
 }

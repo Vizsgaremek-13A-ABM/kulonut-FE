@@ -12,6 +12,10 @@
     }
 }
 
+ng-select{
+    z-index: 999;
+}
+
 #filters-row{
     justify-content: space-between;
     align-items: flex-end;
@@ -27,5 +31,14 @@ button{
     bottom: 0;
 }
 
-// ::ng-deep .ng-select-container.ng-has-value{
-// }
+
+@media screen and (max-width: 1400px) {
+    #filters-row{
+        display: grid !important;
+        grid-template-columns: repeat(2, 1fr);
+        & #button-parent{
+            width: 100%;
+            grid-column: 1 / -1;
+        }
+    }
+}
