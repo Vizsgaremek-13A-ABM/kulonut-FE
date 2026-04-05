@@ -16,7 +16,7 @@ spec:
         app: kulonut-fe-vizsgaremek
     spec:
       containers:
-        - name: github-action-container
+        - name: httpd-container
           image: ghcr.io/megadrive88/kulonut-fe-vizsgaremek:1775312762
           ports:
             - containerPort: 80
@@ -51,7 +51,6 @@ metadata:
   annotations:
     cert-manager.io/cluster-issuer: letsencrypt-prod
 spec:
-  ingressClassName: nginx
   tls:
     - hosts:
         - kulonut-vizsgaremek.jcloud.jedlik.cloud
