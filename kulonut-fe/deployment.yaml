@@ -20,7 +20,7 @@ spec:
     spec:
       containers:
         - name: httpd-container
-          image: ghcr.io/megadrive88/kulonut-fe-vizsgaremek:1775395418
+          image: ghcr.io/megadrive88/kulonut-fe-vizsgaremek:1775396268
           ports:
             - containerPort: 80
           # Konténer egészségügyi ellenőrzései:
