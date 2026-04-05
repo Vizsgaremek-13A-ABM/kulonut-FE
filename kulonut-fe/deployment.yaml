@@ -19,11 +19,14 @@ spec:
         app: kulonut-fe-vizsgaremek
     spec:
       containers:
-        - name: httpd-container
-          image: ghcr.io/megadrive88/kulonut-fe-vizsgaremek:1775395418
+        - name: httpd-frontend
+          # (A) Ha a GHCR image tartalmaz Apache-t:
+          image: ghcr.io/megadrive88/kulonut-fe-vizsgaremek:<IMAGE_TAG>
+          # (B) Alternatíva: hivatalos httpd image és static fájlok másolása:
+          # image: httpd:2.4
           ports:
             - containerPort: 80
-          # Konténer egészségügyi ellenőrzései:
+          # Egészségügyi ellenőrzések:
           readinessProbe:
             httpGet:
               path: /
@@ -36,7 +39,6 @@ spec:
               port: 80
             initialDelaySeconds: 15
             periodSeconds: 20
-          # Erőforrás-kérések és korlátok:
           resources:
             requests:
               cpu: "250m"
