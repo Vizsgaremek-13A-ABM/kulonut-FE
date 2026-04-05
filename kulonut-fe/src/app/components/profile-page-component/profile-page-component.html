@@ -1,7 +1,7 @@
 <app-top-bar-component/>
-<div class="content fancy-border row">
-    <div class="col-12 col-md-6">
-        <div class="px-2">
+<section class="content fancy-border row">
+    <div class="col-12 col-md-6 g-0 mb-2">
+        <div class="px-3">
             <h4 style="color: white;">Adatmódosítás</h4>
             <form (ngSubmit)="sendUserUpdateData()" [formGroup]="user_data_form" class="fancy-border vertical-box gap-3" style="background-color: white;">
                 <div id="pfp-container">
@@ -51,8 +51,8 @@
             </form>
         </div>
     </div>
-    <div class="col-12 col-md-6">
-        <div class="px-2">
+    <div class="col-12 col-md-6 g-0">
+        <div class="px-3">
             <h4 style="color: white;">Jelszó módosítás</h4>
             <form (ngSubmit)="sendPasswordUpdateData()" [formGroup]="password_form" class="fancy-border vertical-box gap-3" style="background-color: white;">
                 <app-form-field-component
@@ -97,4 +97,6 @@
             </form>
         </div>
     </div>
-</div>
+    <button class="mx-3 fancy-border" id="logout-button" matButton="filled" (click)="Logout()">Kijelentkezés</button>
+
+</section>

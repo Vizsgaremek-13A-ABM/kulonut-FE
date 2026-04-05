@@ -188,4 +188,9 @@ export class ProfilePageComponent implements OnInit {
   ImageError(e: any){
     e.target.src = "/assets/default_avatar.png"
   }
+
+  Logout(){
+    this.authService.Logout()
+    this.router.navigate(['/'])
+  }
 }
