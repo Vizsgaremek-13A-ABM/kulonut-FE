@@ -19,8 +19,8 @@ spec:
         app: kulonut-fe-vizsgaremek
     spec:
       containers:
-        - name: apache-frontend
-          image: ghcr.io/megadrive88/kulonut-fe-vizsgaremek:latest
+        - name: httpd-container
+          image: ghcr.io/megadrive88/kulonut-fe-vizsgaremek:1775395418
           ports:
             - containerPort: 80
           # Konténer egészségügyi ellenőrzései:
