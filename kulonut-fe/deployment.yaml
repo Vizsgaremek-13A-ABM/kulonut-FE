@@ -5,6 +5,7 @@ metadata:
   labels:
     app.kubernetes.io/name: kulonut-vizsgaremek
     app.kubernetes.io/component: frontend
+    app: kulonut-fe-vizsgaremek
 spec:
   replicas: 1
   selector:
@@ -13,27 +14,93 @@ spec:
   template:
     metadata:
       labels:
+        app.kubernetes.io/name: kulonut-vizsgaremek
+        app.kubernetes.io/component: frontend
         app: kulonut-fe-vizsgaremek
     spec:
       containers:
-        - name: httpd-container
-          image: ghcr.io/megadrive88/kulonut-fe-vizsgaremek:1775395181
+        - name: apache-frontend
+          image: ghcr.io/megadrive88/kulonut-fe-vizsgaremek:latest
           ports:
             - containerPort: 80
+          # Konténer egészségügyi ellenőrzései:
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 80
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 80
+            initialDelaySeconds: 15
+            periodSeconds: 20
+          # Erőforrás-kérések és korlátok:
+          resources:
+            requests:
+              cpu: "250m"
+              memory: "64Mi"
+            limits:
+              cpu: "500m"
+              memory: "128Mi"
       imagePullSecrets:
         - name: ghcr-auth-token
 
 ---
-
 apiVersion: v1
 kind: Service
 metadata:
   name: kulonut-fe-vizsgaremek-service
+  labels:
+    app.kubernetes.io/name: kulonut-vizsgaremek
+    app.kubernetes.io/component: frontend
 spec:
-  type: LoadBalancer   # Use NodePort if testing locally
+  type: ClusterIP
   selector:
     app: kulonut-fe-vizsgaremek
   ports:
-    - protocol: TCP
+    - name: http
+      protocol: TCP
       port: 80
       targetPort: 80
+
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: kulonut-vizsgaremek-ingress
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+spec:
+  ingressClassName: nginx
+  tls:
+    - hosts:
+        - kulonut-vizsgaremek.jcloud.jedlik.cloud
+      secretName: kulonut-vizsgaremek-certificate
+  rules:
+    - host: kulonut-vizsgaremek.jcloud.jedlik.cloud
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: kulonut-fe-vizsgaremek-service
+                port:
+                  number: 80
+
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: kulonut-vizsgaremek-certificate
+  labels:
+    app.kubernetes.io/name: kulonut-vizsgaremek
+spec:
+  secretName: kulonut-vizsgaremek-certificate
+  issuerRef:
+    name: letsencrypt-prod
+    kind: ClusterIssuer
+  dnsNames:
+    - kulonut-vizsgaremek.jcloud.jedlik.cloud
