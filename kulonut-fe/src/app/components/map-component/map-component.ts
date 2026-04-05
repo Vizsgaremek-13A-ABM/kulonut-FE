@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, EventEmitter, inject, Input, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, EventEmitter, inject, Input, OnDestroy, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core';
 import DataService from '../../services/data.service';
 import { Subject } from 'rxjs';
 import Polygon from '../../interfaces/polygon.interface';
@@ -17,7 +17,7 @@ import { GeoJsonObject } from 'geojson';
   templateUrl: './map-component.html',
   styleUrl: './map-component.scss',
 })
-export class MapComponent implements OnInit, AfterViewInit {
+export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('map') map!:ElementRef
   private ds = inject(DataService)
   @Input() readonly = true
@@ -304,5 +304,9 @@ export class MapComponent implements OnInit, AfterViewInit {
       `,
       theme: 'material-ui-dark'
     })
+  }
+  ngOnDestroy(): void {
+    if(this.leafletMap)
+      this.leafletMap.remove()
   }
 }

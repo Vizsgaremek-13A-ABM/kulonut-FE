@@ -6,10 +6,10 @@
             <form (ngSubmit)="sendUserUpdateData()" [formGroup]="user_data_form" class="fancy-border vertical-box gap-3" style="background-color: white;">
                 <div id="pfp-container">
                     @if (user.avatar && user.avatar != 'default-avatar.png') {
-                        <img src="{{user.avatar}}" class="fancy-border" alt="pfp" id="profile-picture" (error)="ImageError($event)">
+                        <img src="{{user.avatar}}" class="fancy-border" alt="pfp" id="profile-picture" #pfpImg (error)="ImageError($event)">
                     }
                     @else {
-                        <img src="/assets/default_avatar.png" class="fancy-border" alt="pfp" id="profile-picture">
+                        <img src="/assets/default_avatar.png" class="fancy-border" alt="pfp" id="profile-picture" #pfpImg>
                     }
                     <div class="pfp-overlay" (click)="UploadPfpCommand()">
                         ✎Feltöltés
