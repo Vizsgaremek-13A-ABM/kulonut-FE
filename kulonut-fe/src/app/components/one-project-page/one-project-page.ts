@@ -13,7 +13,6 @@ import { MatButtonModule } from '@angular/material/button';
 import { MapComponent } from '../map-component/map-component';
 import DisplayShape from '../../interfaces/displayshape.interface';
 import { Project } from '../../interfaces/project.interface';
-import 'sweetalert2/themes/material-ui.css'
 
 @Component({
   selector: 'app-one-project-page',
@@ -48,7 +47,7 @@ export class OneProjectPageComponent implements OnInit {
 
   protected selectFields!:{control: string, items$: Observable<any>}[]
   protected dateFields = [
-    { title: "Tervkiadás dátuma", control: "plan_issue_date" },
+    { title: "Tervkiadás dátuma", control: "plan_issue_date", mandatory: true },
     { title: "Közmű nyilatkozat kiadás dátuma", control: "utility_statement_issue_date" },
     { title: "Útépítési engedély kiadás dátuma", control: "road_construction_permit_date" },
     { title: "Vízjogi engedély kiadás dátuma", control: "water_rights_permit_date" }
@@ -87,9 +86,9 @@ export class OneProjectPageComponent implements OnInit {
       folder_number: [{ value: "", disabled: isDisabled }],
       work_number: [{ value: "", disabled: isDisabled }, Validators.required],
       plan_issue_date: [{ value: this.ds.GetToday(), disabled: isDisabled }, Validators.required],
-      utility_statement_issue_date: [{ value: this.ds.GetToday(), disabled: isDisabled }],
-      road_construction_permit_date: [{ value: this.ds.GetToday(), disabled: isDisabled }],
-      water_rights_permit_date: [{ value: this.ds.GetToday(), disabled: isDisabled }],
+      utility_statement_issue_date: [{ value: null, disabled: isDisabled }],
+      road_construction_permit_date: [{ value: null, disabled: isDisabled }],
+      water_rights_permit_date: [{ value: null, disabled: isDisabled }],
       road_construction_plan: [{ value: false, disabled: isDisabled }],
       water_network_plan: [{ value: false, disabled: isDisabled }],
       sewage_plan: [{ value: false, disabled: isDisabled }],
@@ -152,7 +151,10 @@ export class OneProjectPageComponent implements OnInit {
 
   onSaved(shapes:any){
     this.selectedShapes = shapes
-    this.polygonsCount = this.selectedShapes.filter(x=>x.isConnectedToCurrentProject).length
+    const nextCount = this.selectedShapes.filter(x => x.isConnectedToCurrentProject).length
+    queueMicrotask(() => {
+      this.polygonsCount = nextCount
+    })
   }
 
   async uploadFile(){

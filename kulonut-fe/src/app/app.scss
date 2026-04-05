@@ -1,4 +1,4 @@
-@import '../variables';
+@use '../variables' as *;
 
 *{
     scroll-behavior: smooth;
@@ -37,8 +37,6 @@ form{
         font-size: 120%;
         &:disabled{
             opacity: .8;
-            -webkit-box-shadow: 7px 7px 0px 0px black;
-            box-shadow: 7px 7px 0px 0px black;
         }
         &.blue-form-button{
             background-color: $primary-blue !important;
@@ -55,6 +53,8 @@ form{
     pointer-events: none;
     content: "*";
     color: $error-bg;
+    font-size: 70%;
+    vertical-align: top;
 }
 
 .error-box{
@@ -68,10 +68,10 @@ form{
     background-color: $bg-gray;
     margin-left: auto;
     margin-right: auto;
-    max-width: 1400px;
+    max-width: 1600px;
     color: black;
     padding: 30px;
-    & div.white-panel{
+    & .white-panel{
         background-color: white;
         padding: 10px;
         -webkit-box-shadow: 7px 7px 0px 0px $bg-dark-gray;

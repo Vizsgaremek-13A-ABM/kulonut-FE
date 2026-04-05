@@ -1,18 +1,26 @@
 <header>
-    <img src="assets/logo.png" alt="">
-    <a [routerLink]="['/main']" class="active">térkép</a>
-    <a [routerLink]="['']">projektek</a>
-    <a [routerLink]="['/project/new']">új projekt</a> <!--nem mindenkinel-->
-    <a [routerLink]="['']">kijelentkezés</a>
+    <img src="/assets/logo.png" alt="">
+    <a [routerLink]="['/main']" routerLinkActive="active">térkép</a>
+    <a [routerLink]="['/projects']" routerLinkActive="active">projektek</a>
+    <a [routerLink]="['/project/new']" routerLinkActive="active">új projekt</a> <!--nem mindenkinel-->
+    @if (user.role.level >= 5) {
+        <a [routerLink]="['/admin']" routerLinkActive="active">Felhasználókarbantartás</a>
+    }
+    <a (click)="Logout()" style="cursor: pointer;">kijelentkezés</a>
     <a class="profile-button" [routerLink]="['/profile']">
         <div class="row">
             <div class="col" style="text-align: right;">
-                <span class="username">Gipsz Jakab</span> <br>
-                <span class="user-role">rang</span>
+                <span class="username">{{user.display_name ? user.display_name : user.name}}</span> <br>
+                <span class="user-role">{{user.role.role_name}}</span>
             </div>
             <div class="col p-0">
                 <div id="profile-icon">
-                    <img src="pogatsa.png" class="fancy-border" alt="pfp">
+                    @if (user.avatar && user.avatar != 'default-avatar.png') {
+                        <img src="{{user.avatar}}" class="fancy-border" alt="pfp" (error)="ImageError($event)">
+                    }
+                    @else {
+                        <img src="/assets/default_avatar.png" class="fancy-border" alt="pfp">
+                    }
                 </div>
             </div>
         </div>

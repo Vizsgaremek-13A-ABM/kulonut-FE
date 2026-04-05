@@ -1,0 +1,36 @@
+@use '../../../variables' as *;
+
+.user-row{
+    list-style-type: none;
+    gap: 10px;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    margin-bottom: 0;
+}
+
+#back-to-top{
+    position: fixed;
+    bottom: 15px;
+    right: 15px;
+    width: 40px;
+    height: 40px;
+    font-size: 22pt;
+    border: 0;
+}
+
+button{
+    border-radius: 0;
+    font-size: 120%;
+    background-color: $primary-blue !important;
+    bottom: 0;
+}
+
+input, select{
+    border-radius: 0;
+    border: 1px solid $primary-blue;
+}
+
+#filter-row{
+    align-items: end;
+    gap: 15px;
+}

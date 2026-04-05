@@ -3,6 +3,8 @@ import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } 
 import {MatButtonModule} from '@angular/material/button';
 import { Router, RouterLink } from '@angular/router';
 import { FormFieldComponent } from '../form-field-component/form-field-component';
+import AuthService from '../../services/auth.service';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-login-component',
@@ -15,16 +17,35 @@ import { FormFieldComponent } from '../form-field-component/form-field-component
 })
 export class LoginComponent implements OnInit {
   private router = inject(Router)
+  private authService = inject(AuthService)
   private fb = inject(FormBuilder)
   protected form!: FormGroup
+
   ngOnInit(){
+    if (this.authService.GetUser()){
+      this.router.navigate(['/main'])
+    }
     this.form = this.fb.group({
-      username: ['', Validators.required],
+      email: ['', [Validators.required, Validators.email]],
       password: ['', Validators.required],
+      rememberMe: [false]
     })
   }
   sendLoginData(){
-    console.log(this.form.value);
-    this.router.navigate(['profile']) // ideiglenes
+    const loginData = this.form.value
+    this.authService.Login(loginData).subscribe({
+      next: (response) => {        
+        this.authService.SetToken(response.token, loginData.rememberMe)
+        this.authService.SetUser(response.user, loginData.rememberMe)
+        this.router.navigate(['/main'])
+      },
+      error: () => {
+        Swal.fire({
+          title: "Hibás e-mail cím vagy jelszó!",
+          theme: "material-ui-dark",
+          icon: "error"
+        })
+      }
+    })
   }
 }

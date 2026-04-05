@@ -1,4 +1,4 @@
-@import '../../../variables';
+@use '../../../variables' as *;
 
 header{
     z-index: 9999;
@@ -23,6 +23,7 @@ header{
         text-transform: uppercase;
         height: 100%;
         padding: 15px 30px;
+        white-space: nowrap;
         &.active{
             font-weight: 500;
             background-color: $bg-dark-gray;
@@ -45,20 +46,6 @@ header{
             color: $primary-orange;
         }
         & #profile-icon{
-            // background-color: $primary-orange;
-            // color: black;
-            // border-radius: 100%;
-            // aspect-ratio: 1;
-            // position: relative;
-            // height: 40px;
-            // & span{
-            //     position: absolute;
-            //     top: 50%;
-            //     left: 50%;
-            //     transform: translate(-50%, -50%);
-            //     font-size: 150%;
-            //     font-weight: bold;
-            // }
             & img{
                 width: 40px;
                 height: 40px;
