@@ -3,6 +3,7 @@ import { DestroyRef, inject, Injectable } from "@angular/core";
 import { environment } from "../../environments/enviromnent";
 import User from "../interfaces/user.interface";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
+import { Router } from "@angular/router";
 
 interface RegisterResponse {
   message: string;
@@ -25,6 +26,7 @@ export default class AuthService {
   private http = inject(HttpClient);
   private destroyRef = inject(DestroyRef);
   private readonly API_URL = environment.apiUrl;
+  private router = inject(Router)
 
   private auth_token: string | undefined;
   private user: User | undefined;
@@ -70,9 +72,12 @@ export default class AuthService {
       .post<any>(`${this.API_URL}/auth/logout`, {}, { headers: this.Headers })
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
+        next: () => {
+          this.ClearAuthState();
+          this.router.navigate(['/'])
+        },
         error: (e) => console.log(e),
       });
-    this.ClearAuthState();
   }
 
   public SetToken(token: string, remember?: boolean) {

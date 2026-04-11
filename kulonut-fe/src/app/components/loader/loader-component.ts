@@ -2,7 +2,7 @@ import { Component, OnInit } from "@angular/core";
 import { AsyncPipe, NgIf } from "@angular/common";
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { Observable } from "rxjs";
-import { LoaderService } from "../services/loading.service";
+import { LoaderService } from "../../services/loading.service";
 
 @Component({
   selector: 'app-loader-component',

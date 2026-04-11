@@ -26,7 +26,6 @@ export class TopBarComponent implements OnInit {
 
   Logout(){
     this.authService.Logout()
-    this.router.navigate(['/'])
   }
 
   ImageError(e: any){
