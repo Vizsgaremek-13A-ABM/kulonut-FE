@@ -56,7 +56,8 @@ export class MainPageComponent implements OnInit {
       width: "800px",
       html: `<div class="d-flex gap-2" style="flex-direction: column;">
       ${layer.project_ids.map((x: number) => {
-        const project = this.projects.find(y => y.id == x)
+        const project = this.filteredProjects.find(y => y.id == x)
+        if (!project) return
         return `<a href="#" data-id="${x}"
           style="color: white; text-decoration: none;"
           class="project-link"
