@@ -1,6 +1,6 @@
 import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { DestroyRef, inject, Injectable } from "@angular/core";
-import { environment } from "../../environments/enviromnent";
+import { environment } from "../../environments/environment";
 import User from "../interfaces/user.interface";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { Router } from "@angular/router";

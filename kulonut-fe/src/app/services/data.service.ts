@@ -1,6 +1,6 @@
 import { HttpClient } from "@angular/common/http";
 import { DestroyRef, inject, Injectable } from "@angular/core";
-import { environment } from "../../environments/enviromnent";
+import { environment } from "../../environments/environment";
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import Designer from "../interfaces/designer.interface";
 import {Project} from "../interfaces/project.interface";

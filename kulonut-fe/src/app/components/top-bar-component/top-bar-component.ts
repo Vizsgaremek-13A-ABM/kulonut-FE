@@ -2,7 +2,7 @@ import { Component, inject, OnInit } from '@angular/core';
 import { Router, RouterLink, RouterLinkActive } from "@angular/router";
 import AuthService from '../../services/auth.service';
 import User from '../../interfaces/user.interface';
-import { environment } from '../../../environments/enviromnent';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-top-bar-component',
