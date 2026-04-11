@@ -4,6 +4,14 @@
 // components according to the Material 3 design spec.
 // Learn more about theming and how to use it for your application's
 // custom components at https://material.angular.dev/guide/theming
+$grid-breakpoints: (
+  xs: 0,
+  sm: 576px,
+  md: 768px,
+  lg: 992px,
+  xl: 1200px,
+  xxl: 1400px
+);
 @use '@angular/material' as mat;
 @use 'variables' as *;
 @import 'bootstrap/scss/bootstrap';

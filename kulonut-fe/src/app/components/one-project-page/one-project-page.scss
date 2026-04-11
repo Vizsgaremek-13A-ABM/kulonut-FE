@@ -5,6 +5,10 @@ ng-select, textarea{
     border-radius: 0;
 }
 
+h5{
+    white-space: nowrap;
+}
+
 #datepicker-panel h5{
     margin-bottom: 3px;
 }
@@ -52,8 +56,22 @@ input[type="date"]::-webkit-calendar-picker-indicator {
   cursor: pointer;
 }
 
-@media screen and (max-width: 992px){
-    #project-form{
-        margin-bottom: 20px;
+
+   
+#project-form{
+    margin-bottom: 20px;
+}
+
+#form-inner{
+    padding-right: 0 !important;
+}
+
+@media screen and (max-width: 1400px){
+    #form-left{
+        padding-right: 0 !important;
+        margin-bottom: 90px;
+    }
+    #datepicker-panel{
+        padding-left: 0;
     }
 }

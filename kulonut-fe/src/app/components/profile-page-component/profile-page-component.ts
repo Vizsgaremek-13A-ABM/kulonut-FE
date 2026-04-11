@@ -154,14 +154,14 @@ export class ProfilePageComponent implements OnInit {
       for(let item of this.passwordBoxes){
         (item as any).type = "password"
       }
-      (this.eyeImage.nativeElement as HTMLImageElement).src = `${environment.imageUrl}/assets/unseen.png`
+      (this.eyeImage.nativeElement as HTMLImageElement).src = `/assets/unseen.png`
       
     } else{
       this.passwordsVisible = true
       for(let item of this.passwordBoxes){
         (item as any).type = "text"
       }
-      (this.eyeImage.nativeElement as HTMLImageElement).src = `${environment.imageUrl}/assets/seen.png`
+      (this.eyeImage.nativeElement as HTMLImageElement).src = `/assets/seen.png`
     }
   }
 
