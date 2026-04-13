@@ -1,6 +1,8 @@
 @use '../../../variables' as *;
 
-header{
+nav{
+    max-width: 100vw;
+    overflow: hidden;
     z-index: 9999;
     position: fixed;
     top: 0;
@@ -15,7 +17,7 @@ header{
         width: 300px;
         margin-right: 15px;
     }
-    & a:not(.profile-button){
+    & a:not(.profile-button):not(.navbar-brand){
         border-left: 1px solid $primary-blue;
         font-size: 120%;
         text-decoration: none;
@@ -37,7 +39,7 @@ header{
     .profile-button{
         text-decoration: none;
         margin-left: auto;
-        margin-right: 25px;
+        margin-right: 15px;
         white-space: nowrap;
         & .username{
             color: var(--mat-sys-on-surface);
@@ -51,6 +53,7 @@ header{
                 height: 40px;
                 object-fit: cover;
                 border: 1px solid black;
+                margin-right: 0;
             }
         }
         &:hover{
@@ -63,4 +66,31 @@ header{
 }
 .separator-margin{
     margin-bottom: 70px;
+}
+
+.navbar {
+  padding: 0;
+}
+
+.right-buttons{
+    position: absolute;
+    right: 15px;
+    top: 4px;
+    display: flex;
+}
+
+.navbar-toggler{
+   margin-left: 10px;
+   padding: 0 6px;
+   border-radius: 0;
+   border: 1px solid black;
+}
+
+@media screen and (max-width: 1400px) {
+    .navbar{
+        padding-bottom: 5px;
+    }
+    nav a:not(.profile-button):not(.navbar-brand){
+        border: 0;
+    }
 }

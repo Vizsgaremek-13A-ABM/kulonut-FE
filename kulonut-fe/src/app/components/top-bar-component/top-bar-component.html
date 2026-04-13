@@ -1,30 +1,42 @@
-<header>
-    <img src="/assets/logo.png" alt="">
-    <a [routerLink]="['/main']" routerLinkActive="active">térkép</a>
-    <a [routerLink]="['/projects']" routerLinkActive="active">projektek</a>
-    <a [routerLink]="['/project/new']" routerLinkActive="active">új projekt</a> <!--nem mindenkinel-->
-    @if (user.role.level >= 5) {
-        <a [routerLink]="['/admin']" routerLinkActive="active">Felhasználókarbantartás</a>
-    }
-    <a (click)="Logout()" style="cursor: pointer;">kijelentkezés</a>
-    <a class="profile-button" [routerLink]="['/profile']">
-        <div class="row">
-            <div class="col" style="text-align: right;">
-                <span class="username">{{user.display_name ? user.display_name : user.name}}</span> <br>
-                <span class="user-role">{{user.role.role_name}}</span>
-            </div>
-            <div class="col p-0">
-                <div id="profile-icon">
-                    @if (user.avatar && user.avatar != 'default-avatar.png') {
-                        <img src="{{user.avatar}}" class="fancy-border" alt="pfp" (error)="ImageError($event)">
-                    }
-                    @else {
-                        <img src="/assets/default_avatar.png" class="fancy-border" alt="pfp">
-                    }
+<nav class="navbar navbar-expand-xxl navbar-light px-0">
+   
+    <a class="navbar-brand p-0 m-0" [routerLink]="['/main']">
+        <img src="/assets/logo.png" alt="">
+    </a>
+    
+    <div class="right-buttons">
+        <a class="profile-button" [routerLink]="['/profile']" aria-label="Profiladatok megjelenítése">
+            <div class="row">
+                <div class="col" style="text-align: right;">
+                    <span class="username">{{user.display_name ? user.display_name : user.name}}</span> <br>
+                    <span class="user-role">{{user.role.role_name}}</span>
+                </div>
+                <div class="col p-0">
+                    <div id="profile-icon">
+                        @if (user.avatar && user.avatar != 'default-avatar.png') {
+                            <img src="{{user.avatar}}" class="fancy-border" alt="Profilkép" (error)="ImageError($event)">
+                        }
+                        @else {
+                            <img src="/assets/default_avatar.png" class="fancy-border" alt="Profilkép">
+                        }
+                    </div>
                 </div>
             </div>
+        </a>
+        <button class="navbar-toggler fancy-border" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Menü megjelenítése">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+    </div>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <div class="navbar-nav align-items-xxl-center w-100">
+            <a [routerLink]="['/main']" routerLinkActive="active" aria-label="térkép">térkép</a>
+            <a [routerLink]="['/projects']" routerLinkActive="active" aria-label="projektek">projektek</a>
+            <a [routerLink]="['/project/new']" routerLinkActive="active" aria-label="új projekt">új projekt</a> <!--nem mindenkinel-->
+            @if (user.role.level >= 5) {
+                <a [routerLink]="['/admin']" routerLinkActive="active" aria-label="felhasználókarbantartás">felhasználókarbantartás</a>
+            }
+            <a (click)="Logout()" style="cursor: pointer;" aria-label="kijelentkezés">kijelentkezés</a>
         </div>
-
-    </a>
-</header>
+    </div>
+</nav>
 <div class="separator-margin"></div>

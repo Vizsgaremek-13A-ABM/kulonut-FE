@@ -1,21 +1,21 @@
 <app-top-bar-component/>
-<div class="content fancy-border d-flex vertical-box mx-3" style="gap: 25px; max-width: 100%;">
+<section class="content fancy-border d-flex vertical-box mx-auto" style="gap: 25px;">
     
     <div class="row g-0">
-        <form class="col-12 col-lg-7 p-0" [formGroup]="project_form" (submit)="SubmitProjectData()">
-            <div class="pe-3">
+        <form class="col-12 p-0 g-0" [formGroup]="project_form" (submit)="SubmitProjectData()" id="project-form">
+            <div class="pe-3 g-0" id="form-inner">
                 <div class="d-flex white-panel g-0 gap-3" style="width: 100%; height: 60px;">
-                    <h3 style="white-space: nowrap;" class="mandatory-star">Projekt neve:</h3>
-                    <input id="project-name-input" type="text" class="form-control" formControlName="project_name">
+                    <h3 style="white-space: nowrap;" [class]="mode != 'show' ? 'mandatory-star' : ''">Projekt neve:</h3>
+                    <input title="A projekt neve" id="project-name-input" type="text" class="form-control" formControlName="project_name">
                 </div>
-                <div class="white-panel row g-0" style="height: 660px;">
-                    <div class="col-6 pe-3">
+                <div class="white-panel row g-0" style="min-height: 660px;">
+                    <div class="col-12 col-xxl-6 pe-3" id="form-left">
                         <div class="row">
                             <div class="col-5 d-flex vertical-box" style="gap: 10px; margin-top: 10px;">
-                                <h5>Tervező</h5>
-                                <h5 class="mandatory-star">Generáltervező</h5>
-                                <h5>Geodézia</h5>
-                                <h5 class="mandatory-star">Megrendelő</h5>
+                                <h6>Tervező</h6>
+                                <h6 [class]="mode != 'show' ? 'mandatory-star' : ''">Generáltervező</h6>
+                                <h6>Geodézia</h6>
+                                <h6 [class]="mode != 'show' ? 'mandatory-star' : ''">Megrendelő</h6>
                             </div>
                             <div class="col-7 d-flex vertical-box" style="gap: 5px;">
                                 @for (item of selectFields; track $index) {
@@ -36,9 +36,9 @@
                         <hr>
                         <div class="row">
                             <div class="col-5 d-flex vertical-box" style="gap: 10px; margin-top: 10px;">
-                                <h5>Egyéb munkarészek</h5>
-                                <h5>Iratpapucs száma</h5>
-                                <h5 class="mandatory-star">Munkaszám</h5>
+                                <h6>Egyéb munkarészek</h6>
+                                <h6>Iratpapucs száma</h6>
+                                <h6 [class]="mode != 'show' ? 'mandatory-star' : ''">Munkaszám</h6>
                             </div>
                             <div class="col-7 d-flex vertical-box" style="gap: 5px;">
                                 <input type="text" class="form-control" formControlName="other_work_parts" maxlength="255">
@@ -47,14 +47,14 @@
                             </div>
                         </div>
                         <hr>
-                        <h5>Megjegyzés</h5>
+                        <h6>Megjegyzés</h6>
                         <textarea style="max-height: 120px; height: 100%;" maxlength="255" class="form-control" formControlName="notes"></textarea>
                         <span>A projekthez jelenleg {{polygonsCount}} terület tartozik</span>
                     </div>
-                    <div class="col-6 row vertical-box" id="datepicker-panel" style="align-items: flex-start; gap: 15px; padding-right: 0;">
+                    <div class="col-12 col-xxl-6 row vertical-box g-0" id="datepicker-panel" style="align-items: flex-start; gap: 15px; padding-right: 0;">
                         @for (item of dateFields; track $index){
                             <div>
-                                <h5 [className]="item.mandatory ? 'mandatory-star' : ''">{{item.title}}</h5>
+                                <h6 [className]="(item.mandatory && mode != 'show') ? 'mandatory-star' : ''">{{item.title}}</h6>
                                 <input type="date" class="form-control" [formControlName]="item.control">
                             </div>
                         }
@@ -75,7 +75,7 @@
                             <hr>
                             <div>
                                 <label for="uploadFile">Polygonok feltöltése TXT formában</label>
-                                <div class="d-flex gap-2">
+                                <div class="d-flex gap-2" style="margin-bottom: 15px;">
                                     <input id="uploadFile" #TXTUploader type="file" class="form-control" accept=".txt">
                                     <button (click)="uploadFile()" type="button" matButton="filled" class="blue-form-button" style="max-height: 37px;">Feltöltés</button>
                                 </div>
@@ -89,7 +89,7 @@
                 </div>
             </div>
         </form>
-        <div class="col-12 col-lg-5">
+        <div class="col-12 g-0">
             <div class="d-flex vertical-box white-panel" style="height: 720px;">
                 <div id="map" class="fancy-border" style="border: 1px solid black;">
                     <app-map-component [readonlyProjectIds]="[projectId]" [file]="uploadedFile" [readonly]="mode == 'show'" [projectId]="projectId" (saved)="onSaved($event)"/>
@@ -97,4 +97,4 @@
             </div>
         </div>
     </div>
-</div>
+</section>

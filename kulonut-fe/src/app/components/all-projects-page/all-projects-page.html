@@ -1,5 +1,5 @@
 <app-top-bar-component/>
-<div class="content fancy-border vertical-box gap-4">
+<section class="content fancy-border vertical-box gap-4">
     <app-filters-component (apply)="FilterCommand($event)"/>
     @for (project of displayProjects; track project.id){
         <ul class="project-row fancy-border white-panel">
@@ -42,5 +42,5 @@
         </ul>
         <!-- paging? -->
     }
-</div>
+</section>
 <button id="back-to-top" class="fancy-border" (click)="BackToTopCommand()">🡅</button>

@@ -46,3 +46,11 @@ button{
 #pfp-file-input{
     display: none;
 }
+
+#logout-button{
+    background-color: $error-bg !important;
+    border-radius: 0;
+    margin-top: 20px;
+    flex-shrink: 1;
+    font-size: 120%;
+}

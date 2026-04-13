@@ -3,7 +3,6 @@ import { TopBarComponent } from "../top-bar-component/top-bar-component";
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { FormFieldComponent } from '../form-field-component/form-field-component';
 import { MatButtonModule } from '@angular/material/button';
-import { environment } from '../../../environments/enviromnent';
 import AuthService from '../../services/auth.service';
 import User from '../../interfaces/user.interface';
 import { forkJoin, of } from 'rxjs';
@@ -29,6 +28,7 @@ export class ProfilePageComponent implements OnInit {
   protected user!: User
   private formdata!:FormData
 
+  @ViewChild('pfpImg') pfpImg!: ElementRef<HTMLImageElement>;
   @ViewChild('oldpassword') oldPasswordBox!: ElementRef;
   @ViewChild('newpassword') newPasswordBox!: ElementRef;
   @ViewChild('confpassword') confPasswordBox!: ElementRef;
@@ -82,7 +82,6 @@ export class ProfilePageComponent implements OnInit {
           theme: "material-ui"
         })
         this.authService.Logout()
-        location.reload()
       },
       error: (response) => {
         const backendErrors = response?.error?.errors
@@ -120,11 +119,16 @@ export class ProfilePageComponent implements OnInit {
       newUserData: this.ds.UpdateUserPersonal(this.user.id, userData),
       profileIcon: this.ds.UpdateUserProfilePicture(this.user.id, this.formdata) ?? of(null)
     }).subscribe({
-      next: ({newUserData, profileIcon}) => {
+      next: async ({newUserData, profileIcon}) => {
         this.user = newUserData.data
         if (profileIcon && profileIcon.data)
           this.user.avatar = profileIcon.data.avatar;
         this.authService.SetUser(this.user)
+        await Swal.fire({
+          title: "Adatai sikeresen módosultak!",
+          theme: "material-ui-dark",
+          icon: "success"
+        })
         location.reload()
       },
       error: (response) =>{
@@ -146,14 +150,14 @@ export class ProfilePageComponent implements OnInit {
       for(let item of this.passwordBoxes){
         (item as any).type = "password"
       }
-      (this.eyeImage.nativeElement as HTMLImageElement).src = `${environment.imageUrl}/assets/unseen.png`
+      (this.eyeImage.nativeElement as HTMLImageElement).src = `/assets/unseen.png`
       
     } else{
       this.passwordsVisible = true
       for(let item of this.passwordBoxes){
         (item as any).type = "text"
       }
-      (this.eyeImage.nativeElement as HTMLImageElement).src = `${environment.imageUrl}/assets/seen.png`
+      (this.eyeImage.nativeElement as HTMLImageElement).src = `/assets/seen.png`
     }
   }
 
@@ -170,7 +174,7 @@ export class ProfilePageComponent implements OnInit {
 
       const reader = new FileReader();
       reader.onload = () => {
-        (document.querySelector("#profile-picture") as HTMLImageElement).src = reader.result as string;
+        this.pfpImg.nativeElement.src = reader.result as string;
         this.cdr.detectChanges()
       };
       reader.readAsDataURL(file);
@@ -179,5 +183,9 @@ export class ProfilePageComponent implements OnInit {
 
   ImageError(e: any){
     e.target.src = "/assets/default_avatar.png"
+  }
+
+  Logout(){
+    this.authService.Logout()
   }
 }
