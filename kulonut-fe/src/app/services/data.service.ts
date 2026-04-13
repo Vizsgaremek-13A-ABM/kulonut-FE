@@ -9,7 +9,6 @@ import { Observable, map } from "rxjs";
 import { tileLayer } from "leaflet";
 import DisplayShape from "../interfaces/displayshape.interface";
 import * as geojson from 'geojson';
-import AuthService from "./auth.service";
 import User from "../interfaces/user.interface";
 import Role from "../interfaces/role.interface";
 
@@ -21,7 +20,6 @@ export default class DataService {
     private destroyRef = inject(DestroyRef)
     private readonly API_URL = environment.apiUrl;
     public readonly STORAGE_URL = environment.storageUrl;
-    private authService = inject(AuthService)
 
     private projectTypes = [
         "Útépítési terv",
@@ -119,38 +117,38 @@ export default class DataService {
     }
 
     public DeleteProject(id: number){
-        return this.http.delete<any>(`${this.API_URL}/projects/${id}`, { headers: this.authService.Headers })
+        return this.http.delete<any>(`${this.API_URL}/projects/${id}`)
             .pipe(takeUntilDestroyed(this.destroyRef))
     }
 
     public GetAllUsers(){
-        return this.http.get<{data: User[]}>(`${this.API_URL}/users`, { headers: this.authService.Headers })
+        return this.http.get<{data: User[]}>(`${this.API_URL}/users`)
             .pipe(takeUntilDestroyed(this.destroyRef))
     }
 
     public GetAllRoles(){
-        return this.http.get<{data: Role[]}>(`${this.API_URL}/roles`, { headers: this.authService.Headers })
+        return this.http.get<{data: Role[]}>(`${this.API_URL}/roles`)
             .pipe(takeUntilDestroyed(this.destroyRef))
     }
 
     public UpdateUserRole(userId: number, roleId: number){
-        return this.http.put<any>(`${this.API_URL}/users/${userId}`, { role_id: roleId }, { headers: this.authService.Headers })
+        return this.http.put<any>(`${this.API_URL}/users/${userId}`, { role_id: roleId })
             .pipe(takeUntilDestroyed(this.destroyRef))
     }
 
     public UpdateUserPersonal(userId: number, data: Object){
-        return this.http.put<any>(`${this.API_URL}/users/${userId}`, data, { headers: this.authService.Headers })
+        return this.http.put<any>(`${this.API_URL}/users/${userId}`, data)
             .pipe(takeUntilDestroyed(this.destroyRef))
     }
 
     public UpdateUserProfilePicture(userId: number, profile_icon: any){   
         if (!profile_icon) return
-        return this.http.post<any>(`${this.API_URL}/users/${userId}/profile-icon`, profile_icon, { headers: this.authService.Headers })
+        return this.http.post<any>(`${this.API_URL}/users/${userId}/profile-icon`, profile_icon)
             .pipe(takeUntilDestroyed(this.destroyRef))
     }
 
     public UpdatePassword(data: Object){
-        return this.http.post<any>(`${this.API_URL}/auth/update-password`, data, { headers: this.authService.Headers })
+        return this.http.post<any>(`${this.API_URL}/auth/update-password`, data)
             .pipe(takeUntilDestroyed(this.destroyRef))
     }
 }
