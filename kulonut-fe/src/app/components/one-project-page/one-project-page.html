@@ -12,10 +12,10 @@
                     <div class="col-12 col-xxl-6 pe-3" id="form-left">
                         <div class="row">
                             <div class="col-5 d-flex vertical-box" style="gap: 10px; margin-top: 10px;">
-                                <h5>Tervező</h5>
-                                <h5 [class]="mode != 'show' ? 'mandatory-star' : ''">Generáltervező</h5>
-                                <h5>Geodézia</h5>
-                                <h5 [class]="mode != 'show' ? 'mandatory-star' : ''">Megrendelő</h5>
+                                <h6>Tervező</h6>
+                                <h6 [class]="mode != 'show' ? 'mandatory-star' : ''">Generáltervező</h6>
+                                <h6>Geodézia</h6>
+                                <h6 [class]="mode != 'show' ? 'mandatory-star' : ''">Megrendelő</h6>
                             </div>
                             <div class="col-7 d-flex vertical-box" style="gap: 5px;">
                                 @for (item of selectFields; track $index) {
@@ -36,9 +36,9 @@
                         <hr>
                         <div class="row">
                             <div class="col-5 d-flex vertical-box" style="gap: 10px; margin-top: 10px;">
-                                <h5>Egyéb munkarészek</h5>
-                                <h5>Iratpapucs száma</h5>
-                                <h5 [class]="mode != 'show' ? 'mandatory-star' : ''">Munkaszám</h5>
+                                <h6>Egyéb munkarészek</h6>
+                                <h6>Iratpapucs száma</h6>
+                                <h6 [class]="mode != 'show' ? 'mandatory-star' : ''">Munkaszám</h6>
                             </div>
                             <div class="col-7 d-flex vertical-box" style="gap: 5px;">
                                 <input type="text" class="form-control" formControlName="other_work_parts" maxlength="255">
@@ -47,14 +47,14 @@
                             </div>
                         </div>
                         <hr>
-                        <h5>Megjegyzés</h5>
+                        <h6>Megjegyzés</h6>
                         <textarea style="max-height: 120px; height: 100%;" maxlength="255" class="form-control" formControlName="notes"></textarea>
                         <span>A projekthez jelenleg {{polygonsCount}} terület tartozik</span>
                     </div>
                     <div class="col-12 col-xxl-6 row vertical-box g-0" id="datepicker-panel" style="align-items: flex-start; gap: 15px; padding-right: 0;">
                         @for (item of dateFields; track $index){
                             <div>
-                                <h5 [className]="(item.mandatory && mode != 'show') ? 'mandatory-star' : ''">{{item.title}}</h5>
+                                <h6 [className]="(item.mandatory && mode != 'show') ? 'mandatory-star' : ''">{{item.title}}</h6>
                                 <input type="date" class="form-control" [formControlName]="item.control">
                             </div>
                         }
