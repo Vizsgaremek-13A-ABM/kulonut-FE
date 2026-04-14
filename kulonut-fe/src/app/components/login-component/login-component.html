@@ -3,12 +3,14 @@
   <form class="vertical-box fancy-border gap-3" (ngSubmit)="sendLoginData()" [formGroup]="form">
     <img src="/assets/logo.png" alt="">
     <app-form-field-component
+        data-cy="email"
         label="E-mail cím"
         controlName="email"
         type="email"
         [form]="form"
     />
     <app-form-field-component
+        data-cy="password"
         label="Jelszó"
         controlName="password"
         type="password"
@@ -21,7 +23,7 @@
           Maradok bejelentkezve
         </label>
       </div>
-      <button matButton="filled" class="wide fancy-border mt-2 blue-form-button" type="submit">Bejelentkezés</button>
+      <button data-cy="login-submit" matButton="filled" class="wide fancy-border mt-2 blue-form-button" type="submit">Bejelentkezés</button>
     </div>
     <div>
       <a [routerLink]="['/user_register']" style="width: fit-content;">Nincs még fiókja?</a>

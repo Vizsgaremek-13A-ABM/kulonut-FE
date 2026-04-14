@@ -8,8 +8,8 @@
         <a class="profile-button" [routerLink]="['/profile']" aria-label="Profiladatok megjelenítése">
             <div class="row">
                 <div class="col" style="text-align: right;">
-                    <span class="username">{{user.display_name ? user.display_name : user.name}}</span> <br>
-                    <span class="user-role">{{user.role.role_name}}</span>
+                    <span data-cy="user-display-name" class="username">{{user.display_name ? user.display_name : user.name}}</span> <br>
+                    <span data-cy="user-role" class="user-role">{{user.role.role_name}}</span>
                 </div>
                 <div class="col p-0">
                     <div id="profile-icon">
