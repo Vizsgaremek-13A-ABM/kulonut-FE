@@ -5,7 +5,7 @@
     </a>
     
     <div class="right-buttons">
-        <a class="profile-button" [routerLink]="['/profile']" aria-label="Profiladatok megjelenítése">
+        <a data-cy="user-profile" class="profile-button" [routerLink]="['/profile']" aria-label="Profiladatok megjelenítése">
             <div class="row">
                 <div class="col" style="text-align: right;">
                     <span data-cy="user-display-name" class="username">{{user.display_name ? user.display_name : user.name}}</span> <br>
@@ -29,13 +29,13 @@
     </div>
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <div class="navbar-nav align-items-xxl-center w-100">
-            <a [routerLink]="['/main']" routerLinkActive="active" aria-label="térkép">térkép</a>
-            <a [routerLink]="['/projects']" routerLinkActive="active" aria-label="projektek">projektek</a>
-            <a [routerLink]="['/project/new']" routerLinkActive="active" aria-label="új projekt">új projekt</a> <!--nem mindenkinel-->
+            <a [routerLink]="['/main']" data-cy="nav-map" routerLinkActive="active" aria-label="térkép">térkép</a>
+            <a [routerLink]="['/projects']" data-cy="nav-projects" routerLinkActive="active" aria-label="projektek">projektek</a>
+            <a [routerLink]="['/project/new']" data-cy="nav-new-project" routerLinkActive="active" aria-label="új projekt">új projekt</a> <!--nem mindenkinel-->
             @if (user.role.level >= 5) {
-                <a [routerLink]="['/admin']" routerLinkActive="active" aria-label="felhasználókarbantartás">felhasználókarbantartás</a>
+                <a [routerLink]="['/admin']" data-cy="nav-users" routerLinkActive="active" aria-label="felhasználókarbantartás">felhasználókarbantartás</a>
             }
-            <a (click)="Logout()" style="cursor: pointer;" aria-label="kijelentkezés">kijelentkezés</a>
+            <a (click)="Logout()" data-cy="nav-logout" style="cursor: pointer;" aria-label="kijelentkezés">kijelentkezés</a>
         </div>
     </div>
 </nav>

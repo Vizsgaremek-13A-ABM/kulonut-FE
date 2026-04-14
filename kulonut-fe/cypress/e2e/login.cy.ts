@@ -1,9 +1,12 @@
 describe('Login Tests', () => {
 
-  it('should show error popup on invalid login', () => {
+  it('should show login header', () => {
+  cy.visit('/')
+  cy.contains('Bejelentkezés')
+  })
+  it('should show error popup on empty login', () => {
     cy.visit('/')
 
-    cy.contains('Bejelentkezés').click()
 
     cy.get('[data-cy="login-submit"]').click()
     cy.get('.swal2-popup', { timeout: 5000 })
@@ -14,8 +17,6 @@ describe('Login Tests', () => {
 
   it('should login on valid login', () => {
     cy.visit('/')
-
-    cy.contains('Bejelentkezés').click()
 
     cy.fixture('user').then((user) => {
       cy.get('[data-cy="email"] input').type(user.email)
