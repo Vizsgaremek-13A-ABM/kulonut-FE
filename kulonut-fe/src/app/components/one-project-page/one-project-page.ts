@@ -1,5 +1,5 @@
 import { Component, ElementRef, inject, OnInit, ViewChild, ChangeDetectorRef } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { TopBarComponent } from '../top-bar-component/top-bar-component';
 import DataService from '../../services/data.service';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -13,6 +13,8 @@ import { MatButtonModule } from '@angular/material/button';
 import { MapComponent } from '../map-component/map-component';
 import DisplayShape from '../../interfaces/displayshape.interface';
 import { Project } from '../../interfaces/project.interface';
+import AuthService from '../../services/auth.service';
+import User from '../../interfaces/user.interface';
 
 @Component({
   selector: 'app-one-project-page',
@@ -28,6 +30,8 @@ export class OneProjectPageComponent implements OnInit {
   protected mode!:string
   protected projectId!:number
   private ds = inject(DataService)
+  private authservice = inject(AuthService)
+  private router = inject(Router)
   private fb = inject(FormBuilder);
   private cdr = inject(ChangeDetectorRef)
   @ViewChild("TXTUploader") txtUploader!: ElementRef<HTMLInputElement>
@@ -45,6 +49,8 @@ export class OneProjectPageComponent implements OnInit {
   private selectedShapes!: DisplayShape[]
   protected polygonsCount = 0
 
+  protected user!: User
+
   protected selectFields!:{control: string, items$: Observable<any>}[]
   protected dateFields = [
     { title: "Tervkiadás dátuma", control: "plan_issue_date", mandatory: true },
@@ -61,7 +67,8 @@ export class OneProjectPageComponent implements OnInit {
     { title: "Közvilágítási terv", control: "public_lighting_plan"  }
   ]
 
-  ngOnInit(): void {    
+  ngOnInit(): void {
+    this.user = this.authservice.GetUser()!
     this.mode = this.route.snapshot.data['mode'];
     const isDisabled = this.mode === "show";
     if(this.mode != "new"){
@@ -173,4 +180,19 @@ export class OneProjectPageComponent implements OnInit {
       }
     }
   }
+  navigateToEdit(){
+    if (this.user.role.level < 50) return
+    this.router.navigate([`/project/edit/${this.projectId}`])
+  }
 }
+// 1 projekt letrehozas - kesz
+// 2 projekt szerkesztés/törlés - kesz
+// 3 projekt megtekintés, ha ez projektenkent valtozo akkor annak a megadasa hogy legyen pontosan
+// 4 felhasznalo rang modositas - kesz
+
+// 1: 50
+// 2: 50
+// 3: sztem ugy a legegyszerubb ha van egy dropdown ahol szint szerint mondjuk novekvo sorrendbe vannak a role-ok és akkor ott meg tudod adni hogy mi legyen a minimum rang ahhoz a projekthez
+// 4: 99
+
+// 3: es akkor csak a magáénal alacsonyabbat allithat be

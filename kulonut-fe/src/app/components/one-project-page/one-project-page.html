@@ -83,8 +83,10 @@
                         }
                     </div>
                     @if (mode != "show") { 
-                        <!-- else ha jogosult, akkor szerkesztes -->
                         <button [disabled]="project_form.invalid" style="margin-top: auto;" type="submit" matButton="filled" class="blue-form-button fancy-border">{{mode == "new" ? "Rögzít" : "Mentés"}}</button>
+                    }
+                    @else if (user.role.level >= 50){
+                        <button style="margin-top: auto;" type="button" matButton="filled" class="blue-form-button fancy-border" (click)="navigateToEdit()">Szerkesztés</button>
                     }
                 </div>
             </div>

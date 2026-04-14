@@ -53,6 +53,7 @@ export class MainPageComponent implements OnInit {
       customClass: {
         htmlContainer: 'swal-left-align'
       },
+      icon: "info",
       width: "800px",
       html: `<div class="d-flex gap-2" style="flex-direction: column;">
       ${layer.project_ids.map((x: number) => {

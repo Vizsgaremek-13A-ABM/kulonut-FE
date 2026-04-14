@@ -7,6 +7,8 @@ import { Project } from '../../interfaces/project.interface';
 import { DatePipe } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import Swal from 'sweetalert2';
+import User from '../../interfaces/user.interface';
+import AuthService from '../../services/auth.service';
 
 @Component({
   selector: 'app-all-projects-page',
@@ -19,11 +21,15 @@ import Swal from 'sweetalert2';
 })
 export class AllProjectsPage implements OnInit {
   private ds = inject(DataService)
+  private authService = inject(AuthService)
   
   protected projects!: Project[]
   protected displayProjects!: Project[]
 
+  protected user!: User
+
   ngOnInit(): void {
+    this.user = this.authService.GetUser()!
     this.ds.GetProjects()
       .subscribe({
         next: (response)=>{
