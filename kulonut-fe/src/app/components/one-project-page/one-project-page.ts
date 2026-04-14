@@ -16,6 +16,7 @@ import { Project } from '../../interfaces/project.interface';
 import AuthService from '../../services/auth.service';
 import User from '../../interfaces/user.interface';
 import Role from '../../interfaces/role.interface';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-one-project-page',
@@ -87,10 +88,10 @@ export class OneProjectPageComponent implements OnInit {
     }
     this.project_form = this.fb.group({
       project_name: [{ value: "", disabled: isDisabled }, Validators.required],
-      designer: [{ value: null, disabled: isDisabled }],
-      generalDesigner: [{ value: null, disabled: isDisabled }, Validators.required],
-      geodesy: [{ value: null, disabled: isDisabled }],
-      client: [{ value: null, disabled: isDisabled }, Validators.required],
+      designer_id: [{ value: null, disabled: isDisabled }],
+      general_designer_id: [{ value: null, disabled: isDisabled }, Validators.required],
+      geodesy_id: [{ value: null, disabled: isDisabled }],
+      client_id: [{ value: null, disabled: isDisabled }, Validators.required],
       other_work_parts: [{ value: "", disabled: isDisabled }],
       folder_number: [{ value: "", disabled: isDisabled }],
       work_number: [{ value: "", disabled: isDisabled }, Validators.required],
@@ -117,18 +118,18 @@ export class OneProjectPageComponent implements OnInit {
       }
     })
     this.selectFields = [
-      { control: 'designer', items$: this.designers },
-      { control: 'generalDesigner', items$: this.generalDesigners },
-      { control: 'geodesy', items$: this.geodesies },
-      { control: 'client', items$: this.clients },
+      { control: 'designer_id', items$: this.designers },
+      { control: 'general_designer_id', items$: this.generalDesigners },
+      { control: 'geodesy_id', items$: this.geodesies },
+      { control: 'client_id', items$: this.clients },
     ];
     this.projectLoaded$.subscribe(project=>{      
       this.project_form.patchValue({
         project_name: project.project_name,
-        designer: project.designer,
-        generalDesigner: project.general_designer,
-        geodesy: project.geodesy,
-        client: project.client,
+        designer_id: project.designer,
+        general_designer_id: project.general_designer,
+        geodesy_id: project.geodesy,
+        client_id: project.client,
         other_work_parts: project.other_work_parts,
         folder_number: project.folder_number,
         work_number: project.work_number,
@@ -152,15 +153,37 @@ export class OneProjectPageComponent implements OnInit {
 	}
 
   SubmitProjectData(){
+    console.log(this.project_form.value);
+    
     if(this.mode == "show") return
     if(this.mode == "edit"){
-
+      this.ds.UpdateProject(this.projectId, this.project_form.value).subscribe({
+        next: () => {
+          this.PolygonCRUDactions()
+        },
+        error: () => {
+          Swal.fire({
+            title: "Hiba történt a projekt mentése során!",
+            text: "Előfordulhat, hogy szerverhiba, vagy hiányzó adat.",
+            icon: "error"
+          })
+        }
+      })
     }
     else if(this.mode == "new"){
-
+      this.ds.CreateProject(this.project_form.value).subscribe({
+        next: () => {
+          this.PolygonCRUDactions()
+        },
+        error: () => {
+          Swal.fire({
+            title: "Hiba történt a projekt létrehozása során!",
+            text: "Előfordulhat, hogy szerverhiba, vagy hiányzó adat.",
+            icon: "error"
+          })
+        }
+      })
     }
-    console.log(this.project_form.value);
-    console.log(this.selectedShapes);
   }
 
   onSaved(shapes:any){
@@ -190,6 +213,9 @@ export class OneProjectPageComponent implements OnInit {
   navigateToEdit(){
     if (this.user.role.level < 50) return
     this.router.navigate([`/project/edit/${this.projectId}`])
+  }
+  PolygonCRUDactions(){
+    console.log(this.selectedShapes);
   }
 }
 // 1 projekt letrehozas - kesz

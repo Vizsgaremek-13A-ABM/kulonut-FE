@@ -109,11 +109,13 @@ export default class DataService {
     }
 
     public CreateProject(project: Project){
-        // return this.http.post<{id: number}>(`${this.API_URL}/projects`, )
+        return this.http.post<{id: number}>(`${this.API_URL}/projects`, project)
+            .pipe(takeUntilDestroyed(this.destroyRef))
     }
 
     public UpdateProject(id: number, project: Project){
-        // return this.http.put<{data: Project;}>(`${this.API_URL}/projects/${}`, )
+        return this.http.put<{data: Project;}>(`${this.API_URL}/projects/${id}`, project)
+            .pipe(takeUntilDestroyed(this.destroyRef))
     }
 
     public DeleteProject(id: number){
@@ -150,5 +152,17 @@ export default class DataService {
     public UpdatePassword(data: Object){
         return this.http.post<any>(`${this.API_URL}/auth/update-password`, data)
             .pipe(takeUntilDestroyed(this.destroyRef))
+    }
+
+    public BulkCreatePolygons(){
+
+    }
+
+    public BulkUpdatePolygons(){
+        
+    }
+
+    public BulkDeletePolygons(){
+        
     }
 }
