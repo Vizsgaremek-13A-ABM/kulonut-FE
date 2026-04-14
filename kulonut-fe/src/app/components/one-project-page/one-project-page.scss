@@ -67,6 +67,10 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     padding-right: 0 !important;
 }
 
+input[type="date"]{
+    width: fit-content;
+}
+
 @media screen and (max-width: 1400px){
     #form-left{
         padding-right: 0 !important;
