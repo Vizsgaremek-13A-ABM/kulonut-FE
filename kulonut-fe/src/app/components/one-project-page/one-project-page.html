@@ -65,7 +65,7 @@
                                 <h6 class="mandatory-star">Legkisebb rang, amivel látható</h6>
                                 <select class="form-select" formControlName="min_role_level">
                                     @for (role of roles; track role.id) {
-                                        <option [ngValue]="role.level" [title]="role.description">{{role.role_name}}</option>
+                                        <option [selected]="mode != 'new' && project_form.value.min_role_level == role.level" [ngValue]="role.level" [title]="role.description">{{role.role_name}}</option>
                                     }
                                 </select>
                             </div>

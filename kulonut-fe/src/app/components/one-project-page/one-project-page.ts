@@ -80,9 +80,13 @@ export class OneProjectPageComponent implements OnInit {
         next: (resp)=>{
           this.projectLoaded$.next(resp.data)     
         },
-        error: (e)=>{
-          console.log(e.message);
-          //router navigate
+        error: ()=>{
+          Swal.fire({
+            title: "Hiba történt a projekt betöltése során!",
+            icon: "error",
+            theme: "material-ui-dark"
+          })
+          this.router.navigate(['/projects'])
         }
       })
     }
@@ -153,9 +157,8 @@ export class OneProjectPageComponent implements OnInit {
 	}
 
   SubmitProjectData(){
-    console.log(this.project_form.value);
-    
     if(this.mode == "show") return
+    if (this.user.role.level < 50) return
     if(this.mode == "edit"){
       this.ds.UpdateProject(this.projectId, this.project_form.value).subscribe({
         next: () => {
@@ -165,7 +168,8 @@ export class OneProjectPageComponent implements OnInit {
           Swal.fire({
             title: "Hiba történt a projekt mentése során!",
             text: "Előfordulhat, hogy szerverhiba, vagy hiányzó adat.",
-            icon: "error"
+            icon: "error",
+            theme: "material-ui-dark"
           })
         }
       })
@@ -179,7 +183,8 @@ export class OneProjectPageComponent implements OnInit {
           Swal.fire({
             title: "Hiba történt a projekt létrehozása során!",
             text: "Előfordulhat, hogy szerverhiba, vagy hiányzó adat.",
-            icon: "error"
+            icon: "error",
+            theme: "material-ui-dark"
           })
         }
       })

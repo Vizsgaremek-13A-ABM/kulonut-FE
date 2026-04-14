@@ -59,6 +59,9 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 }
 
 
+select:disabled{
+    background-image: none !important;
+}
    
 #project-form{
     margin-bottom: 20px;
