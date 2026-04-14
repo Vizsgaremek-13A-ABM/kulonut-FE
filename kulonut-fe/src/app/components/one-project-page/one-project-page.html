@@ -51,13 +51,25 @@
                         <textarea style="max-height: 120px; height: 100%;" maxlength="255" class="form-control" formControlName="notes"></textarea>
                         <span>A projekthez jelenleg {{polygonsCount}} terület tartozik</span>
                     </div>
-                    <div class="col-12 col-xxl-6 row vertical-box g-0 ps-2" id="datepicker-panel" style="align-items: flex-start; gap: 15px; padding-right: 0;">
-                        @for (item of dateFields; track $index){
-                            <div>
-                                <h6 [className]="(item.mandatory && mode != 'show') ? 'mandatory-star' : ''">{{item.title}}</h6>
-                                <input type="date" class="form-control" [formControlName]="item.control">
+                    <div class="col-12 col-xxl-6 row g-0 ps-2" id="datepicker-panel" style="align-items: flex-start; gap: 15px; padding-right: 0;">
+                        <div style="flex-wrap: nowrap;" class="d-flex">
+                            <div class="col-6 g-0 vertical-box pe-4" style="gap: 15px;">
+                                @for (item of dateFields; track $index){
+                                    <div>
+                                        <h6 [className]="(item.mandatory && mode != 'show') ? 'mandatory-star' : ''">{{item.title}}</h6>
+                                        <input type="date" class="form-control" [formControlName]="item.control">
+                                    </div>
+                                }
                             </div>
-                        }
+                            <div class="col-6 g-0">
+                                <h6 class="mandatory-star">Legkisebb rang, amivel látható</h6>
+                                <select class="form-select" formControlName="min_role_level">
+                                    @for (role of roles; track role.id) {
+                                        <option [ngValue]="role.level" [title]="role.description">{{role.role_name}}</option>
+                                    }
+                                </select>
+                            </div>
+                        </div>
                         <hr>
                         <ul id="checkboxes">
                             @for (item of checkFields; track $index) {

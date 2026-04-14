@@ -15,6 +15,7 @@ import DisplayShape from '../../interfaces/displayshape.interface';
 import { Project } from '../../interfaces/project.interface';
 import AuthService from '../../services/auth.service';
 import User from '../../interfaces/user.interface';
+import Role from '../../interfaces/role.interface';
 
 @Component({
   selector: 'app-one-project-page',
@@ -45,6 +46,7 @@ export class OneProjectPageComponent implements OnInit {
   protected generalDesigners!: Observable<Designer[]>
   protected geodesies!: Observable<Geodesy[]>
   protected clients!: Observable<Client[]>
+  protected roles!: Role[]
 
   private selectedShapes!: DisplayShape[]
   protected polygonsCount = 0
@@ -102,13 +104,18 @@ export class OneProjectPageComponent implements OnInit {
       stormwater_drainage_plan: [{ value: false, disabled: isDisabled }],
       public_lighting_plan: [{ value: false, disabled: isDisabled }],
       notes: [{ value: "", disabled: isDisabled }],
-      min_role_level: [1]
+      min_role_level: [{ value: 99, disabled: isDisabled }, Validators.required]
     });
     this.projectTypes = this.ds.GetProjectTypes()
     this.designers = this.ds.GetDesigners().pipe(map(x => x.data))
     this.generalDesigners = this.ds.GetGeneralDesigners().pipe(map(x => x.data))
     this.geodesies = this.ds.GetGeodesies().pipe(map(x => x.data))
     this.clients = this.ds.GetClients().pipe(map(x => x.data))
+    this.ds.GetAllRoles().pipe(map(x => x.data)).subscribe({
+      next: (resp) => {
+        this.roles = resp.filter(x => this.user.role.level >= x.level).sort((x, y) => y.level - x.level)
+      }
+    })
     this.selectFields = [
       { control: 'designer', items$: this.designers },
       { control: 'generalDesigner', items$: this.generalDesigners },
@@ -135,7 +142,7 @@ export class OneProjectPageComponent implements OnInit {
         stormwater_drainage_plan: project.stormwater_drainage_plan,
         public_lighting_plan: project.public_lighting_plan,
         notes: project.notes,
-        min_role_level: 1
+        min_role_level: project.min_role_level
       })
     })
   }
