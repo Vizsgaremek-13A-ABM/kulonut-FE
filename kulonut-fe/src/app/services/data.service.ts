@@ -6,7 +6,7 @@ import Designer from "../interfaces/designer.interface";
 import {Project} from "../interfaces/project.interface";
 import Polygon from "../interfaces/polygon.interface";
 import { Observable, map } from "rxjs";
-import { tileLayer } from "leaflet";
+import { polygon, tileLayer } from "leaflet";
 import DisplayShape from "../interfaces/displayshape.interface";
 import * as geojson from 'geojson';
 import User from "../interfaces/user.interface";
@@ -103,6 +103,22 @@ export default class DataService {
         })
     }
 
+    private ConvertDisplayShapeToPolygon(shapes: DisplayShape[], project_id: number|undefined){        
+        return shapes.map(x => {
+            return {
+                ...(x.polygon_id !== undefined && { polygon_id: x.polygon_id }),
+                ...(project_id !== undefined && { project_id }),
+                polygon_name: x.polygon_name,
+                coordinates: (x.shape as any).geometry.coordinates[0].map((y:number[]) => {
+                    return {
+                        latitude: y[1],
+                        longitude: y[0]
+                    }
+                })
+            } as Omit<Polygon, "polygon_id" | "projects">;
+        })
+    }
+
     public GetProjectById(id: number){
         return this.http.get<{data: Project;}>(`${this.API_URL}/projects/${id}`)
             .pipe(takeUntilDestroyed(this.destroyRef))
@@ -155,22 +171,15 @@ export default class DataService {
     }
 
     public BulkCreatePolygons(displayShapes: DisplayShape[], project_id: number){
-        return this.http.post<any>(`${this.API_URL}/polygons/bulk`, {polygons: displayShapes.map(x => {
-            return {
-                project_id: project_id,
-                polygon_name: x.polygon_name,
-                coordinates: (x.shape as any).geometry.coordinates[0].map((y:number[]) => {
-                    return {
-                        latitude: y[1],
-                        longitude: y[0]
-                    }
-                })
-            } as Omit<Polygon, "polygon_id" | "projects">;
-        })})
+        return this.http.post<any>(`${this.API_URL}/polygons/bulk`, 
+            {polygons: this.ConvertDisplayShapeToPolygon(displayShapes, project_id)})
+            .pipe(takeUntilDestroyed(this.destroyRef))
     }
 
-    public BulkUpdatePolygons(){
-        
+    public BulkUpdatePolygons(displayShapes: DisplayShape[]){             
+        return this.http.put<any>(`${this.API_URL}/polygons/bulk`, 
+            {polygons: this.ConvertDisplayShapeToPolygon(displayShapes, undefined)})
+            .pipe(takeUntilDestroyed(this.destroyRef))
     }
 
     public BulkDeletePolygons(polygons: DisplayShape[]){

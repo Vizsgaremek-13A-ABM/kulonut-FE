@@ -111,6 +111,9 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
                 color: this.blue,
               })
               shape.isConnectedToCurrentProject = true
+              if (!shape.project_ids.includes(this.projectId)){
+                shape.project_ids.push(this.projectId)
+              }
               this.EmitSave()
               L.popup()
                 .setLatLng(e.latlng)
@@ -122,6 +125,7 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
                 color: this.orange,
               })
               shape.isConnectedToCurrentProject = false
+              shape.project_ids.filter(x => x != this.projectId)
               this.EmitSave()
               L.popup()
                 .setLatLng(e.latlng)
@@ -184,7 +188,7 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
           }).then((result) => {
             if (result.isConfirmed) {
               let dsh = 
-                {leaflet_id: (layer as any)._leaflet_id, shape: layer.toGeoJSON(), polygon_name: result.value, isNew: true, isModified: false, isDeleted: false, isConnectedToCurrentProject: true} as DisplayShape
+                {leaflet_id: (layer as any)._leaflet_id, shape: layer.toGeoJSON(), polygon_name: result.value, isNew: true, isModified: false, isDeleted: false, isConnectedToCurrentProject: true, project_ids: [this.projectId]} as DisplayShape
               this.shapes.push(dsh)
               this.EmitSave()
             } else if (result.isDismissed) {
@@ -243,7 +247,7 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
         leaflet_id: (layer as any)._leaflet_id,
         shape: layer.toGeoJSON() as GeoJsonObject,
         project_ids: this.projectId ? [this.projectId] : [],
-        polygon_name: "swal ablak",
+        polygon_name: "swal ablak", // elnevezni normalisan
         isNew: true,
         isModified: false,
         isDeleted: false,

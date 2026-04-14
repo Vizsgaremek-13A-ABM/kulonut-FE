@@ -224,17 +224,17 @@ export class OneProjectPageComponent implements OnInit {
     const deletedPolygons = this.selectedShapes.filter(x => x.isDeleted)
     if(deletedPolygons.length > 0)
       await firstValueFrom(this.ds.BulkDeletePolygons(deletedPolygons));
+
     const rest = this.selectedShapes.filter(x => !x.isDeleted)
     const newPolygons = rest.filter(x => x.isNew)
     if(newPolygons.length > 0)
       await firstValueFrom(this.ds.BulkCreatePolygons(newPolygons, this.projectId))
 
+    const modifiedPolygons = rest.filter(x => x.isModified)
+    if(modifiedPolygons.length > 0)
+      await firstValueFrom(this.ds.BulkUpdatePolygons(modifiedPolygons))
+
     
-    //put
-    const modifiedPolygonds = rest.filter(x => x.isModified)
-    
-    //put
-    const addedToThisproject = rest.filter(x => x.isConnectedToCurrentProject)
     
   }
 }
