@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, EventEmitter, inject, Input, OnDestroy, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, EventEmitter, inject, Input, OnDestroy, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core';
 import DataService from '../../services/data.service';
 import { Subject } from 'rxjs';
 import Polygon from '../../interfaces/polygon.interface';
@@ -34,6 +34,7 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
   protected shapes:DisplayShape[] = [];  
   protected leafletMap!:L.Map
   private drawnItems!: L.FeatureGroup
+  private cdr = inject(ChangeDetectorRef)
 
   ngOnInit(): void {
     this.ds
@@ -60,7 +61,7 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
 
       this.leafletMap = L.map(this.map.nativeElement, {
         maxZoom: 18,
-        minZoom: 8,
+        minZoom: 1,
         center: centerCoords as L.LatLngExpression,
         zoom: 12
       });
@@ -249,6 +250,7 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
         isConnectedToCurrentProject: true
       } as DisplayShape)
       this.EmitSave()
+      this.cdr.detectChanges() // nem segitett
     }
     else if (changes["readonlyProjectIds"] && !changes['readonlyProjectIds'].firstChange){
       if (this.readonly && this.drawnItems){

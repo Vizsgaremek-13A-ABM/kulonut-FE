@@ -5,7 +5,7 @@ import DataService from '../../services/data.service';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { NgSelectComponent } from '@ng-select/ng-select';
 import { AsyncPipe } from '@angular/common';
-import { Observable, Subject, map } from 'rxjs';
+import { Observable, Subject, firstValueFrom, map } from 'rxjs';
 import Designer from '../../interfaces/designer.interface';
 import Geodesy from '../../interfaces/geodesy.interface';
 import Client from '../../interfaces/client.interface';
@@ -109,7 +109,7 @@ export class OneProjectPageComponent implements OnInit {
       stormwater_drainage_plan: [{ value: false, disabled: isDisabled }],
       public_lighting_plan: [{ value: false, disabled: isDisabled }],
       notes: [{ value: "", disabled: isDisabled }],
-      min_role_level: [{ value: 99, disabled: isDisabled }, Validators.required]
+      min_role_level: [{ value: 1, disabled: isDisabled }, Validators.required]
     });
     this.projectTypes = this.ds.GetProjectTypes()
     this.designers = this.ds.GetDesigners().pipe(map(x => x.data))
@@ -176,7 +176,8 @@ export class OneProjectPageComponent implements OnInit {
     }
     else if(this.mode == "new"){
       this.ds.CreateProject(this.project_form.value).subscribe({
-        next: () => {
+        next: (resp:{id:number}) => {
+          this.projectId = resp.id
           this.PolygonCRUDactions()
         },
         error: () => {
@@ -219,8 +220,22 @@ export class OneProjectPageComponent implements OnInit {
     if (this.user.role.level < 50) return
     this.router.navigate([`/project/edit/${this.projectId}`])
   }
-  PolygonCRUDactions(){
-    console.log(this.selectedShapes);
+  async PolygonCRUDactions(){
+    const deletedPolygons = this.selectedShapes.filter(x => x.isDeleted)
+    if(deletedPolygons.length > 0)
+      await firstValueFrom(this.ds.BulkDeletePolygons(deletedPolygons));
+    const rest = this.selectedShapes.filter(x => !x.isDeleted)
+    const newPolygons = rest.filter(x => x.isNew)
+    if(newPolygons.length > 0)
+      await firstValueFrom(this.ds.BulkCreatePolygons(newPolygons, this.projectId))
+
+    
+    //put
+    const modifiedPolygonds = rest.filter(x => x.isModified)
+    
+    //put
+    const addedToThisproject = rest.filter(x => x.isConnectedToCurrentProject)
+    
   }
 }
 // 1 projekt letrehozas - kesz
@@ -234,3 +249,5 @@ export class OneProjectPageComponent implements OnInit {
 // 4: 99
 
 // 3: es akkor csak a magáénal alacsonyabbat allithat be
+// valahogy figyelmeztetni hogy save-re nem nyomott még rá
+//torlesnel "sikeresen hozzaadva"

@@ -1,4 +1,4 @@
-import { HttpClient } from "@angular/common/http";
+import { HttpClient, HttpParams } from "@angular/common/http";
 import { DestroyRef, inject, Injectable } from "@angular/core";
 import { environment } from "../../environments/environment";
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -154,15 +154,31 @@ export default class DataService {
             .pipe(takeUntilDestroyed(this.destroyRef))
     }
 
-    public BulkCreatePolygons(){
-
+    public BulkCreatePolygons(displayShapes: DisplayShape[], project_id: number){
+        return this.http.post<any>(`${this.API_URL}/polygons/bulk`, {polygons: displayShapes.map(x => {
+            return {
+                project_id: project_id,
+                polygon_name: x.polygon_name,
+                coordinates: (x.shape as any).geometry.coordinates[0].map((y:number[]) => {
+                    return {
+                        latitude: y[1],
+                        longitude: y[0]
+                    }
+                })
+            } as Omit<Polygon, "polygon_id" | "projects">;
+        })})
     }
 
     public BulkUpdatePolygons(){
         
     }
 
-    public BulkDeletePolygons(){
-        
+    public BulkDeletePolygons(polygons: DisplayShape[]){
+        let params = new HttpParams();
+        polygons.forEach(x => {
+            params = params.append('polygon_ids[]', x.polygon_id!);
+        });
+        return this.http.delete<any>(`${this.API_URL}/polygons/bulk`, {params})
+            .pipe(takeUntilDestroyed(this.destroyRef))
     }
 }
