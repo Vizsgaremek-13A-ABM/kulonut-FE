@@ -10,6 +10,7 @@ import { FiltersComponent } from "../filters-component/filters-component";
 import { Project } from '../../interfaces/project.interface';
 import Swal from 'sweetalert2';
 import { Router } from '@angular/router';
+import AuthService from '../../services/auth.service';
 
 @Component({
   selector: 'app-main-page-component',
@@ -22,6 +23,7 @@ import { Router } from '@angular/router';
 })
 export class MainPageComponent implements OnInit {  
   private ds = inject(DataService)
+  private authService = inject(AuthService)
   private router = inject(Router)
   private projects!: Project[]
   private filteredProjects!: Project[]
@@ -36,8 +38,8 @@ export class MainPageComponent implements OnInit {
   ngOnInit(): void {
     this.ds.GetProjects().subscribe({
       next: (response) => {
-        this.projects = response
-        this.filteredProjects = response
+        this.projects = response.filter(x => x.min_role_level <= this.authService.GetUser()?.role.level!)
+        this.filteredProjects = response.filter(x => x.min_role_level <= this.authService.GetUser()?.role.level!)
       }
     })
   }
@@ -53,6 +55,7 @@ export class MainPageComponent implements OnInit {
       customClass: {
         htmlContainer: 'swal-left-align'
       },
+      icon: "info",
       width: "800px",
       html: `<div class="d-flex gap-2" style="flex-direction: column;">
       ${layer.project_ids.map((x: number) => {

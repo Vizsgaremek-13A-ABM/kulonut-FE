@@ -140,6 +140,13 @@ export class ProfilePageComponent implements OnInit {
             icon: "error"
           })
         }
+        else if (backendErrors?.profile_icon){
+          Swal.fire({
+            title: "Rossz képformátum!",
+            theme: 'material-ui-dark',
+            icon: "error"
+          })
+        }
       }
     })
   }

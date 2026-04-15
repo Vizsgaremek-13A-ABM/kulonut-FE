@@ -31,8 +31,10 @@
         <div class="navbar-nav align-items-xxl-center w-100">
             <a [routerLink]="['/main']" data-cy="nav-map" routerLinkActive="active" aria-label="térkép">térkép</a>
             <a [routerLink]="['/projects']" data-cy="nav-projects" routerLinkActive="active" aria-label="projektek">projektek</a>
-            <a [routerLink]="['/project/new']" data-cy="nav-new-project" routerLinkActive="active" aria-label="új projekt">új projekt</a> <!--nem mindenkinel-->
-            @if (user.role.level >= 5) {
+            @if (user.role.level >= 50) {
+                <a [routerLink]="['/project/new']" data-cy="nav-new-project" routerLinkActive="active" aria-label="új projekt">új projekt</a>
+            }
+            @if (user.role.level == 99) {
                 <a [routerLink]="['/admin']" data-cy="nav-users" routerLinkActive="active" aria-label="felhasználókarbantartás">felhasználókarbantartás</a>
             }
             <a (click)="Logout()" data-cy="nav-logout" style="cursor: pointer;" aria-label="kijelentkezés">kijelentkezés</a>

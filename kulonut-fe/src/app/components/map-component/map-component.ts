@@ -35,6 +35,8 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
   protected leafletMap!:L.Map
   private drawnItems!: L.FeatureGroup
 
+  private isDeleting = false
+
   ngOnInit(): void {
     this.ds
       .GetPolygons()
@@ -55,12 +57,13 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
         let coords = polygons.find(x =>
           x.projects.some(project => project.project_id == this.projectId)
         )?.coordinates[0];
-        centerCoords = [coords?.latitude!, coords?.longitude!]
+        if(coords?.latitude && coords.longitude)
+          centerCoords = [coords?.latitude!, coords?.longitude!]
       }
 
       this.leafletMap = L.map(this.map.nativeElement, {
         maxZoom: 18,
-        minZoom: 8,
+        minZoom: 1,
         center: centerCoords as L.LatLngExpression,
         zoom: 12
       });
@@ -94,7 +97,8 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
         this.shapes[i].leaflet_id = (l as any)._leaflet_id
         this.drawnItems.addLayer(l);
         if(this.shapes[i].project_ids.includes(this.projectId)){
-          this.shapes[i].isConnectedToCurrentProject = true;
+          this.shapes[i].partOfCurrentProjectDefault = true;
+          this.shapes[i].partOfCurrentProject = true;
           (l as any).setStyle({
             color: this.blue,
           });
@@ -103,24 +107,29 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
         
         if (!this.readonly){
           l.on('click', (e)=>{
+            if (this.isDeleting) return
             const shape = this.shapes.find(x=>x.leaflet_id == e.sourceTarget._leaflet_id)!
             
-            if (!shape.isConnectedToCurrentProject){
+            if (!shape.partOfCurrentProject){
               (l as any).setStyle({
                 color: this.blue,
               })
-              shape.isConnectedToCurrentProject = true
+              shape.partOfCurrentProject = true
+              if (!shape.project_ids.includes(this.projectId)){
+                shape.project_ids.push(this.projectId)
+              }
               this.EmitSave()
               L.popup()
                 .setLatLng(e.latlng)
                 .setContent(`${shape.polygon_name} sikeresen hozzárendelve a projekthez`)
-                .openOn(this.leafletMap);
+                .openOn(this.leafletMap);              
             }
             else{
               (l as any).setStyle({
                 color: this.orange,
               })
-              shape.isConnectedToCurrentProject = false
+              shape.partOfCurrentProject = false
+              shape.project_ids = shape.project_ids.filter(x => x != this.projectId)
               this.EmitSave()
               L.popup()
                 .setLatLng(e.latlng)
@@ -128,6 +137,15 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
                 .openOn(this.leafletMap);
             }
           })
+        }
+        else{
+          layer.on('mouseover', (e)=>{          
+            const shape = this.shapes.find(x=>x.leaflet_id == e.sourceTarget._leaflet_id)!
+            L.popup()
+              .setLatLng(e.latlng)
+              .setContent(shape.polygon_name)
+              .openOn(this.leafletMap);
+          });
         }
       });
 
@@ -149,7 +167,6 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
         const drawControl = new L.Control.Draw({
           edit: {
             featureGroup: this.drawnItems,
-            // remove: false
           },
           draw: {
             polygon: {},
@@ -183,7 +200,15 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
           }).then((result) => {
             if (result.isConfirmed) {
               let dsh = 
-                {leaflet_id: (layer as any)._leaflet_id, shape: layer.toGeoJSON(), polygon_name: result.value, isNew: true, isModified: false, isDeleted: false, isConnectedToCurrentProject: true} as DisplayShape
+                {
+                  leaflet_id: (layer as any)._leaflet_id, 
+                  shape: layer.toGeoJSON(),
+                  polygon_name: result.value, 
+                  status: "new",
+                  partOfCurrentProject: true, 
+                  partOfCurrentProjectDefault: false, 
+                  project_ids: [this.projectId]
+                } as DisplayShape
               this.shapes.push(dsh)
               this.EmitSave()
             } else if (result.isDismissed) {
@@ -196,19 +221,29 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
           event.layers.eachLayer((l: any)=>{
             let shape = this.shapes.find(x=>x.leaflet_id == l._leaflet_id)!
             shape.shape = l.toGeoJSON()
-            shape.isModified = true
+            if (shape.status != "new")
+              shape.status = "modified"
           })
           this.EmitSave()          
         });
 
-         this.leafletMap.on('draw:deleted', (event: any) => {
+        this.leafletMap.on('draw:deletestart', () => {
+          this.isDeleting = true;
+        });
+
+        this.leafletMap.on('draw:deletestop', () => {
+          this.isDeleting = false;
+        });
+
+        this.leafletMap.on('draw:deleted', (event: any) => {
           event.layers.eachLayer((l: any)=>{
             let shape = this.shapes.find(x=>x.leaflet_id == l._leaflet_id)!
-            if(shape.isNew){
+            if(shape.status == "new"){
               this.shapes = this.shapes.filter(x=>x.leaflet_id != l._leaflet_id)!
             }
             else{
-              shape.isDeleted = true
+              shape.partOfCurrentProject = false
+              shape.status = 'deleted'
             }
           })
           this.EmitSave()
@@ -218,7 +253,7 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
     })
   }
   isWorthyToEmit(x: DisplayShape){
-    return x.isNew || x.isModified || x.isDeleted || x.isConnectedToCurrentProject
+    return x.status != "unchanged" || (x.partOfCurrentProject != x.partOfCurrentProjectDefault)
   }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -238,16 +273,32 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
 
       layer.addTo(this.drawnItems)      
       this.leafletMap.setView(coordPairs[0], 15)
-      this.shapes.push({
-        leaflet_id: (layer as any)._leaflet_id,
-        shape: layer.toGeoJSON() as GeoJsonObject,
-        project_ids: this.projectId ? [this.projectId] : [],
-        polygon_name: "swal ablak",
-        isNew: true,
-        isModified: false,
-        isDeleted: false,
-        isConnectedToCurrentProject: true
-      } as DisplayShape)
+      Swal.fire({
+        title: "Adjon nevet az alakzatnak:",
+        input: "text",
+        confirmButtonText: 'OK',
+        theme: "material-ui-dark",
+        inputValidator: (value) => {
+          if (!value || value.trim() === '') {
+            return 'Kérem adjon meg egy nem üres nevet';
+          }
+          return null;
+        }
+      }).then((result) => {
+        if (result.isConfirmed) {
+          this.shapes.push({
+            leaflet_id: (layer as any)._leaflet_id,
+            shape: layer.toGeoJSON() as GeoJsonObject,
+            project_ids: this.projectId ? [this.projectId] : [],
+            polygon_name: result.value, 
+            status: "new",
+            partOfCurrentProject: true,
+            partOfCurrentProjectDefault: false,
+          } as DisplayShape)
+        } else if (result.isDismissed) {
+            this.drawnItems.removeLayer(layer);
+        }
+      });
       this.EmitSave()
     }
     else if (changes["readonlyProjectIds"] && !changes['readonlyProjectIds'].firstChange){
@@ -276,7 +327,7 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
     }
   }
   private EmitSave(){
-    this.saved.emit(this.shapes.filter(x=>this.isWorthyToEmit(x)))
+    this.saved.emit({shapes: this.shapes.filter(x=>this.isWorthyToEmit(x)), count: this.shapes.filter(x=>x.partOfCurrentProject).length})
   }
   ShowInfo(){
     Swal.fire({
