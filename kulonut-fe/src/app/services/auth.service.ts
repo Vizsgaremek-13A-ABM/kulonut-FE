@@ -1,8 +1,9 @@
-import { HttpClient, HttpHeaders } from "@angular/common/http";
+import { HttpClient } from "@angular/common/http";
 import { DestroyRef, inject, Injectable } from "@angular/core";
-import { environment } from "../../environments/enviromnent";
+import { environment } from "../../environments/environment";
 import User from "../interfaces/user.interface";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
+import { Router } from "@angular/router";
 
 interface RegisterResponse {
   message: string;
@@ -25,8 +26,8 @@ export default class AuthService {
   private http = inject(HttpClient);
   private destroyRef = inject(DestroyRef);
   private readonly API_URL = environment.apiUrl;
+  private router = inject(Router)
 
-  private auth_token: string | undefined;
   private user: User | undefined;
 
   private readonly TOKEN_KEY = "kulonut:auth_token";
@@ -37,15 +38,6 @@ export default class AuthService {
 
   constructor() {
     this.LoadFromStorage();
-  }
-
-  public get Headers() {
-    if (!this.auth_token) return undefined;
-
-    return new HttpHeaders({
-      Accept: "application/json",
-      Authorization: `Bearer ${this.auth_token}`,
-    });
   }
 
   public RegisterAccount(registerData: {
@@ -67,16 +59,18 @@ export default class AuthService {
 
   public Logout() {
     this.http
-      .post<any>(`${this.API_URL}/auth/logout`, {}, { headers: this.Headers })
+      .post<any>(`${this.API_URL}/auth/logout`, {})
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
+        next: () => {
+          this.ClearAuthState();
+          this.router.navigate(['/'])
+        },
         error: (e) => console.log(e),
       });
-    this.ClearAuthState();
   }
 
   public SetToken(token: string, remember?: boolean) {
-    this.auth_token = token;
     const shouldRemember = this.ResolveRememberPreference(remember);
     this.ClearStoredToken();
     this.SelectStorage(shouldRemember).setItem(this.TOKEN_KEY, token);
@@ -119,24 +113,15 @@ export default class AuthService {
   }
 
   private ClearAuthState() {
-    this.auth_token = undefined;
     this.user = undefined;
     this.ClearStoredToken();
     this.ClearStoredUser();
   }
 
   private LoadFromStorage() {
-    const token =
-      localStorage.getItem(this.TOKEN_KEY) ??
-      sessionStorage.getItem(this.TOKEN_KEY);
-
     const userJson =
       localStorage.getItem(this.USER_KEY) ??
       sessionStorage.getItem(this.USER_KEY);
-
-    if (token) {
-      this.auth_token = token;
-    }
 
     if (userJson) {
       try {

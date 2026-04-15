@@ -3,13 +3,11 @@ import { TopBarComponent } from "../top-bar-component/top-bar-component";
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { FormFieldComponent } from '../form-field-component/form-field-component';
 import { MatButtonModule } from '@angular/material/button';
-import { environment } from '../../../environments/enviromnent';
 import AuthService from '../../services/auth.service';
 import User from '../../interfaces/user.interface';
 import { forkJoin, of } from 'rxjs';
 import DataService from '../../services/data.service';
 import Swal from 'sweetalert2';
-import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-profile-page-component',
@@ -27,7 +25,6 @@ export class ProfilePageComponent implements OnInit {
   private authService = inject(AuthService)
   private ds = inject(DataService)
   private cdr = inject(ChangeDetectorRef)
-  private router = inject(Router)
   protected user!: User
   private formdata!:FormData
 
@@ -85,7 +82,6 @@ export class ProfilePageComponent implements OnInit {
           theme: "material-ui"
         })
         this.authService.Logout()
-        this.router.navigate(['/'])
       },
       error: (response) => {
         const backendErrors = response?.error?.errors
@@ -144,6 +140,13 @@ export class ProfilePageComponent implements OnInit {
             icon: "error"
           })
         }
+        else if (backendErrors?.profile_icon){
+          Swal.fire({
+            title: "Rossz képformátum!",
+            theme: 'material-ui-dark',
+            icon: "error"
+          })
+        }
       }
     })
   }
@@ -191,6 +194,5 @@ export class ProfilePageComponent implements OnInit {
 
   Logout(){
     this.authService.Logout()
-    this.router.navigate(['/'])
   }
 }
