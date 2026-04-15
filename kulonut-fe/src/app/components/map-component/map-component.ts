@@ -1,4 +1,4 @@
-import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, EventEmitter, inject, Input, OnDestroy, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, EventEmitter, inject, Input, OnDestroy, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core';
 import DataService from '../../services/data.service';
 import { Subject } from 'rxjs';
 import Polygon from '../../interfaces/polygon.interface';
@@ -34,7 +34,8 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
   protected shapes:DisplayShape[] = [];  
   protected leafletMap!:L.Map
   private drawnItems!: L.FeatureGroup
-  private cdr = inject(ChangeDetectorRef)
+
+  private isDeleting = false
 
   ngOnInit(): void {
     this.ds
@@ -106,6 +107,7 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
         
         if (!this.readonly){
           l.on('click', (e)=>{
+            if (this.isDeleting) return
             const shape = this.shapes.find(x=>x.leaflet_id == e.sourceTarget._leaflet_id)!
             
             if (!shape.partOfCurrentProject){
@@ -135,6 +137,16 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
                 .openOn(this.leafletMap);
             }
           })
+        }
+        else{
+          // this.shapes.forEach(x => {            
+          //   layer.on('mouseover', (e)=>{          
+          //     L.popup()
+          //       .setLatLng(e.latlng)
+          //       .setContent(x.polygon_name)
+          //       .openOn(this.leafletMap);
+          //   });
+          // }); -- nemjo
         }
       });
 
@@ -191,7 +203,8 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
               let dsh = 
                 {
                   leaflet_id: (layer as any)._leaflet_id, 
-                  shape: layer.toGeoJSON(), polygon_name: result.value, 
+                  shape: layer.toGeoJSON(),
+                  polygon_name: result.value, 
                   status: "new",
                   partOfCurrentProject: true, 
                   partOfCurrentProjectDefault: false, 
@@ -215,7 +228,16 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
           this.EmitSave()          
         });
 
-         this.leafletMap.on('draw:deleted', (event: any) => {
+        this.leafletMap.on('draw:deletestart', () => {
+          this.isDeleting = true;
+        });
+
+        this.leafletMap.on('draw:deletestop', () => {
+          this.isDeleting = false;
+        });
+
+        this.leafletMap.on('draw:deleted', (event: any) => {
+          //polygoncount nem modosul
           event.layers.eachLayer((l: any)=>{
             let shape = this.shapes.find(x=>x.leaflet_id == l._leaflet_id)!
             if(shape.status == "new"){
@@ -252,17 +274,33 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
 
       layer.addTo(this.drawnItems)      
       this.leafletMap.setView(coordPairs[0], 15)
-      this.shapes.push({
-        leaflet_id: (layer as any)._leaflet_id,
-        shape: layer.toGeoJSON() as GeoJsonObject,
-        project_ids: this.projectId ? [this.projectId] : [],
-        polygon_name: "swal ablak", // elnevezni normalisan
-        status: "new",
-        partOfCurrentProject: true,
-        partOfCurrentProjectDefault: false,
-      } as DisplayShape)
+      Swal.fire({
+        title: "Adjon nevet az alakzatnak:",
+        input: "text",
+        confirmButtonText: 'OK',
+        theme: "material-ui-dark",
+        inputValidator: (value) => {
+          if (!value || value.trim() === '') {
+            return 'Kérem adjon meg egy nem üres nevet';
+          }
+          return null;
+        }
+      }).then((result) => {
+        if (result.isConfirmed) {
+          this.shapes.push({
+            leaflet_id: (layer as any)._leaflet_id,
+            shape: layer.toGeoJSON() as GeoJsonObject,
+            project_ids: this.projectId ? [this.projectId] : [],
+            polygon_name: result.value, 
+            status: "new",
+            partOfCurrentProject: true,
+            partOfCurrentProjectDefault: false,
+          } as DisplayShape)
+        } else if (result.isDismissed) {
+            this.drawnItems.removeLayer(layer);
+        }
+      });
       this.EmitSave()
-      this.cdr.detectChanges() // nem segitett
     }
     else if (changes["readonlyProjectIds"] && !changes['readonlyProjectIds'].firstChange){
       if (this.readonly && this.drawnItems){
@@ -290,7 +328,7 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
     }
   }
   private EmitSave(){
-    this.saved.emit(this.shapes.filter(x=>this.isWorthyToEmit(x)))
+    this.saved.emit({shapes: this.shapes.filter(x=>this.isWorthyToEmit(x)), count: this.shapes.filter(x=>x.partOfCurrentProject).length})
   }
   ShowInfo(){
     Swal.fire({

@@ -164,6 +164,11 @@ export class OneProjectPageComponent implements OnInit {
         next: async () => {
           try {
             await this.PolygonCRUDactions()
+            await Swal.fire({
+              title: "Sikeres mentés",
+              icon: "success",
+              theme: "material-ui-dark"
+            })
           } catch {
             Swal.fire({
               title: "A projekt mentése sikeres volt, de az alakzatok mentése során hiba történt!",
@@ -172,6 +177,7 @@ export class OneProjectPageComponent implements OnInit {
               theme: "material-ui-dark"
             })
           }
+          this.router.navigate([`project/show/${this.projectId}`])
         },
         error: () => {
           Swal.fire({
@@ -189,6 +195,11 @@ export class OneProjectPageComponent implements OnInit {
           this.projectId = resp.id
           try {
             await this.PolygonCRUDactions()
+            await Swal.fire({
+              title: "Sikeres projekt létrehozás!",
+              icon: "success",
+              theme: "material-ui-dark"
+            })
           } catch {
             Swal.fire({
               title: "A projekt létrehozása sikeres volt, de az alakzatok mentése során hiba történt!",
@@ -197,6 +208,7 @@ export class OneProjectPageComponent implements OnInit {
               theme: "material-ui-dark"
             })
           }
+          this.router.navigate([`project/show/${this.projectId}`])
         },
         error: () => {
           Swal.fire({
@@ -211,12 +223,9 @@ export class OneProjectPageComponent implements OnInit {
   }
 
   onSaved(shapes:any){
-    this.selectedShapes = shapes
-    const nextCount = this.selectedShapes.filter(x => x.partOfCurrentProject).length
-    console.log(shapes);
-    
+    this.selectedShapes = shapes.shapes
     queueMicrotask(() => {
-      this.polygonsCount = nextCount
+      this.polygonsCount = shapes.count
       this.cdr.detectChanges()
     })
   }
@@ -278,6 +287,4 @@ export class OneProjectPageComponent implements OnInit {
 // 4: 99
 
 // 3: es akkor csak a magáénal alacsonyabbat allithat be
-//torlesnel "sikeresen hozzaadva"
-//sikeres mentesrol szolni
 // fooldalon meg projekt oldalon azalapjan szurni hogy mi a role levelje
