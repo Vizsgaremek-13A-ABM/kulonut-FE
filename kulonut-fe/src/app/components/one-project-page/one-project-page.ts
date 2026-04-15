@@ -276,15 +276,4 @@ export class OneProjectPageComponent implements OnInit {
       await firstValueFrom(this.ds.BulkUnlinkPolygons(unlinkedPolygons, this.projectId))
   }
 }
-// 1 projekt letrehozas - kesz
-// 2 projekt szerkesztés/törlés - kesz
-// 3 projekt megtekintés, ha ez projektenkent valtozo akkor annak a megadasa hogy legyen pontosan
-// 4 felhasznalo rang modositas - kesz
-
-// 1: 50
-// 2: 50
-// 3: sztem ugy a legegyszerubb ha van egy dropdown ahol szint szerint mondjuk novekvo sorrendbe vannak a role-ok és akkor ott meg tudod adni hogy mi legyen a minimum rang ahhoz a projekthez
-// 4: 99
-
-// 3: es akkor csak a magáénal alacsonyabbat allithat be
-// fooldalon meg projekt oldalon azalapjan szurni hogy mi a role levelje
+// nem mentett modositasokrol szolni

@@ -33,19 +33,11 @@ export class AllProjectsPage implements OnInit {
     this.ds.GetProjects()
       .subscribe({
         next: (response)=>{
-          this.projects = response
-          this.displayProjects = response
+          this.projects = response.filter(x => x.min_role_level <= this.authService.GetUser()?.role.level!)
+          this.displayProjects = response.filter(x => x.min_role_level <= this.authService.GetUser()?.role.level!)
         }
       })
   }
-
-// Admin - minden joga van
-// Adatfelvevo - adatot tud felvenni, lat mindent
-// Es meg 3 olyan szint akik csak latnak
-
-// Hat ezek alapjan projekt szintnek 3 kell
-// egy amit mindenki lat (marmint aki be van jelentkezve), egy amihez kell legalabb 2-es jog, és egy amihez 3as jog kell
-// és az admin + adatfelvevonek ez alapján nagyobb mint 3as joga van
 
   BackToTopCommand(){
     window.scrollTo(0,0)
