@@ -193,13 +193,13 @@ export default class DataService {
     }
 
     public BulkUnlinkPolygons(displayShapes: DisplayShape[], project_id: number){
-        return this.http.delete<any>(`${this.API_URL}/polygons/projects/bulk`, {body: {
+        return this.http.post<any>(`${this.API_URL}/polygons/projects/bulk-unlink`, {
             links: displayShapes.map(x =>{
                 return {
                     polygon_id: x.polygon_id,
                     project_id: project_id
                 }
             })
-        }}).pipe(takeUntilDestroyed(this.destroyRef))
+        }).pipe(takeUntilDestroyed(this.destroyRef))
     }
 }

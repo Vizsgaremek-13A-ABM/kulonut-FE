@@ -120,16 +120,14 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
               L.popup()
                 .setLatLng(e.latlng)
                 .setContent(`${shape.polygon_name} sikeresen hozzárendelve a projekthez`)
-                .openOn(this.leafletMap);
-              console.log(shape);
-              
+                .openOn(this.leafletMap);              
             }
             else{
               (l as any).setStyle({
                 color: this.orange,
               })
               shape.partOfCurrentProject = false
-              shape.project_ids.filter(x => x != this.projectId)
+              shape.project_ids = shape.project_ids.filter(x => x != this.projectId)
               this.EmitSave()
               L.popup()
                 .setLatLng(e.latlng)

@@ -49,7 +49,7 @@ export class OneProjectPageComponent implements OnInit {
   protected clients!: Observable<Client[]>
   protected roles!: Role[]
 
-  private selectedShapes!: DisplayShape[]
+  private selectedShapes: DisplayShape[] = []
   protected polygonsCount = 0
 
   protected user!: User
@@ -161,8 +161,17 @@ export class OneProjectPageComponent implements OnInit {
     if (this.user.role.level < 50) return
     if(this.mode == "edit"){
       this.ds.UpdateProject(this.projectId, this.project_form.value).subscribe({
-        next: () => {
-          this.PolygonCRUDactions()
+        next: async () => {
+          try {
+            await this.PolygonCRUDactions()
+          } catch {
+            Swal.fire({
+              title: "A projekt mentése sikeres volt, de az alakzatok mentése során hiba történt!",
+              text: "Kérjük próbálja újra.",
+              icon: "error",
+              theme: "material-ui-dark"
+            })
+          }
         },
         error: () => {
           Swal.fire({
@@ -176,9 +185,18 @@ export class OneProjectPageComponent implements OnInit {
     }
     else if(this.mode == "new"){
       this.ds.CreateProject(this.project_form.value).subscribe({
-        next: (resp:{id:number}) => {
+        next: async (resp:{id:number}) => {
           this.projectId = resp.id
-          this.PolygonCRUDactions()
+          try {
+            await this.PolygonCRUDactions()
+          } catch {
+            Swal.fire({
+              title: "A projekt létrehozása sikeres volt, de az alakzatok mentése során hiba történt!",
+              text: "Kérjük próbálja újra.",
+              icon: "error",
+              theme: "material-ui-dark"
+            })
+          }
         },
         error: () => {
           Swal.fire({
@@ -231,11 +249,13 @@ export class OneProjectPageComponent implements OnInit {
     if(newPolygons.length > 0)
       await firstValueFrom(this.ds.BulkCreatePolygons(newPolygons, this.projectId))
 
-    const modifiedPolygons = rest.filter(x => x.isModified || x.partOfCurrentProject != x.partOfCurrentProjectDefault)
+    const modifiedPolygons = rest.filter(x =>
+      !x.isNew && (x.isModified || (x.partOfCurrentProject && !x.partOfCurrentProjectDefault))
+    )
     if(modifiedPolygons.length > 0)
       await firstValueFrom(this.ds.BulkUpdatePolygons(modifiedPolygons, this.projectId))
-    //unlinket meg kene oldani (martin dolga)
-    const unlinkedPolygons = rest.filter(x => !x.partOfCurrentProject && x.partOfCurrentProjectDefault)
+
+    const unlinkedPolygons = rest.filter(x => !x.isNew && !x.partOfCurrentProject && x.partOfCurrentProjectDefault)
     if(unlinkedPolygons.length > 0)
       await firstValueFrom(this.ds.BulkUnlinkPolygons(unlinkedPolygons, this.projectId))
   }
@@ -252,4 +272,4 @@ export class OneProjectPageComponent implements OnInit {
 
 // 3: es akkor csak a magáénal alacsonyabbat allithat be
 //torlesnel "sikeresen hozzaadva"
-// ha 0 polygon van (mind kitorolte) eltunik a brader
+//sikeres mentesrol szolni
