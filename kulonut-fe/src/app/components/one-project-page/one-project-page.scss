@@ -71,6 +71,13 @@ select:disabled{
     padding-right: 0 !important;
 }
 
+#save-button-after:hover:after{
+    content: "Ellenőrizze, hogy minden módosítást mentett a térképen!";
+    color: $error-bg;
+    position: absolute;
+    top: -20px;
+}
+
 @media screen and (max-width: 1400px){
     #form-left{
         padding-right: 0 !important;

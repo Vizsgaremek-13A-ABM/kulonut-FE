@@ -56,7 +56,8 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
         let coords = polygons.find(x =>
           x.projects.some(project => project.project_id == this.projectId)
         )?.coordinates[0];
-        centerCoords = [coords?.latitude!, coords?.longitude!]
+        if(coords?.latitude && coords.longitude)
+          centerCoords = [coords?.latitude!, coords?.longitude!]
       }
 
       this.leafletMap = L.map(this.map.nativeElement, {
@@ -95,7 +96,8 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
         this.shapes[i].leaflet_id = (l as any)._leaflet_id
         this.drawnItems.addLayer(l);
         if(this.shapes[i].project_ids.includes(this.projectId)){
-          this.shapes[i].isConnectedToCurrentProject = true;
+          this.shapes[i].partOfCurrentProjectDefault = true;
+          this.shapes[i].partOfCurrentProject = true;
           (l as any).setStyle({
             color: this.blue,
           });
@@ -106,11 +108,11 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
           l.on('click', (e)=>{
             const shape = this.shapes.find(x=>x.leaflet_id == e.sourceTarget._leaflet_id)!
             
-            if (!shape.isConnectedToCurrentProject){
+            if (!shape.partOfCurrentProject){
               (l as any).setStyle({
                 color: this.blue,
               })
-              shape.isConnectedToCurrentProject = true
+              shape.partOfCurrentProject = true
               if (!shape.project_ids.includes(this.projectId)){
                 shape.project_ids.push(this.projectId)
               }
@@ -119,12 +121,14 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
                 .setLatLng(e.latlng)
                 .setContent(`${shape.polygon_name} sikeresen hozzárendelve a projekthez`)
                 .openOn(this.leafletMap);
+              console.log(shape);
+              
             }
             else{
               (l as any).setStyle({
                 color: this.orange,
               })
-              shape.isConnectedToCurrentProject = false
+              shape.partOfCurrentProject = false
               shape.project_ids.filter(x => x != this.projectId)
               this.EmitSave()
               L.popup()
@@ -154,7 +158,6 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
         const drawControl = new L.Control.Draw({
           edit: {
             featureGroup: this.drawnItems,
-            // remove: false
           },
           draw: {
             polygon: {},
@@ -188,7 +191,16 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
           }).then((result) => {
             if (result.isConfirmed) {
               let dsh = 
-                {leaflet_id: (layer as any)._leaflet_id, shape: layer.toGeoJSON(), polygon_name: result.value, isNew: true, isModified: false, isDeleted: false, isConnectedToCurrentProject: true, project_ids: [this.projectId]} as DisplayShape
+                {
+                  leaflet_id: (layer as any)._leaflet_id, 
+                  shape: layer.toGeoJSON(), polygon_name: result.value, 
+                  isNew: true,
+                  isModified: false,
+                  isDeleted: false,
+                  partOfCurrentProject: true, 
+                  partOfCurrentProjectDefault: false, 
+                  project_ids: [this.projectId]
+                } as DisplayShape
               this.shapes.push(dsh)
               this.EmitSave()
             } else if (result.isDismissed) {
@@ -223,7 +235,7 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
     })
   }
   isWorthyToEmit(x: DisplayShape){
-    return x.isNew || x.isModified || x.isDeleted || x.isConnectedToCurrentProject
+    return x.isNew || x.isModified || x.isDeleted || (x.partOfCurrentProject != x.partOfCurrentProjectDefault)
   }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -251,7 +263,8 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
         isNew: true,
         isModified: false,
         isDeleted: false,
-        isConnectedToCurrentProject: true
+        partOfCurrentProject: true,
+        partOfCurrentProjectDefault: false,
       } as DisplayShape)
       this.EmitSave()
       this.cdr.detectChanges() // nem segitett

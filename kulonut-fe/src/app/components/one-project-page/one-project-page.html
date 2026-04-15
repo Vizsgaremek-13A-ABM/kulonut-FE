@@ -87,7 +87,7 @@
                             <hr>
                             <div>
                                 <label for="uploadFile">Polygonok feltöltése TXT formában</label>
-                                <div class="d-flex gap-2" style="margin-bottom: 15px;">
+                                <div class="d-flex gap-2" style="margin-bottom: 25px;">
                                     <input id="uploadFile" #TXTUploader type="file" class="form-control" accept=".txt">
                                     <button (click)="uploadFile()" type="button" matButton="filled" class="blue-form-button" style="max-height: 37px;">Feltöltés</button>
                                 </div>
@@ -95,7 +95,7 @@
                         }
                     </div>
                     @if (mode != "show") { 
-                        <button [disabled]="project_form.invalid" style="margin-top: auto;" type="submit" matButton="filled" class="blue-form-button fancy-border">{{mode == "new" ? "Rögzít" : "Mentés"}}</button>
+                        <button [disabled]="project_form.invalid" style="margin-top: auto;" type="submit" matButton="filled" class="blue-form-button fancy-border" id="save-button-after">{{mode == "new" ? "Rögzít" : "Mentés"}}</button>
                     }
                     @else if (user.role.level >= 50){
                         <button style="margin-top: auto;" type="button" matButton="filled" class="blue-form-button fancy-border" (click)="navigateToEdit()">Szerkesztés</button>

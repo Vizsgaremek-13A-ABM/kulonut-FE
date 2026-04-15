@@ -78,7 +78,7 @@ export default class DataService {
     }
 
     public ConvertPolygonToGeoJson(polygons: Polygon[]) {
-        return polygons.map(x => {            
+        return polygons.map(x => {                        
             return {
                 polygon_id: x.polygon_id,
                 project_ids: x.projects.map(y=>y.project_id),
@@ -86,7 +86,8 @@ export default class DataService {
                 isNew: false,
                 isModified: false,
                 isDeleted: false,
-                isConnectedToCurrentProject: false,
+                partOfCurrentProject: false,
+                partOfCurrentProjectDefault: false,
                 shape: {
                 type: "Feature",
                 geometry: {
@@ -103,11 +104,11 @@ export default class DataService {
         })
     }
 
-    private ConvertDisplayShapeToPolygon(shapes: DisplayShape[], project_id: number|undefined){        
+    private ConvertDisplayShapeToPolygon(shapes: DisplayShape[], project_id: number){         
         return shapes.map(x => {
             return {
                 ...(x.polygon_id !== undefined && { polygon_id: x.polygon_id }),
-                ...(project_id !== undefined && { project_id }),
+                ...((project_id !== undefined && x.partOfCurrentProject != x.partOfCurrentProjectDefault) && { project_id }),
                 polygon_name: x.polygon_name,
                 coordinates: (x.shape as any).geometry.coordinates[0].map((y:number[]) => {
                     return {
@@ -170,24 +171,35 @@ export default class DataService {
             .pipe(takeUntilDestroyed(this.destroyRef))
     }
 
-    public BulkCreatePolygons(displayShapes: DisplayShape[], project_id: number){
+    public BulkCreatePolygons(displayShapes: DisplayShape[], project_id: number){        
         return this.http.post<any>(`${this.API_URL}/polygons/bulk`, 
             {polygons: this.ConvertDisplayShapeToPolygon(displayShapes, project_id)})
             .pipe(takeUntilDestroyed(this.destroyRef))
     }
 
-    public BulkUpdatePolygons(displayShapes: DisplayShape[]){             
+    public BulkUpdatePolygons(displayShapes: DisplayShape[], project_id: number){             
         return this.http.put<any>(`${this.API_URL}/polygons/bulk`, 
-            {polygons: this.ConvertDisplayShapeToPolygon(displayShapes, undefined)})
+            {polygons: this.ConvertDisplayShapeToPolygon(displayShapes, project_id)})
             .pipe(takeUntilDestroyed(this.destroyRef))
     }
 
-    public BulkDeletePolygons(polygons: DisplayShape[]){
+    public BulkDeletePolygons(displayShapes: DisplayShape[]){
         let params = new HttpParams();
-        polygons.forEach(x => {
+        displayShapes.forEach(x => {
             params = params.append('polygon_ids[]', x.polygon_id!);
         });
         return this.http.delete<any>(`${this.API_URL}/polygons/bulk`, {params})
             .pipe(takeUntilDestroyed(this.destroyRef))
+    }
+
+    public BulkUnlinkPolygons(displayShapes: DisplayShape[], project_id: number){
+        return this.http.delete<any>(`${this.API_URL}/polygons/projects/bulk`, {body: {
+            links: displayShapes.map(x =>{
+                return {
+                    polygon_id: x.polygon_id,
+                    project_id: project_id
+                }
+            })
+        }}).pipe(takeUntilDestroyed(this.destroyRef))
     }
 }

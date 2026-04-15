@@ -194,9 +194,10 @@ export class OneProjectPageComponent implements OnInit {
 
   onSaved(shapes:any){
     this.selectedShapes = shapes
-    const nextCount = this.selectedShapes.filter(x => x.isConnectedToCurrentProject).length
+    const nextCount = this.selectedShapes.filter(x => x.partOfCurrentProject).length
     queueMicrotask(() => {
       this.polygonsCount = nextCount
+      this.cdr.detectChanges()
     })
   }
 
@@ -230,12 +231,13 @@ export class OneProjectPageComponent implements OnInit {
     if(newPolygons.length > 0)
       await firstValueFrom(this.ds.BulkCreatePolygons(newPolygons, this.projectId))
 
-    const modifiedPolygons = rest.filter(x => x.isModified)
+    const modifiedPolygons = rest.filter(x => x.isModified || x.partOfCurrentProject != x.partOfCurrentProjectDefault)
     if(modifiedPolygons.length > 0)
-      await firstValueFrom(this.ds.BulkUpdatePolygons(modifiedPolygons))
-
-    
-    
+      await firstValueFrom(this.ds.BulkUpdatePolygons(modifiedPolygons, this.projectId))
+    //unlinket meg kene oldani (martin dolga)
+    const unlinkedPolygons = rest.filter(x => !x.partOfCurrentProject && x.partOfCurrentProjectDefault)
+    if(unlinkedPolygons.length > 0)
+      await firstValueFrom(this.ds.BulkUnlinkPolygons(unlinkedPolygons, this.projectId))
   }
 }
 // 1 projekt letrehozas - kesz
@@ -249,5 +251,5 @@ export class OneProjectPageComponent implements OnInit {
 // 4: 99
 
 // 3: es akkor csak a magáénal alacsonyabbat allithat be
-// valahogy figyelmeztetni hogy save-re nem nyomott még rá
 //torlesnel "sikeresen hozzaadva"
+// ha 0 polygon van (mind kitorolte) eltunik a brader
