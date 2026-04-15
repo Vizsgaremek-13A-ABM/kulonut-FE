@@ -192,9 +192,7 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
                 {
                   leaflet_id: (layer as any)._leaflet_id, 
                   shape: layer.toGeoJSON(), polygon_name: result.value, 
-                  isNew: true,
-                  isModified: false,
-                  isDeleted: false,
+                  status: "new",
                   partOfCurrentProject: true, 
                   partOfCurrentProjectDefault: false, 
                   project_ids: [this.projectId]
@@ -211,7 +209,8 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
           event.layers.eachLayer((l: any)=>{
             let shape = this.shapes.find(x=>x.leaflet_id == l._leaflet_id)!
             shape.shape = l.toGeoJSON()
-            shape.isModified = true
+            if (shape.status != "new")
+              shape.status = "modified"
           })
           this.EmitSave()          
         });
@@ -219,11 +218,11 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
          this.leafletMap.on('draw:deleted', (event: any) => {
           event.layers.eachLayer((l: any)=>{
             let shape = this.shapes.find(x=>x.leaflet_id == l._leaflet_id)!
-            if(shape.isNew){
+            if(shape.status == "new"){
               this.shapes = this.shapes.filter(x=>x.leaflet_id != l._leaflet_id)!
             }
             else{
-              shape.isDeleted = true
+              shape.status = 'deleted'
             }
           })
           this.EmitSave()
@@ -233,7 +232,7 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
     })
   }
   isWorthyToEmit(x: DisplayShape){
-    return x.isNew || x.isModified || x.isDeleted || (x.partOfCurrentProject != x.partOfCurrentProjectDefault)
+    return x.status != "unchanged" || (x.partOfCurrentProject != x.partOfCurrentProjectDefault)
   }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -258,9 +257,7 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
         shape: layer.toGeoJSON() as GeoJsonObject,
         project_ids: this.projectId ? [this.projectId] : [],
         polygon_name: "swal ablak", // elnevezni normalisan
-        isNew: true,
-        isModified: false,
-        isDeleted: false,
+        status: "new",
         partOfCurrentProject: true,
         partOfCurrentProjectDefault: false,
       } as DisplayShape)

@@ -6,9 +6,10 @@ export default interface DisplayShape{
   polygon_id: number | null
   project_ids: number[]
   polygon_name: string
-  isNew: boolean
-  isModified: boolean
-  isDeleted: boolean
+  status: "unchanged"|"new"|"modified"|"deleted"
+  // isNew: boolean
+  // isModified: boolean
+  // isDeleted: boolean
   partOfCurrentProject: boolean
   partOfCurrentProjectDefault: boolean
 }

@@ -213,6 +213,8 @@ export class OneProjectPageComponent implements OnInit {
   onSaved(shapes:any){
     this.selectedShapes = shapes
     const nextCount = this.selectedShapes.filter(x => x.partOfCurrentProject).length
+    console.log(shapes);
+    
     queueMicrotask(() => {
       this.polygonsCount = nextCount
       this.cdr.detectChanges()
@@ -240,22 +242,27 @@ export class OneProjectPageComponent implements OnInit {
     this.router.navigate([`/project/edit/${this.projectId}`])
   }
   async PolygonCRUDactions(){
-    const deletedPolygons = this.selectedShapes.filter(x => x.isDeleted)
+    const deletedPolygons = this.selectedShapes.filter(x => x.status == "deleted")
     if(deletedPolygons.length > 0)
       await firstValueFrom(this.ds.BulkDeletePolygons(deletedPolygons));
 
-    const rest = this.selectedShapes.filter(x => !x.isDeleted)
-    const newPolygons = rest.filter(x => x.isNew)
+    const rest = this.selectedShapes.filter(x => x.status != "deleted")
+    const newPolygons = rest.filter(x => x.status == "new")
     if(newPolygons.length > 0)
       await firstValueFrom(this.ds.BulkCreatePolygons(newPolygons, this.projectId))
 
-    const modifiedPolygons = rest.filter(x =>
-      !x.isNew && (x.isModified || (x.partOfCurrentProject && !x.partOfCurrentProjectDefault))
+    const modifiedPolygons = rest.filter(x => 
+      x.status != "new" &&
+      (x.status == "modified" || (x.partOfCurrentProject && !x.partOfCurrentProjectDefault))
     )
     if(modifiedPolygons.length > 0)
       await firstValueFrom(this.ds.BulkUpdatePolygons(modifiedPolygons, this.projectId))
 
-    const unlinkedPolygons = rest.filter(x => !x.isNew && !x.partOfCurrentProject && x.partOfCurrentProjectDefault)
+    const unlinkedPolygons = rest.filter(x =>
+      x.status != "new" &&
+      !x.partOfCurrentProject &&
+      x.partOfCurrentProjectDefault
+    )
     if(unlinkedPolygons.length > 0)
       await firstValueFrom(this.ds.BulkUnlinkPolygons(unlinkedPolygons, this.projectId))
   }
@@ -273,3 +280,4 @@ export class OneProjectPageComponent implements OnInit {
 // 3: es akkor csak a magáénal alacsonyabbat allithat be
 //torlesnel "sikeresen hozzaadva"
 //sikeres mentesrol szolni
+// fooldalon meg projekt oldalon azalapjan szurni hogy mi a role levelje
