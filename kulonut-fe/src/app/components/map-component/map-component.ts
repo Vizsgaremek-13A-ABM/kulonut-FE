@@ -139,14 +139,13 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
           })
         }
         else{
-          // this.shapes.forEach(x => {            
-          //   layer.on('mouseover', (e)=>{          
-          //     L.popup()
-          //       .setLatLng(e.latlng)
-          //       .setContent(x.polygon_name)
-          //       .openOn(this.leafletMap);
-          //   });
-          // }); -- nemjo
+          layer.on('mouseover', (e)=>{          
+            const shape = this.shapes.find(x=>x.leaflet_id == e.sourceTarget._leaflet_id)!
+            L.popup()
+              .setLatLng(e.latlng)
+              .setContent(shape.polygon_name)
+              .openOn(this.leafletMap);
+          });
         }
       });
 
@@ -237,13 +236,13 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
         });
 
         this.leafletMap.on('draw:deleted', (event: any) => {
-          //polygoncount nem modosul
           event.layers.eachLayer((l: any)=>{
             let shape = this.shapes.find(x=>x.leaflet_id == l._leaflet_id)!
             if(shape.status == "new"){
               this.shapes = this.shapes.filter(x=>x.leaflet_id != l._leaflet_id)!
             }
             else{
+              shape.partOfCurrentProject = false
               shape.status = 'deleted'
             }
           })
