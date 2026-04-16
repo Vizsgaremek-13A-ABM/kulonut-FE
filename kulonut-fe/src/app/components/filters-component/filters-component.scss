@@ -31,6 +31,10 @@ button{
     bottom: 0;
 }
 
+input[type="date"]::-webkit-calendar-picker-indicator {
+  filter: invert(1);
+  cursor: pointer;
+}
 
 @media screen and (max-width: 1400px) {
     #filters-row{
