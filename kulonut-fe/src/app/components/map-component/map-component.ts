@@ -63,7 +63,7 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
 
       this.leafletMap = L.map(this.map.nativeElement, {
         maxZoom: 18,
-        minZoom: 1,
+        minZoom: 8,
         center: centerCoords as L.LatLngExpression,
         zoom: 12
       });
