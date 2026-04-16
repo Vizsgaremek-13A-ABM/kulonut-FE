@@ -44,16 +44,28 @@ export class AllProjectsPage implements OnInit {
   }
 
   DeleteProjectCommand(id: number, name: string){
-    this.ds.DeleteProject(id).subscribe({
-      next: async () => {
-        await Swal.fire({
-          title: "Sikeres törlés!",
-          text: `"${name}" projekt sikeresen törölve!`,
-          theme: "material-ui-dark",
-          icon: "success"
-        })
-        location.reload()
+    Swal.fire({
+      title: "Biztosan törli a projektet?",
+      text: `${name} nevű projekt véglegesen törlődni fog!`,
+      icon: "question",
+      showCancelButton: true,
+      confirmButtonText: 'Igen',
+      cancelButtonText: 'Nem',
+      theme: 'material-ui-dark'
+    }).then((result) => {
+      if (!result.isConfirmed) {
+        return
       }
+      this.ds.DeleteProject(id).subscribe({
+        next: async () => {
+          await Swal.fire({
+            title: "Sikeres törlés!",
+            theme: "material-ui-dark",
+            icon: "success"
+          })
+          location.reload()
+        }
+      })
     })
   }
 

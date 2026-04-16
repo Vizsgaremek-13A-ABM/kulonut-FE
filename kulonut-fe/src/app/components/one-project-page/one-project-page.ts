@@ -178,7 +178,6 @@ export class OneProjectPageComponent implements OnInit {
               theme: "material-ui-dark"
             })
           }
-          this.router.navigate([`project/show/${this.projectId}`])
         },
         error: () => {
           Swal.fire({
@@ -209,7 +208,7 @@ export class OneProjectPageComponent implements OnInit {
               theme: "material-ui-dark"
             })
           }
-          this.router.navigate([`project/show/${this.projectId}`])
+          this.router.navigate([`project/edit/${this.projectId}`])
         },
         error: () => {
           Swal.fire({

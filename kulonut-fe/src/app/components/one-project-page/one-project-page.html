@@ -55,10 +55,21 @@
                         <div style="flex-wrap: nowrap;" class="d-flex">
                             <div class="col-6 g-0 vertical-box pe-4" style="gap: 15px;">
                                 @for (item of dateFields; track $index){
-                                    <div>
-                                        <h6 [className]="(item.mandatory && mode != 'show') ? 'mandatory-star' : ''">{{item.title}}</h6>
-                                        <input type="date" class="form-control" [formControlName]="item.control">
-                                    </div>
+                                    @if (mode != 'show') {
+                                        <div>
+                                            <h6 [className]="item.mandatory ? 'mandatory-star' : ''">{{item.title}}</h6>
+                                            <input type="date" class="form-control" [formControlName]="item.control">
+                                        </div>
+                                    } @else {
+                                        <div>
+                                            <h6>{{item.title}}</h6>
+                                            @if (project_form.value[item.control]) {
+                                                <input type="date" class="form-control" [formControlName]="item.control">
+                                            } @else{
+                                                <span [style.marginLeft.px]="10">-</span>
+                                            }
+                                        </div>
+                                    }
                                 }
                             </div>
                             <div class="col-6 g-0">
