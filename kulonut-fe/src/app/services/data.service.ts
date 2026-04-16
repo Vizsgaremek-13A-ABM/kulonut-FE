@@ -191,7 +191,7 @@ export default class DataService {
     }
 
     public BulkUnlinkPolygons(displayShapes: DisplayShape[], project_id: number){
-        return this.http.post<any>(`${this.API_URL}/polygons/projects/bulk-unlink`, {
+        return this.http.post<any>(`${this.API_URL}/polygons/projects/bulk`, {
             links: displayShapes.map(x =>{
                 return {
                     polygon_id: x.polygon_id,

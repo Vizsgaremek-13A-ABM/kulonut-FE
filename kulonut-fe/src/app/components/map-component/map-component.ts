@@ -331,6 +331,7 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
   }
   ShowInfo(){
     Swal.fire({
+      width: "700px",
       html:`
       <h3 style="color:white;">Útmutató</h3>
       <h5 style="color:white;">Új alakzat</h5>
@@ -351,6 +352,11 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
       <p style="text-align:justify;">
         A jobb felső sarokban található ikonnal válthatunk utcai és műholdas nézet között.
         A nagyítóra kattintva helynévre kereshetünk, Enter nyomása után a térkép az adott helyre ugrik
+      </p>
+      <h5 style="color:white;">Fontos</h5>
+      <p style="text-align:justify;">
+        A projekt változtatásait a kék "Rögzít", vagy "Mentés" gombbal mentheti el.
+        Amennyiben egy projektnek csak a területeiben csinál változtatást, azok is csak a kék "Rögzít", vagy "Mentés" gomb kattintása után kerülnek mentésre!
       </p>
       `,
       theme: 'material-ui-dark'
