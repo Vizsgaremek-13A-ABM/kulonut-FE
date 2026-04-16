@@ -10,6 +10,7 @@ button{
     left: 10px;
     background-color: white;
     color: black;
+    outline: 1px solid black !important;
 }
 ::ng-deep .leaflet-div-icon.leaflet-editing-icon {
   width: 14px !important;

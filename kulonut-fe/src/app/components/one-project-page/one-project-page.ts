@@ -71,6 +71,7 @@ export class OneProjectPageComponent implements OnInit {
   ]
 
   ngOnInit(): void {
+    window.scrollTo(0, 0)
     this.user = this.authservice.GetUser()!
     this.mode = this.route.snapshot.data['mode'];
     const isDisabled = this.mode === "show";
@@ -276,4 +277,3 @@ export class OneProjectPageComponent implements OnInit {
       await firstValueFrom(this.ds.BulkUnlinkPolygons(unlinkedPolygons, this.projectId))
   }
 }
-// nem mentett modositasokrol szolni
