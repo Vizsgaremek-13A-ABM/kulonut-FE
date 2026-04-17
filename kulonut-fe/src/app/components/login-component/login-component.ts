@@ -5,10 +5,11 @@ import { Router, RouterLink } from '@angular/router';
 import { FormFieldComponent } from '../form-field-component/form-field-component';
 import AuthService from '../../services/auth.service';
 import Swal from 'sweetalert2';
+import { PasswordEyeToggleComponent } from '../password-eye-toggle-component/password-eye-toggle-component';
 
 @Component({
   selector: 'app-login-component',
-  imports: [MatButtonModule, FormsModule, RouterLink, FormFieldComponent, ReactiveFormsModule],
+  imports: [MatButtonModule, FormsModule, RouterLink, FormFieldComponent, ReactiveFormsModule, PasswordEyeToggleComponent],
   templateUrl: './login-component.html',
   styleUrls: [
     '../../app.scss',
@@ -20,6 +21,7 @@ export class LoginComponent implements OnInit {
   private authService = inject(AuthService)
   private fb = inject(FormBuilder)
   protected form!: FormGroup
+  protected passwordFieldType = 'password'
 
   ngOnInit(){
     if (this.authService.GetUser()){
@@ -47,5 +49,9 @@ export class LoginComponent implements OnInit {
         })
       }
     })
+  }
+
+  onPasswordVisibilityToggled(visible: boolean){
+    this.passwordFieldType = visible ? 'text' : 'password'
   }
 }

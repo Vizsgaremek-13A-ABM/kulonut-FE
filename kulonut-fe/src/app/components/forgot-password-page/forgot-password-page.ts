@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { FormFieldComponent } from '../form-field-component/form-field-component';
 import { MatButtonModule } from '@angular/material/button';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -15,7 +15,7 @@ import { RouterLink } from '@angular/router';
     './forgot-password-page.scss'
   ],
 })
-export class ForgotPasswordPage {
+export class ForgotPasswordPage implements OnInit {
   private fb = inject(FormBuilder)
   private authService = inject(AuthService)
   protected form!: FormGroup
@@ -45,15 +45,17 @@ export class ForgotPasswordPage {
         })
       },
       error: (e) =>{       
-        // ha nincs hitelesitve az emailcim?         
-        if (e.error.errors.email){
-          if (e.error.errors.email[0] == "passwords.user")
+        const backendErrors = e?.error?.errors
+        const emailErrors = backendErrors?.email
+
+        if (Array.isArray(emailErrors)){
+          if (emailErrors[0] == "passwords.user")
             Swal.fire({
               title: "Ellenőrizze az e-mail címet",
               theme: "material-ui-dark",
               icon: 'error'
             })
-          else if (e.error.errors.email[0] == "passwords.throttled"){
+          else if (emailErrors[0] == "passwords.throttled"){
             Swal.fire({
               title: "Túl sok kérést küldött a közelmúltban, próbálja újra kicsit később!",
               theme: "material-ui-dark",

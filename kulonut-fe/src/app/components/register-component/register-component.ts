@@ -5,10 +5,11 @@ import { Router, RouterLink } from '@angular/router';
 import { FormFieldComponent } from '../form-field-component/form-field-component';
 import Swal from 'sweetalert2';
 import AuthService from '../../services/auth.service';
+import { PasswordEyeToggleComponent } from '../password-eye-toggle-component/password-eye-toggle-component';
 
 @Component({
   selector: 'app-register-component',
-  imports: [MatButtonModule, FormsModule, RouterLink, FormFieldComponent, ReactiveFormsModule],
+  imports: [MatButtonModule, FormsModule, RouterLink, FormFieldComponent, ReactiveFormsModule, PasswordEyeToggleComponent],
   templateUrl: './register-component.html',
   styleUrls: [
     '../../app.scss',
@@ -20,6 +21,7 @@ export class RegisterComponent implements OnInit {
   private authService = inject(AuthService)
   private router = inject(Router)
   protected form!: FormGroup
+  protected passwordFieldType = 'password'
 
   ngOnInit(): void {
     this.form = this.fb.group({
@@ -100,5 +102,9 @@ export class RegisterComponent implements OnInit {
 
   private validatePassword(pwd: string){
     return pwd.match(this.authService.PASSWORD_REGEX)
+  }
+
+  onPasswordVisibilityToggled(visible: boolean){
+    this.passwordFieldType = visible ? 'text' : 'password'
   }
 }
