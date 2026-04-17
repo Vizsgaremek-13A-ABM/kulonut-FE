@@ -13,7 +13,7 @@
         data-cy="password"
         label="Jelszó"
         controlName="password"
-        type="password"
+      [type]="passwordFieldType"
         [form]="form"
     />
     <div>
@@ -23,7 +23,10 @@
           Maradok bejelentkezve
         </label>
       </div>
-      <button data-cy="login-submit" matButton="filled" class="wide fancy-border mt-2 blue-form-button" type="submit">Bejelentkezés</button>
+      <div class="d-flex mt-2" style="width: 100%; gap: 25px;">
+        <button data-cy="login-submit" matButton="filled" class="fancy-border blue-form-button" style="width: 100%;" type="submit">Bejelentkezés</button>
+        <app-password-eye-toggle-component (toggled)="onPasswordVisibilityToggled($event)"></app-password-eye-toggle-component>
+      </div>
     </div>
     <div>
       <a [routerLink]="['/user_register']" data-cy="register" style="width: fit-content;">Nincs még fiókja?</a>

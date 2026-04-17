@@ -5,10 +5,11 @@ import AuthService from '../../services/auth.service';
 import { FormFieldComponent } from '../form-field-component/form-field-component';
 import { MatButtonModule } from '@angular/material/button';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { PasswordEyeToggleComponent } from '../password-eye-toggle-component/password-eye-toggle-component';
 
 @Component({
   selector: 'app-reset-password-page',
-  imports: [FormFieldComponent, MatButtonModule, ReactiveFormsModule, RouterLink],
+  imports: [FormFieldComponent, MatButtonModule, ReactiveFormsModule, RouterLink, PasswordEyeToggleComponent],
   templateUrl: './reset-password-page.html',
   styleUrls: [
     '../../app.scss',
@@ -25,6 +26,7 @@ export class ResetPasswordPage implements OnInit {
   protected token = '';
   protected form!: FormGroup
   protected ready = false;
+  protected passwordFieldType = 'password'
 
   ngOnInit(): void {
     this.email = this.route.snapshot.queryParamMap.get('email') ?? '';
@@ -103,5 +105,9 @@ export class ResetPasswordPage implements OnInit {
   
   private validatePassword(pwd: string){
     return pwd.match(this.authService.PASSWORD_REGEX)
+  }
+
+  onPasswordVisibilityToggled(visible: boolean){
+    this.passwordFieldType = visible ? 'text' : 'password'
   }
 }

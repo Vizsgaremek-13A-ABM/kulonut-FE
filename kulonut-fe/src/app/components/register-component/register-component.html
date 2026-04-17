@@ -17,15 +17,18 @@
         label="Jelszó"
         controlName="password"
         [form]="form"
-        type="password"
+        [type]="passwordFieldType"
     />
     <app-form-field-component
         label="Jelszó újra"
         controlName="password_confirmation"
         [form]="form"
-        type="password"
+        [type]="passwordFieldType"
     />
-    <button [disabled]="form.invalid" matButton="filled" class="wide fancy-border mt-2 blue-form-button" type="submit">Regisztráció</button>
+    <div class="d-flex" style="width: 100%; gap: 25px;">
+      <button [disabled]="form.invalid" matButton="filled" class="fancy-border blue-form-button" style="width: 100%;" type="submit">Regisztráció</button>
+      <app-password-eye-toggle-component (toggled)="onPasswordVisibilityToggled($event)"></app-password-eye-toggle-component>
+    </div>
     <a [routerLink]="['']" style="width: fit-content;">Már van fiókja?</a>
   </form>
 </div>
