@@ -1,5 +1,5 @@
 import { Component, inject, OnInit } from '@angular/core';
-import { ActivatedRoute, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import Swal from 'sweetalert2';
 import AuthService from '../../services/auth.service';
 import { FormFieldComponent } from '../form-field-component/form-field-component';
@@ -19,6 +19,7 @@ export class ResetPasswordPage implements OnInit {
   private readonly authService = inject(AuthService);
   private readonly route = inject(ActivatedRoute);
   private fb = inject(FormBuilder)
+  private router = inject(Router)
 
   protected email = '';
   protected token = '';
@@ -56,7 +57,7 @@ export class ResetPasswordPage implements OnInit {
       });
       return;
     }
-    if(!this.validatePassword(value.password) || !this.validatePassword(value.password_confirmation)){
+    if(!this.validatePassword(value.password)){
       Swal.fire({
         title: 'Az új jelszó túl gyenge!',
         text: "Legalább egy kis- és nagybetűt, egy számot és egy speciális karaktert kell tartalmaznia, valamint minimum 8 karakter hosszú kell legyen.",
@@ -74,6 +75,29 @@ export class ResetPasswordPage implements OnInit {
       return;
     }
 
+    this.authService.ResetPassword({
+      token: this.token,
+      email: this.email,
+      password: this.form.value.password,
+      password_confirmation: this.form.value.password_confirmation,
+    }).subscribe({
+      next: async () => {
+        await Swal.fire({
+          title: "Sikeres jelszó visszaállítás!",
+          text: "Jelentkezzen be fiókjába!",
+          icon: "success",
+          theme: "material-ui-dark"
+        })
+        this.router.navigate(['/'])
+      },
+      error: () => {
+        Swal.fire({
+          title: "Valami hiba történt.",
+          icon: "error",
+          theme: "material-ui-dark"
+        })
+      }
+    })
 
   }
   
