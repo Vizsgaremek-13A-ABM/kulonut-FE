@@ -53,7 +53,7 @@ export class RegisterComponent implements OnInit {
         title: "A jelszó túl gyenge!",
         text: "Legalább egy kis- és nagybetűt, egy számot és egy speciális karaktert kell tartalmaznia, valamint minimum 8 karakter hosszú kell legyen.",
         theme: 'material-ui-dark',
-        icon: "error"
+        icon: "warning"
       })
       return
     }
@@ -91,7 +91,7 @@ export class RegisterComponent implements OnInit {
             title: "A jelszó túl gyenge!",
             text: "Legalább egy kis- és nagybetűt, egy számot és egy speciális karaktert kell tartalmaznia, valamint minimum 8 karakter hosszú kell legyen.",
             theme: 'material-ui-dark',
-            icon: "error"
+            icon: "warning"
           })
         }
       }

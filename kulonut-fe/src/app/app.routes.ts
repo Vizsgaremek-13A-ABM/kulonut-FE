@@ -6,7 +6,7 @@ export const routes: Routes = [
     { path: '', loadComponent: () => import('./components/login-component/login-component').then(m => m.LoginComponent) },
     { path: 'user_register', loadComponent: () => import('./components/register-component/register-component').then(m => m.RegisterComponent) },
     { path: 'forgot_password', loadComponent: () => import('./components/forgot-password-page/forgot-password-page').then(m => m.ForgotPasswordPage) },
-    { path: 'reset_password', loadComponent: () => import('./components/reset-password-page/reset-password-page').then(m => m.ResetPasswordPage) },
+    { path: 'reset-password', loadComponent: () => import('./components/reset-password-page/reset-password-page').then(m => m.ResetPasswordPage) },
     { path: 'main', canActivate: [authGuard], loadComponent: () => import('./components/main-page-component/main-page-component').then(m => m.MainPageComponent) },
     { path: 'profile', canActivate: [authGuard], loadComponent: () => import('./components/profile-page-component/profile-page-component').then(m => m.ProfilePageComponent) },
     

@@ -131,4 +131,12 @@ export default class AuthService {
       }
     }
   }
+
+  public ForgotPassword(){
+    
+  }
+
+  public ResetPassword(){
+
+  }
 }
