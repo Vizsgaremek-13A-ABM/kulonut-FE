@@ -132,11 +132,13 @@ export default class AuthService {
     }
   }
 
-  public ForgotPassword(){
-    
+  public ForgotPassword(email: string){
+    return this.http.post<any>(`${this.API_URL}/auth/forgot-password`, {email: email})
+      .pipe(takeUntilDestroyed(this.destroyRef));
   }
 
-  public ResetPassword(){
-
+  public ResetPassword(passwordData: Object){
+    return this.http.post<any>(`${this.API_URL}/auth/reset-password`, passwordData)
+      .pipe(takeUntilDestroyed(this.destroyRef));
   }
 }

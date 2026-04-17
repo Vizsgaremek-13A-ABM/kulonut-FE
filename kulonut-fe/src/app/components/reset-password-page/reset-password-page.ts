@@ -1,5 +1,5 @@
 import { Component, inject, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, RouterLink } from '@angular/router';
 import Swal from 'sweetalert2';
 import AuthService from '../../services/auth.service';
 import { FormFieldComponent } from '../form-field-component/form-field-component';
@@ -8,7 +8,7 @@ import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } 
 
 @Component({
   selector: 'app-reset-password-page',
-  imports: [FormFieldComponent, MatButtonModule, FormsModule, ReactiveFormsModule],
+  imports: [FormFieldComponent, MatButtonModule, FormsModule, ReactiveFormsModule, RouterLink],
   templateUrl: './reset-password-page.html',
   styleUrls: [
     '../../app.scss',
