@@ -7,5 +7,6 @@ export default interface User{
     email: string,
     avatar: string,
     role: Role,
-    joined_at: Date|string
+    joined_at: Date|string,
+    email_verified_at: Date|string|null
 }
