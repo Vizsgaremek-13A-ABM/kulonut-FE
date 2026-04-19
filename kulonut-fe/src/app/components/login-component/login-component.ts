@@ -49,9 +49,27 @@ export class LoginComponent implements OnInit {
             theme: "material-ui-dark"
           }).then(result => {
             if (result.isConfirmed){
-              this.authService.SendVerificationEmail().subscribe()
+              this.authService.SendVerificationEmail().subscribe({
+                next: () => {
+                  Swal.fire({
+                    title: "Az ellenőrző e-mail elküldve!",
+                    text: "Kérjük, ellenőrizze a postafiókját.",
+                    icon: "success",
+                    theme: "material-ui-dark"
+                  })
+                },
+                error: () => {
+                  Swal.fire({
+                    title: "Nem sikerült elküldeni az ellenőrző e-mailt!",
+                    text: "Kérjük, próbálja újra később.",
+                    icon: "error",
+                    theme: "material-ui-dark"
+                  })
+                }
+              })
             }
           })
+          this.authService.ClearStoredToken()
           return
         }
         this.authService.SetToken(response.token, loginData.rememberMe)

@@ -90,7 +90,7 @@ export class ResetPasswordPage implements OnInit {
           icon: "success",
           theme: "material-ui-dark"
         })
-        this.router.navigate(['/'])
+        this.authService.Logout()
       },
       error: () => {
         Swal.fire({
