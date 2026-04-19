@@ -16,7 +16,6 @@ export class EmailVerifiedPage implements OnInit {
   private route = inject(ActivatedRoute)
   ngOnInit(): void {
     const status = this.route.snapshot.queryParamMap.get('status') ?? '';
-    console.log(status);
     if (status == 'success'){
       Swal.fire({
         title: "Sikeres e-mail hitelesítés!",
