@@ -102,7 +102,7 @@ export default class AuthService {
     return remember ? localStorage : sessionStorage;
   }
 
-  private ClearStoredToken() {
+  public ClearStoredToken() {
     localStorage.removeItem(this.TOKEN_KEY);
     sessionStorage.removeItem(this.TOKEN_KEY);
   }
