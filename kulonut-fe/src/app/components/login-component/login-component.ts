@@ -37,8 +37,22 @@ export class LoginComponent implements OnInit {
     const loginData = this.form.value
     this.authService.Login(loginData).subscribe({
       next: (response) => {
+        this.authService.SetToken(response.token, false)
         if (response.user && !response.user.email_verified_at) {
-          response.user.role.level = 0 // nemjo megoldas 
+          Swal.fire({
+            title: "Hitelesítse az e-mail címét!",
+            text: "Ezt a regisztrációkor megadott e-mail címre küldött linkkel teheti meg",
+            icon: "warning",
+            confirmButtonText: "Újraküldés",
+            showCancelButton: true,
+            cancelButtonText: "OK",
+            theme: "material-ui-dark"
+          }).then(result => {
+            if (result.isConfirmed){
+              this.authService.SendVerificationEmail().subscribe()
+            }
+          })
+          return
         }
         this.authService.SetToken(response.token, loginData.rememberMe)
         this.authService.SetUser(response.user, loginData.rememberMe)

@@ -141,4 +141,9 @@ export default class AuthService {
     return this.http.post<any>(`${this.API_URL}/auth/reset-password`, passwordData)
       .pipe(takeUntilDestroyed(this.destroyRef));
   }
+
+  public SendVerificationEmail(){
+    return this.http.post<any>(`${this.API_URL}/email/verification-notification`, {})
+      .pipe(takeUntilDestroyed(this.destroyRef));
+  }
 }

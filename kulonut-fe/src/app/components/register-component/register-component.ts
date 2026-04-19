@@ -68,15 +68,8 @@ export class RegisterComponent implements OnInit {
       return
     }
     this.authService.RegisterAccount(registerData).subscribe({
-      next: async (response) =>{
-        await Swal.fire({
-          title: "Sikeres regisztráció!",
-          text: "Ne felejtse el hitelesíteni e-mail címét, amit az arra kiküldött linkkel tehet meg, valamint vegye fel a kapcsolatot az adminisztrátorral a megfelelő rangért!",
-          theme: 'material-ui-dark',
-          icon: "success"
-        })
-        this.router.navigate(["/"])
-        //login egybol? - rememberme
+      next: () =>{
+        void this.showRegistrationSuccessDialog()
       },
       error: (response) =>{
         const backendErrors = response?.error?.errors
@@ -106,5 +99,43 @@ export class RegisterComponent implements OnInit {
 
   onPasswordVisibilityToggled(visible: boolean){
     this.passwordFieldType = visible ? 'text' : 'password'
+  }
+
+  async showRegistrationSuccessDialog(){
+    const result = await Swal.fire({
+      title: "Sikeres regisztráció!",
+      text: "Ne felejtse el hitelesíteni e-mail címét, amit az arra kiküldött linkkel tehet meg, valamint vegye fel a kapcsolatot az adminisztrátorral a megfelelő rangért!",
+      theme: 'material-ui-dark',
+      confirmButtonText: "Újraküldés",
+      showCancelButton: true,
+      cancelButtonText: "OK",
+      icon: "success"
+    })
+
+    if (result.isConfirmed){
+      this.authService.SendVerificationEmail().subscribe({
+        next: async () => {
+          await Swal.fire({
+            title: "Új hitelesítő e-mail elküldve!",
+            text: "Ellenőrizze a postaládáját, majd használja a legfrissebb linket.",
+            theme: 'material-ui-dark',
+            icon: "success"
+          })
+          await this.showRegistrationSuccessDialog()
+        },
+        error: async () => {
+          await Swal.fire({
+            title: "Nem sikerült újraküldeni az e-mailt.",
+            text: "Próbálja meg később újra, vagy jelentkezzen be, ha a fiókja már aktív.",
+            theme: 'material-ui-dark',
+            icon: "error"
+          })
+          await this.showRegistrationSuccessDialog()
+        }
+      })
+      return
+    }
+
+    this.router.navigate(["/"])
   }
 }
