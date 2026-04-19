@@ -146,4 +146,9 @@ export default class AuthService {
     return this.http.post<any>(`${this.API_URL}/email/verification-notification`, {})
       .pipe(takeUntilDestroyed(this.destroyRef));
   }
+
+  public GetMe(){
+    return this.http.get<{data: User}>(`${this.API_URL}/auth/user`)
+      .pipe(takeUntilDestroyed(this.destroyRef));
+  }
 }
