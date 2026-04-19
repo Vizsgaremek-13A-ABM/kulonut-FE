@@ -76,7 +76,7 @@ export class RegisterComponent implements OnInit {
           icon: "success"
         })
         this.router.navigate(["/"])
-        //email validate
+        //login egybol? - rememberme
       },
       error: (response) =>{
         const backendErrors = response?.error?.errors

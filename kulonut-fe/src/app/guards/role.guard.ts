@@ -6,7 +6,6 @@ export const roleGuard: CanActivateFn = (route, state) => {
     const authService = inject(AuthService);
     const router = inject(Router)
     const minimumRole = route.data['minRole'] as number;
-    //email cim elfogadast is majd nezni
     if (authService.GetUser() && authService.GetUser()!.role.level >= minimumRole) {
         return true;
     }
