@@ -21,7 +21,7 @@ spec:
       containers:
         - name: httpd-frontend
           # (A) Ha a GHCR image tartalmaz Apache-t:
-          image: ghcr.io/megadrive88/kulonut-fe-vizsgaremek:1776619262
+          image: ghcr.io/megadrive88/kulonut-fe-vizsgaremek:1776626082
           # (B) Alternatíva: hivatalos httpd image és static fájlok másolása:
           # image: httpd:2.4
           ports:
