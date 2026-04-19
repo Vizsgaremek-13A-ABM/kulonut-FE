@@ -66,7 +66,10 @@ export default class AuthService {
           this.ClearAuthState();
           this.router.navigate(['/'])
         },
-        error: (e) => console.log(e),
+        error: (e) => {
+          console.log(e);
+          this.router.navigate(['/'])
+        }
       });
   }
 
