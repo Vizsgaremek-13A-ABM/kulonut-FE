@@ -37,6 +37,7 @@ export class LoginComponent implements OnInit {
     const loginData = this.form.value
     this.authService.Login(loginData).subscribe({
       next: (response) => {
+        this.authService.SetToken(response.token, false)
         if (response.user && !response.user.email_verified_at) {
           Swal.fire({
             title: "Hitelesítse az e-mail címét!",
@@ -48,7 +49,7 @@ export class LoginComponent implements OnInit {
             theme: "material-ui-dark"
           }).then(result => {
             if (result.isConfirmed){
-              this.authService.SendVerificationEmail()
+              this.authService.SendVerificationEmail().subscribe()
             }
           })
           return
