@@ -147,6 +147,13 @@ export class ProfilePageComponent implements OnInit {
             icon: "error"
           })
         }
+        else{
+          Swal.fire({
+            title: "Valami hiba történt",
+            theme: 'material-ui-dark',
+            icon: "error"
+          })
+        }
       }
     })
   }
