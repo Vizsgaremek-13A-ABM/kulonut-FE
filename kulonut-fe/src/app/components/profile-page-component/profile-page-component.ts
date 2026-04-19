@@ -147,6 +147,13 @@ export class ProfilePageComponent implements OnInit {
             icon: "error"
           })
         }
+        else if (response.status == 413){
+          Swal.fire({
+            title: "A feltöltött kép túl nagy!",
+            theme: 'material-ui-dark',
+            icon: "error"
+          })
+        }
         else{
           Swal.fire({
             title: "Valami hiba történt",
