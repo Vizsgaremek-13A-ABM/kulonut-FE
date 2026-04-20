@@ -8,7 +8,7 @@
         <button (click)="FilterCommand()" matButton="filled" class="fancy-border" style="max-height: 38px;">Keresés</button>
     </div>
     @for (user of displayUsers; track user.id) {
-        <ul class="user-row fancy-border white-panel">
+        <ul class="user-row fancy-border white-panel" style="position: relative;">
             <li>
                 Felhasználónév
                 <h5>
@@ -36,6 +36,9 @@
                         </option>
                     }
                 </select>
+            </li>
+            <li class="delete-button-parent">
+                <button matButton="filled" class="fancy-border" (click)="DeleteUserCommand(user)">Törlés</button>
             </li>
         </ul>
     }

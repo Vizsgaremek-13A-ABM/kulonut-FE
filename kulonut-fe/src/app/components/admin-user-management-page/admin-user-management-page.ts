@@ -60,4 +60,30 @@ export class AdminUserManagementPage implements OnInit {
       }
     })
   }
+
+  DeleteUserCommand(user: User){
+    Swal.fire({
+      title: "Biztosan törli a felhasználót?",
+      text: `${user.name} nevű felhasználó véglegesen törlődni fog!`,
+      icon: "question",
+      showCancelButton: true,
+      confirmButtonText: 'Igen',
+      cancelButtonText: 'Nem',
+      theme: 'material-ui-dark'
+    }).then((result) => {
+      if (!result.isConfirmed) {
+        return
+      }
+      this.ds.DeleteUser(user.id).subscribe({
+        next: async () => {
+          await Swal.fire({
+            title: "Sikeres törlés!",
+            theme: "material-ui-dark",
+            icon: "success"
+          })
+          location.reload()
+        }
+      })
+    })
+  }
 }

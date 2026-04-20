@@ -200,4 +200,9 @@ export default class DataService {
             })
         }).pipe(takeUntilDestroyed(this.destroyRef))
     }
+
+    public DeleteUser(id: number){
+        return this.http.delete<any>(`${this.API_URL}/users/${id}`)
+            .pipe(takeUntilDestroyed(this.destroyRef))
+    }
 }
