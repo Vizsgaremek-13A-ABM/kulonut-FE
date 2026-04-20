@@ -65,7 +65,7 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
         maxZoom: 18,
         minZoom: 8,
         center: centerCoords as L.LatLngExpression,
-        zoom: 12
+        zoom: 14
       });
       const mapLayers = this.ds.GetMapLayers()
       mapLayers[0].addTo(this.leafletMap);
