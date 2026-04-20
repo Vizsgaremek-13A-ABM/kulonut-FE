@@ -1,4 +1,4 @@
-import { Component, ElementRef, inject, OnInit, ViewChild, ChangeDetectorRef } from '@angular/core';
+import { Component, ElementRef, inject, OnInit, ViewChild, ChangeDetectorRef, HostListener } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TopBarComponent } from '../top-bar-component/top-bar-component';
 import DataService from '../../services/data.service';
@@ -17,6 +17,7 @@ import AuthService from '../../services/auth.service';
 import User from '../../interfaces/user.interface';
 import Role from '../../interfaces/role.interface';
 import Swal from 'sweetalert2';
+import { CanComponentDeactivate } from '../../guards/can_leave.guard';
 
 @Component({
   selector: 'app-one-project-page',
@@ -27,7 +28,7 @@ import Swal from 'sweetalert2';
     './one-project-page.scss'
   ],
 })
-export class OneProjectPageComponent implements OnInit {
+export class OneProjectPageComponent implements OnInit, CanComponentDeactivate {
   private route = inject(ActivatedRoute)
   protected mode!:string
   protected projectId!:number
@@ -151,6 +152,26 @@ export class OneProjectPageComponent implements OnInit {
         min_role_level: project.min_role_level
       })
     })
+  }
+
+  @HostListener('window:beforeunload', ['$event'])
+  handleBeforeUnload(event: BeforeUnloadEvent) {
+    if (this.mode != "show"){
+      event.preventDefault();
+      event.returnValue = '';
+    }
+  }
+
+  canDeactivate(){
+    return Swal.fire({
+      title: 'Elhagyja a webhelyet?',
+      text: "Ellenőrízze, hogy elmentette-e a módosításait",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Igen',
+      cancelButtonText: 'Nem',
+      theme: "material-ui-dark"
+    }).then(result => result.isConfirmed);
   }
 
   trackByFn(item: any) {
