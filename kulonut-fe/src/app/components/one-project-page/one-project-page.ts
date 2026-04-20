@@ -164,8 +164,8 @@ export class OneProjectPageComponent implements OnInit, CanComponentDeactivate {
 
   canDeactivate(){
     return Swal.fire({
-      title: 'Elhagyja a webhelyet?',
-      text: "Ellenőrízze, hogy elmentette-e a módosításait",
+      title: 'Elhagyja az oldalt?',
+      text: "Ellenőrízze, hogy elmentette-e a módosításait!",
       icon: 'warning',
       showCancelButton: true,
       confirmButtonText: 'Igen',
