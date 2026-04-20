@@ -34,6 +34,11 @@ button, a{
     color: darkred !important;
 }
 
+.red-bg{
+    background-color: $error-bg !important;
+    color: darkred !important;
+}
+
 a{
     transition: transform 0.2s ease-in-out, box-shadow .2s ease-in-out;
 }

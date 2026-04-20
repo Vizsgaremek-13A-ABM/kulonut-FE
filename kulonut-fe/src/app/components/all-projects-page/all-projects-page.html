@@ -36,8 +36,8 @@
             <li class="buttons-li">
                 <a [routerLink]="[`/project/show/${project.id}`]" matButton="filled" class="fancy-border">Megtekintés</a>
                 @if (user.role.level >= 50) {
-                    <a [routerLink]="[`/project/edit/${project.id}`]" matButton="filled" class="fancy-border">Szerkesztés</a>
-                    <button (click)="DeleteProjectCommand(project.id, project.project_name)" matButton="filled" class="fancy-border orange-bg">Törlés</button>
+                    <a [routerLink]="[`/project/edit/${project.id}`]" matButton="filled" class="fancy-border orange-bg">Szerkesztés</a>
+                    <button (click)="DeleteProjectCommand(project.id, project.project_name)" matButton="filled" class="fancy-border red-bg">Törlés</button>
                 }
             </li>
         </ul>

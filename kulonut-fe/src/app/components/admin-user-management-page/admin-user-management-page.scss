@@ -4,7 +4,7 @@
     list-style-type: none;
     gap: 10px;
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(2, 1fr);
     margin-bottom: 0;
 }
 
@@ -23,6 +23,17 @@ button{
     font-size: 120%;
     background-color: $primary-blue !important;
     bottom: 0;
+}
+
+.delete-button-parent{
+    position: absolute;
+    top: 0;
+    right: 10px;
+    margin-top: 10px;
+    & button{
+        background-color: $error-bg !important;
+        color: darkred !important;
+    }
 }
 
 input, select{
