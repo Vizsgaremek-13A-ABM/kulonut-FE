@@ -21,12 +21,13 @@ import Swal from 'sweetalert2';
 export class ProfilePageComponent implements OnInit {
   protected user_data_form!: FormGroup;
   protected password_form!: FormGroup;
+  private readonly MAX_PROFILE_IMAGE_SIZE_BYTES = 2048 * 1024;
   private fb = inject(FormBuilder);
   private authService = inject(AuthService)
   private ds = inject(DataService)
   private cdr = inject(ChangeDetectorRef)
   protected user!: User
-  private formdata!:FormData
+  private formdata: FormData | null = null
 
   @ViewChild('pfpImg') pfpImg!: ElementRef<HTMLImageElement>;
   @ViewChild('oldpassword') oldPasswordBox!: ElementRef;
@@ -147,7 +148,7 @@ export class ProfilePageComponent implements OnInit {
             icon: "error"
           })
         }
-        else if (response.status == 413){
+        else if (response.status == 413 || response.status == 0){
           Swal.fire({
             title: "A feltöltött kép túl nagy!",
             theme: 'material-ui-dark',
@@ -190,6 +191,19 @@ export class ProfilePageComponent implements OnInit {
     const fileInp = this.fileInput.nativeElement
     if (fileInp.files && fileInp.files[0]){
       const file = fileInp.files[0]
+
+      if (file.size > this.MAX_PROFILE_IMAGE_SIZE_BYTES) {
+        this.formdata = null
+        fileInp.value = ''
+        Swal.fire({
+          title: "A feltöltött kép túl nagy!",
+          text: "Legfeljebb 2 MB méretű képet tölthet fel.",
+          theme: 'material-ui-dark',
+          icon: "warning"
+        })
+        return
+      }
+
       this.formdata = new FormData()
       this.formdata.append('profile_icon', file)
 

@@ -76,8 +76,16 @@ export class LoginComponent implements OnInit {
         this.authService.SetUser(response.user, loginData.rememberMe)
         this.router.navigate(['/main'])
       },
-      error: () => {
-        Swal.fire({
+      error: (e) => {
+        if(e.status == 429){
+          Swal.fire({
+            title: "Túl sok bejelentkezési kérés",
+            text: "Próbálja újra később!",
+            theme: "material-ui-dark",
+            icon: "error"
+          })
+        }
+        else Swal.fire({
           title: "Hibás e-mail cím vagy jelszó!",
           theme: "material-ui-dark",
           icon: "error"
