@@ -13,12 +13,15 @@
         [form]="form"
         type="email"
     />
-    <app-form-field-component
-        label="Jelszó"
-        controlName="password"
-        [form]="form"
-        [type]="passwordFieldType"
-    />
+    <div>
+      <app-form-field-component
+          label="Jelszó"
+          controlName="password"
+          [form]="form"
+          [type]="passwordFieldType"
+      />
+      <span style="font-size: 90%;">Min. 8 karakter, kötelező kisbetű, nagybetű, szám, speciális karakter</span>
+    </div>
     <app-form-field-component
         label="Jelszó újra"
         controlName="password_confirmation"

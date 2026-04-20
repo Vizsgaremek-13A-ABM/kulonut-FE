@@ -6,11 +6,14 @@
 button{
     position: absolute;
     z-index: 999;
-    bottom: 10px;
-    left: 10px;
+    top: 210px;
+    left: 12px;
     background-color: white;
     color: black;
     outline: 1px solid black !important;
+    width: 30px;
+    height: 30px;
+    border-radius: 2px;
 }
 ::ng-deep .leaflet-div-icon.leaflet-editing-icon {
   width: 14px !important;

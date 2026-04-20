@@ -356,7 +356,7 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
       <h5 style="color:white;">Fontos</h5>
       <p style="text-align:justify;">
         A projekt változtatásait a kék "Rögzít", vagy "Mentés" gombbal mentheti el.
-        Amennyiben egy projektnek csak a területeiben csinál változtatást, azok is csak a kék "Rögzít", vagy "Mentés" gomb kattintása után kerülnek mentésre!
+        Amennyiben egy projektnek csak a területeiben végez változtatást, azok is csak a kék "Rögzít", vagy "Mentés" gomb kattintása után kerülnek mentésre!
       </p>
       `,
       theme: 'material-ui-dark'
