@@ -106,7 +106,7 @@
                         }
                     </div>
                     @if (mode != "show") { 
-                        <button [disabled]="project_form.invalid" style="margin-top: auto;" type="submit" matButton="filled" class="blue-form-button fancy-border" id="save-button-after">{{mode == "new" ? "Rögzít" : "Mentés"}}</button>
+                        <button [disabled]="project_form.invalid" style="margin-top: auto;" type="submit" matButton="filled" class="blue-form-button fancy-border" id="save-button-after" title="A *-gal jelölt mezők kitöltése kötelező">{{mode == "new" ? "Rögzít" : "Mentés"}}</button>
                     }
                     @else if (user.role.level >= 50){
                         <button style="margin-top: auto;" type="button" matButton="filled" class="blue-form-button fancy-border" (click)="navigateToEdit()">Szerkesztés</button>
