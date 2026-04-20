@@ -68,7 +68,8 @@ export class RegisterComponent implements OnInit {
       return
     }
     this.authService.RegisterAccount(registerData).subscribe({
-      next: () =>{
+      next: (resp) =>{
+        this.authService.SetToken(resp.token, false)
         void this.showRegistrationSuccessDialog()
       },
       error: (response) =>{
@@ -135,7 +136,7 @@ export class RegisterComponent implements OnInit {
       })
       return
     }
-
+    this.authService.ClearStoredToken()
     this.router.navigate(["/"])
   }
 }

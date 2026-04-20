@@ -6,6 +6,7 @@ import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { Router } from "@angular/router";
 
 interface RegisterResponse {
+  token: any
   message: string;
   errors: any;
   user: User;
