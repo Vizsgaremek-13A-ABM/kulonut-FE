@@ -69,6 +69,7 @@ export default class AuthService {
         },
         error: (e) => {
           console.log(e);
+          this.ClearAuthState();
           this.router.navigate(['/'])
         }
       });
