@@ -35,11 +35,11 @@
 
         </div>
         <div class="filter-row">
-            <button matButton="filled" class="wide fancy-border">Utolsó 1 év</button>
-            <button matButton="filled" class="wide fancy-border">Utolsó 3 év</button>
-            <button matButton="filled" class="wide fancy-border">Utolsó 5 év</button>
-            <button matButton="filled" class="wide fancy-border">Utolsó 10 év</button>
-            <button matButton="filled" class="wide fancy-border red-bg">Szűrők törlése</button>
+            <button (click)="LastNYear(1)" matButton="filled" class="wide fancy-border">Utolsó 1 év</button>
+            <button (click)="LastNYear(3)" matButton="filled" class="wide fancy-border">Utolsó 3 év</button>
+            <button (click)="LastNYear(5)" matButton="filled" class="wide fancy-border">Utolsó 5 év</button>
+            <button (click)="LastNYear(10)" matButton="filled" class="wide fancy-border">Utolsó 10 év</button>
+            <button (click)="ClearFilters()" matButton="filled" class="wide fancy-border red-bg">Szűrők törlése</button>
         </div>
     </div>
 </form>
