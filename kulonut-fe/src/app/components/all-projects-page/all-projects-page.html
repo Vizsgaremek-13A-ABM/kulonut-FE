@@ -1,46 +1,37 @@
 <app-top-bar-component/>
 <section class="content fancy-border vertical-box gap-4">
     <app-filters-component (apply)="FilterCommand($event)"/>
-    @for (project of displayProjects; track project.id){
-        <ul class="project-row fancy-border white-panel">
-            <li>
-                Projekt neve
-                <h5>
-                    {{project.project_name}}
-                </h5>
-            </li>
-            <li>
-                Tervkiadás dátuma
-                <h5>
-                    {{project.plan_issue_date | date:"yyyy.MM.dd."}}
-                </h5>
-            </li>
-            <li>
-                Megrendelő
-                <h5>
-                    {{project.client}}
-                </h5>
-            </li>
-            <li>
-                Generáltervező
-                <h5>
-                    {{project.general_designer}}
-                </h5>
-            </li>
-            <li>
-                Tervezők
-                <h5>
-                    {{project.designer ? project.designer : '- nincs -'}}
-                </h5>
-            </li>
-            <li class="buttons-li">
-                <a [routerLink]="[`/project/show/${project.id}`]" matButton="filled" class="fancy-border">Megtekintés</a>
-                @if (user.role.level >= 50) {
-                    <a [routerLink]="[`/project/edit/${project.id}`]" matButton="filled" class="fancy-border orange-bg">Szerkesztés</a>
-                    <button (click)="DeleteProjectCommand(project.id, project.project_name)" matButton="filled" class="fancy-border red-bg">Törlés</button>
+    <div class="white-panel fancy-border">
+        <table class="w-100">
+            <thead>
+                <tr>
+                    <th>Munkaszám</th>
+                    <th>Projekt neve</th>
+                    <th>Tervkiadás dátuma</th>
+                    <th>Megrendelő</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @for (project of displayProjects; track project.id){
+                    <tr>
+                        <td><h5>{{project.work_number}}</h5></td>
+                        <td><a [routerLink]="[`/project/show/${project.id}`]" class="projectname-nav"><h5>{{project.project_name}}</h5></a></td>
+                        <td><h5>{{project.plan_issue_date | date:"yyyy.MM.dd."}}</h5></td>
+                        <td><h5>{{project.client}}</h5></td>
+                        <td class="button-td">
+                            <div class="d-flex">
+                                <a [routerLink]="[`/project/show/${project.id}`]" class="fancy-border"><img src="/assets/view.svg" alt="Megtekint" title="Megtekintés"></a>
+                                @if (user.role.level >= 50) {
+                                    <a [routerLink]="[`/project/edit/${project.id}`]" class="fancy-border orange-bg"><img src="/assets/edit.png" alt="Szerkeszt" title="Szerkesztés"></a>
+                                    <button (click)="DeleteProjectCommand(project.id, project.project_name)" class="fancy-border red-bg"><img src="/assets/trash.png" alt="Töröl" title="Törlés"></button>
+                                }
+                            </div>
+                        </td>
+                    </tr>
                 }
-            </li>
-        </ul>
-    }
+            </tbody>
+        </table>
+    </div>
 </section>
 <button id="back-to-top" class="fancy-border" (click)="BackToTopCommand()">🡅</button>

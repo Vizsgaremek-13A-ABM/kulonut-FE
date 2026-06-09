@@ -1,9 +1,33 @@
 @use '../../../variables' as *;
 
-.project-row{
-    list-style-type: none;
-    gap: 5px;
-    display: grid;
+td{
+    border-bottom: 1px solid black;
+    max-width: 40ch;
+    & h5{
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+}
+
+table {
+  border-collapse: separate;
+  border-spacing: 0 10px;
+}
+
+th{
+    font-size: 110%;
+    padding-bottom: 15px;
+    border-bottom: 1px solid black;
+}
+
+.button-td{
+    white-space: nowrap;
+    width: 1%;
+}
+
+a img, button img{
+    width: 30px;
 }
 
 #back-to-top{
@@ -16,17 +40,28 @@
     border: 0;
 }
 
-li.buttons-li{
-    display: flex;
-    gap: 20px;
-}
-
-button, a{
+button, a:not(.projectname-nav){
     font-family: "IBM";
     border-radius: 0;
     font-size: 120%;
-    background-color: $primary-blue !important;
-    bottom: 0;
+    background-color: $primary-blue;
+    padding: 10px 0 !important;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 0;
+    margin-right: 15px;
+    margin-bottom: 15px;
+}
+
+.projectname-nav{
+    text-decoration: none;
+    &:hover{
+        text-decoration-color: black !important;
+        text-decoration: underline;
+    }
 }
 
 .orange-bg{

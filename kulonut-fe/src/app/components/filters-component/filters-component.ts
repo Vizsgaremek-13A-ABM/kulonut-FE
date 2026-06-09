@@ -65,4 +65,25 @@ export class FiltersComponent implements OnInit {
     }
     this.apply.emit(filterFn)
   }
+
+  public ClearFilters(){
+    this.form = this.fb.group({
+      name: [""],
+      startDate: ["2000-01-01"],
+      endDate: [this.ds.GetToday()],
+      types: [[]]
+    })
+    this.ApplyCommand()
+  }
+
+  public LastNYear(n: number){
+    const today = this.ds.GetToday()
+    let todayAsDate = new Date(today)
+    todayAsDate.setFullYear(todayAsDate.getFullYear() - n)
+    this.form.patchValue({
+      endDate: new Date(today).toISOString().split('T')[0],
+      startDate: todayAsDate.toISOString().split('T')[0]
+    });
+    this.ApplyCommand()
+  }
 }
