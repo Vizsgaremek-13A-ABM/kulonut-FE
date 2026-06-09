@@ -40,11 +40,11 @@ a img, button img{
     border: 0;
 }
 
-button, a{
+button, a:not(.projectname-nav){
     font-family: "IBM";
     border-radius: 0;
     font-size: 120%;
-    background-color: $primary-blue !important;
+    background-color: $primary-blue;
     padding: 10px 0 !important;
     width: 40px;
     height: 40px;
@@ -54,6 +54,14 @@ button, a{
     border: 0;
     margin-right: 15px;
     margin-bottom: 15px;
+}
+
+.projectname-nav{
+    text-decoration: none;
+    &:hover{
+        text-decoration-color: black !important;
+        text-decoration: underline;
+    }
 }
 
 .orange-bg{

@@ -16,7 +16,7 @@
                 @for (project of displayProjects; track project.id){
                     <tr>
                         <td><h5>{{project.work_number}}</h5></td>
-                        <td><h5>{{project.project_name}}</h5></td>
+                        <td><a [routerLink]="[`/project/show/${project.id}`]" class="projectname-nav"><h5>{{project.project_name}}</h5></a></td>
                         <td><h5>{{project.plan_issue_date | date:"yyyy.MM.dd."}}</h5></td>
                         <td><h5>{{project.client}}</h5></td>
                         <td class="button-td">

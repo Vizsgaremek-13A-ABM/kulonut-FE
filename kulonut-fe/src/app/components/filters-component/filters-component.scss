@@ -17,8 +17,9 @@ ng-select{
 }
 
 #filters-row{
-    justify-content: space-between;
-    align-items: flex-end;
+    display: grid;
+    grid-template-rows: repeat(2, 1fr);
+    grid-auto-flow: column;
     gap: 20px;
     & div{
         width: 100%;
@@ -29,6 +30,7 @@ button{
     font-size: 120%;
     background-color: $primary-blue !important;
     bottom: 0;
+    max-height: 38px;
 }
 
 input[type="date"]::-webkit-calendar-picker-indicator {
@@ -36,13 +38,59 @@ input[type="date"]::-webkit-calendar-picker-indicator {
   cursor: pointer;
 }
 
+.red-bg{
+    background-color: $error-bg !important;
+    color: darkred !important;
+}
+
+label{
+    white-space: nowrap;
+}
+
+.filter-row{
+    display: flex;
+    flex-wrap: wrap;
+    width: 100%;
+    gap: 20px;
+    & > div, & > button:not(#apply-button){
+        flex: 1 1 calc(20% - 20px);
+        min-width: 180px;
+    }
+}
+
 @media screen and (max-width: 1400px) {
-    #filters-row{
-        display: grid !important;
-        grid-template-columns: repeat(2, 1fr);
-        & #button-parent{
-            width: 100%;
-            grid-column: 1 / -1;
+    .filter-row {
+        & > div, & > button:not(#apply-button) {
+            flex: 1 1 calc(33.333% - 20px);
         }
+    }
+}
+
+@media screen and (max-width: 992px) {
+    #filters-row {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+    }
+    .filter-row {
+        & > div, & > button:not(#apply-button) {
+            flex: 1 1 calc(50% - 20px);
+        }
+    }
+}
+
+@media screen and (max-width: 640px) {
+    .filter-row {
+        flex-direction: column;
+        & > div, & > button:not(#apply-button) {
+            flex: 1 1 100%;
+            min-width: unset;
+        }
+        & > button {
+            min-height: 38px;
+        }
+    }
+    #apply-button {
+        width: 100%;
     }
 }

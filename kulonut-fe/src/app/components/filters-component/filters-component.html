@@ -1,35 +1,45 @@
 <form class="filters fancy-border" [formGroup]="form">
     <h4>Szűrők</h4>
-    <div class="d-flex" id="filters-row">
-        <div>
-            <label for="projectname">Projektnév</label>
-            <input name="projectname" formControlName="name" type="text" class="form-control" placeholder="Projektnév">
+    <div id="filters-row">
+        <div class="filter-row">
+            <div>
+                <label for="projectname">Projektnév</label>
+                <input name="projectname" formControlName="name" type="text" class="form-control" placeholder="Projektnév">
+            </div>
+            <div>
+                <label for="startdate">Tervkiadás dátuma ezután</label>
+                <input name="startdate" formControlName="startDate" type="date" class="form-control">
+            </div>
+            <div>
+                <label for="enddate">~ ezelőtt</label>
+                <input name="enddate"formControlName="endDate" type="date" class="form-control">
+            </div>
+            <div>
+                <label for="type">Típus</label>
+                <ng-select
+                    name="type"
+                    [multiple]="true"
+                    class="form-control"
+                    placeholder="-- Típus --"
+                    [items]="projectTypes"
+                    style="max-height: 40px;"
+                    name="typeSelector"
+                    formControlName="types"
+                    >
+                </ng-select>
+            </div>
+            <div>
+                <label for="">&nbsp;</label>
+                <button id="apply-button" (click)="ApplyCommand()" matButton="filled" class="wide fancy-border" aria-label="szűrők alkalmazása">Szűrők alkalmazása</button>
+            </div>
+
         </div>
-        <div>
-            <label for="startdate">Tervkiadás dátuma ezután</label>
-            <input name="startdate" formControlName="startDate" type="date" class="form-control">
-        </div>
-        <div>
-            <label for="enddate">~ ezelőtt</label>
-            <input name="enddate"formControlName="endDate" type="date" class="form-control">
-        </div>
-        <div>
-            <label for="type">Típus</label>
-            <ng-select 
-                name="type"
-                [multiple]="true"
-                class="form-control"
-                placeholder="-- Típus --"
-                [items]="projectTypes"
-                style="max-height: 40px;"
-                name="typeSelector"
-                formControlName="types"
-                >
-            </ng-select>
-        </div>
-        <div id="button-parent">
-            <button (click)="ApplyCommand()" matButton="filled" class="wide fancy-border" aria-label="szűrők alkalmazása"
-                style="max-height: 38px;">Szűrők alkalmazása</button>
+        <div class="filter-row">
+            <button matButton="filled" class="wide fancy-border">Utolsó 1 év</button>
+            <button matButton="filled" class="wide fancy-border">Utolsó 3 év</button>
+            <button matButton="filled" class="wide fancy-border">Utolsó 5 év</button>
+            <button matButton="filled" class="wide fancy-border">Utolsó 10 év</button>
+            <button matButton="filled" class="wide fancy-border red-bg">Szűrők törlése</button>
         </div>
     </div>
 </form>
