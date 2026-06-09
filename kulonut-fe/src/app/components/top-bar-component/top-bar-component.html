@@ -36,6 +36,7 @@
             }
             @if (user.role.level == 99) {
                 <a [routerLink]="['/admin']" data-cy="nav-users" routerLinkActive="active" aria-label="felhasználókarbantartás">felhasználókarbantartás</a>
+                <a [routerLink]="['/basic-info']" data-cy="nav-users" routerLinkActive="active" aria-label="alapadatok">alapadatok kezelése</a>
             }
             <a (click)="Logout()" data-cy="nav-logout" style="cursor: pointer;" aria-label="kijelentkezés">kijelentkezés</a>
         </div>
