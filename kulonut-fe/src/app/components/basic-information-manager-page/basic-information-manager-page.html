@@ -1,1 +1,24 @@
 <app-top-bar-component/>
+<section class="content fancy-border vertical-box gap-4" style="display: grid; grid-template-columns: 1fr 1fr;">
+    @for (key of keys; track $index) {
+        @let list = infoData[infoTypes[key]].data;
+        <div>
+            <h3>{{key}} <button class="fancy-border toggler" (click)="toggleTable($event,key)">🠻</button></h3>
+            <div class="white-panel fancy-border table-div" style="padding-top: 0; padding-bottom: 0;" [id]="`table-${key}`">
+                <table class="w-100">
+                    @for (item of list; track $index) {
+                        <tr>
+                            <td><input class="form-control" value="{{item.name}}"></td>
+                            <td class="button-td">
+                                <div class="d-flex gap-3">
+                                    <button class="saver fancy-border"><img src="/assets/tick.webp" alt="Töröl" title="Törlés"></button>
+                                    <button class="deleter fancy-border"><img src="/assets/trash.png" alt="Töröl" title="Törlés"></button>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </table>
+            </div>
+        </div>
+    }
+</section>
