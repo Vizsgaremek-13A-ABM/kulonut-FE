@@ -7,6 +7,7 @@ import Designer from '../../interfaces/designer.interface';
 import Geodesy from '../../interfaces/geodesy.interface';
 import GeneralDesigner from '../../interfaces/generaldesigner.interface';
 import { MatButtonModule } from '@angular/material/button';
+import { FormsModule } from '@angular/forms';
 
 
 interface ConcatBasicInfoData{
@@ -18,7 +19,7 @@ interface ConcatBasicInfoData{
 
 @Component({
   selector: 'app-basic-information-manager-page',
-  imports: [TopBarComponent, MatButtonModule],
+  imports: [TopBarComponent, MatButtonModule, FormsModule],
   templateUrl: './basic-information-manager-page.html',
   styleUrls: [
     '../../app.scss',
@@ -26,14 +27,14 @@ interface ConcatBasicInfoData{
   ],
 })
 export class BasicInformationManagerPage implements OnInit {
-  protected readonly infoTypes: {[key: string]: string} = {
+  protected readonly infoTypes: {[key: string]: keyof ConcatBasicInfoData} = {
     "Megrendelők": "clients",
     "Tervezők": "designers",
     "Generáltervezők": "general_designers",
     "Geodéziák": "geodesies",}
   protected readonly keys = Object.keys(this.infoTypes)
   private basicInfoService = inject(BasicInfoService)
-  protected infoData!: any
+  protected infoData!: ConcatBasicInfoData
 
   ngOnInit(): void {
     this.basicInfoService.GetAllBasicInfos().subscribe({
@@ -46,7 +47,6 @@ export class BasicInformationManagerPage implements OnInit {
           theme: "material-ui-dark",
           icon: "error"
         })
-        
       }
     })
   }
@@ -55,5 +55,56 @@ export class BasicInformationManagerPage implements OnInit {
     const table = document.querySelector(`#table-${id}`) as HTMLDivElement
     table.classList.toggle('open');
     (e.target as HTMLButtonElement).textContent = (e.target as HTMLButtonElement).textContent == "🠹" ? "🠻" : "🠹"
+  }
+
+  public DeleteCommand(type: string, id: number){
+    this.basicInfoService.DeleteData(type, id).subscribe({
+      next: async () => {
+        await Swal.fire({
+          title: "Sikeres törlés!",
+          theme: "material-ui-dark",
+          icon: "success"
+        })
+        location.reload()
+      },
+      error: (err) => {
+        if (err.status == 409){
+          Swal.fire({
+            title: "Az adathoz tartozik projekt, a törlés nem lehetséges",
+            theme: "material-ui-dark",
+            icon: "error"
+          })
+        }
+        else{
+          Swal.fire({
+            title: "Hiba a törlés során",
+            theme: "material-ui-dark",
+            icon: "error"
+          })
+        }
+      }
+    })
+  }
+
+  public SaveCommand(type: string, id: number){
+    this.basicInfoService.SaveData(type, id, 
+      (document.querySelector(`#inp-${type}-${id}`) as HTMLInputElement).value)
+      .subscribe({
+      next: async () => {
+        await Swal.fire({
+          title: "Sikeres mentés!",
+          theme: "material-ui-dark",
+          icon: "success"
+        })
+        location.reload()
+      },
+      error: () => {
+        Swal.fire({
+          title: "Hiba a mentés során!",
+          theme: "material-ui-dark",
+          icon: "error"
+        })
+      }
+    })
   }
 }

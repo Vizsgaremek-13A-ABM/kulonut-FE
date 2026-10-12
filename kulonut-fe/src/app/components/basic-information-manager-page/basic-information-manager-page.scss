@@ -19,7 +19,6 @@ button.toggler{
     font-size: 120%;
     padding-top: 0;
     line-height: 75%;
-    // max-height: 25px;
 }
 
 button.deleter, button.saver{
@@ -33,6 +32,11 @@ button img{
     width: 30px;
 }
 
+button:disabled{
+    opacity: .55;
+    pointer-events: none;
+}
+
 td{
     border-bottom: 1px solid black;
     max-width: 40ch;
@@ -43,6 +47,7 @@ td{
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
+        border-radius: 0;
     }
 }
 

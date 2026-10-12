@@ -22,4 +22,14 @@ export default class BasicInfoService {
       takeUntilDestroyed(this.destroyRef)
     );
   }
+
+  public SaveData(type: string, id: number, data: string){
+    return this.http.put<any>(`${this.API_URL}/${type}/${id}`, {name: data})
+      .pipe(takeUntilDestroyed(this.destroyRef))
+  }
+
+  public DeleteData(type: string, id: number){
+    return this.http.delete<any>(`${this.API_URL}/${type}/${id}`)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+  }
 }
