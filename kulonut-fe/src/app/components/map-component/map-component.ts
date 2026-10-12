@@ -42,6 +42,12 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
       .GetPolygons()
       .subscribe((polygons) => {
         this.polygonsLoaded$.next(polygons);
+      }, () => {
+        Swal.fire({
+          title: "Hiba az adatok betöltése során",
+          theme: "material-ui-dark",
+          icon: "error"
+        })
     });
     proj4.defs("EPSG:23700",
       "+proj=somerc +lat_0=47.14439372222222 +lon_0=19.04857177777778 " +

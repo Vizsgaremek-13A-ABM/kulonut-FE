@@ -11,6 +11,9 @@ import DisplayShape from "../interfaces/displayshape.interface";
 import * as geojson from 'geojson';
 import User from "../interfaces/user.interface";
 import Role from "../interfaces/role.interface";
+import Client from "../interfaces/client.interface";
+import Geodesy from "../interfaces/geodesy.interface";
+import GeneralDesigner from "../interfaces/generaldesigner.interface";
 
 @Injectable({
   providedIn: 'root'
@@ -39,17 +42,17 @@ export default class DataService {
     }
 
     public GetGeneralDesigners() {
-        return this.http.get<{data: Designer[]}>(`${this.API_URL}/general-designers`)
+        return this.http.get<{data: GeneralDesigner[]}>(`${this.API_URL}/general-designers`)
             .pipe(takeUntilDestroyed(this.destroyRef))
     }
 
     public GetGeodesies() {
-        return this.http.get<{data: Designer[]}>(`${this.API_URL}/geodesies`)
+        return this.http.get<{data: Geodesy[]}>(`${this.API_URL}/geodesies`)
             .pipe(takeUntilDestroyed(this.destroyRef))
     }
 
     public GetClients() {
-        return this.http.get<{data: Designer[]}>(`${this.API_URL}/clients`)
+        return this.http.get<{data: Client[]}>(`${this.API_URL}/clients`)
             .pipe(takeUntilDestroyed(this.destroyRef))
     }
 

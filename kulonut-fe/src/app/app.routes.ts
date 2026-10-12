@@ -19,5 +19,6 @@ export const routes: Routes = [
     { path: 'projects', canActivate: [authGuard], loadComponent: () => import('./components/all-projects-page/all-projects-page').then(m => m.AllProjectsPage) },
     
     { path: 'admin', canActivate: [roleGuard], data: { minRole: 99 }, loadComponent: () => import('./components/admin-user-management-page/admin-user-management-page').then(m => m.AdminUserManagementPage) },
+    { path: 'basic-info', canActivate: [roleGuard], data: { minRole: 99 }, loadComponent: () => import('./components/basic-information-manager-page/basic-information-manager-page').then(m => m.BasicInformationManagerPage) },
     { path: '**', redirectTo: '' }
 ];

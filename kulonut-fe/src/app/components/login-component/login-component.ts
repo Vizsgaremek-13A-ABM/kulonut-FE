@@ -85,8 +85,16 @@ export class LoginComponent implements OnInit {
             icon: "error"
           })
         }
+        else if (e.status == 422){
+          Swal.fire({
+            title: "Hibás e-mail cím vagy jelszó!",
+            theme: "material-ui-dark",
+            icon: "error"
+          })
+        }
         else Swal.fire({
-          title: "Hibás e-mail cím vagy jelszó!",
+          title: "Hiba történt",
+          text: "Ellenőrizze a kapcsolatot",
           theme: "material-ui-dark",
           icon: "error"
         })

@@ -1,5 +1,5 @@
 export const environment = {
   production: false,
-  apiUrl: 'https://kulonutapi.jcloud.jedlik.cloud/api',
-  storageUrl: 'https://kulonutapi.jcloud.jedlik.cloud/storage/profile-icons',
+  apiUrl: 'http://localhost:8000/api',
+  storageUrl: 'http://localhost:8000/storage/profile-icons',
 };

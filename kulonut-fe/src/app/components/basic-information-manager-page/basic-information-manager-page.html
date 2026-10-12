@@ -1,0 +1,25 @@
+<app-top-bar-component/>
+<section class="content fancy-border vertical-box gap-4" style="display: grid; grid-template-columns: 1fr 1fr;">
+    @for (key of keys; track $index) {
+        @let list = infoData[infoTypes[key]].data;
+        <div>
+            <h3>{{key}} <button class="fancy-border toggler" (click)="toggleTable($event,key)">🠻</button></h3>
+            <div class="white-panel fancy-border table-div" style="padding-top: 0; padding-bottom: 0;" [id]="`table-${key}`">
+                <table class="w-100">
+                    @for (item of list; track $index) {
+                        <tr>
+                            <td><input [id]="`inp-${infoTypes[key]}-${item.id}`" class="form-control" value="{{item.name}}" title="{{item.name}}"></td>
+                            <td style="width: 1%; white-space: nowrap;">{{item.projects}} projekt</td>
+                            <td class="button-td">
+                                <div class="d-flex gap-3">
+                                    <button (click)="SaveCommand(infoTypes[key], item.id)" class="saver fancy-border"><img src="/assets/tick.webp" alt="Mentés" title="Mentés"></button>
+                                    <button [disabled]="item.projects != 0" (click)="DeleteCommand(infoTypes[key], item.id)" class="deleter fancy-border"><img src="/assets/trash.png" alt="Töröl" title="Törlés"></button>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </table>
+            </div>
+        </div>
+    }
+</section>

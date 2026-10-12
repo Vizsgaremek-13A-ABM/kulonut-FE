@@ -1,0 +1,94 @@
+@use '../../../variables' as *;
+
+h3{
+    color: white;
+    display: flex;
+    align-items: flex-end;
+    gap: 20px;
+}
+
+button{
+    border-radius: 0;
+    border: 0;
+    box-sizing: border-box;
+}
+
+button.toggler{
+    margin-bottom: 5px;
+    background-color: $primary-blue !important;
+    font-size: 120%;
+    padding-top: 0;
+    line-height: 75%;
+}
+
+button.deleter, button.saver{
+    background-color: $error-bg !important;
+    aspect-ratio: 1;
+}
+button.saver{
+    background-color: $primary-blue !important;
+}
+button img{
+    width: 30px;
+}
+
+button:disabled{
+    opacity: .55;
+    pointer-events: none;
+}
+
+td{
+    border-bottom: 1px solid black;
+    max-width: 40ch;
+    vertical-align: middle;
+    padding-bottom: 10px;
+    padding-right: 6px;
+    & input{
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        border-radius: 0;
+    }
+}
+
+table {
+  border-collapse: separate;
+  border-spacing: 0 10px;
+}
+
+.button-td{
+    white-space: nowrap;
+    width: 1%;
+    padding-left: 15px;
+}
+
+tr:last-child td{
+    border-bottom: 0;
+}
+
+.table-div{
+    display: grid;
+    grid-template-rows: 0fr;
+    visibility: hidden;
+    transition:
+        grid-template-rows .5s ease-in-out,
+        visibility 0s linear .5s;
+    > table{
+        min-height: 0;
+        overflow: hidden;
+    }
+    overflow-y: auto;
+    &.open{
+        grid-template-rows: 1fr;
+        visibility: visible;
+        transition:
+            grid-template-rows .5s ease-in-out,
+            visibility 0s linear 0s;
+    }
+}
+
+@media screen and (max-width: 992px){
+    section{
+        grid-template-columns: 1fr !important;
+    }
+}
